@@ -107,6 +107,21 @@ export function getPostsByTag(tag: string): PostMeta[] {
 }
 
 /**
+ * 获取当前文章的上一篇和下一篇（按日期排序）
+ */
+export function getAdjacentPosts(slug: string): { prev: PostMeta | null; next: PostMeta | null } {
+  const posts = getAllPosts();
+  const index = posts.findIndex((p) => p.slug === slug);
+  if (index === -1) return { prev: null, next: null };
+
+  // posts 按日期倒序，所以 index-1 是更新的文章（下一篇），index+1 是更早的文章（上一篇）
+  return {
+    prev: index < posts.length - 1 ? posts[index + 1] : null,
+    next: index > 0 ? posts[index - 1] : null,
+  };
+}
+
+/**
  * 根据 slug 读取完整文章（含 HTML 内容）
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {

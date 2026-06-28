@@ -8,21 +8,26 @@ import Subscribe from "@/components/Subscribe";
 import ArticleContent from "@/components/ArticleContent";
 import ReadingProgress from "@/components/ReadingProgress";
 import RelatedPosts from "@/components/RelatedPosts";
+import Comments from "@/components/Comments";
+import PostNav from "@/components/PostNav";
+import BackToTop from "@/components/BackToTop";
 
 interface Props {
   post: Post;
   allPosts: PostMeta[];
+  prev: PostMeta | null;
+  next: PostMeta | null;
 }
 
-export default function PostContent({ post, allPosts }: Props) {
+export default function PostContent({ post, allPosts, prev, next }: Props) {
   const { t, locale } = useI18n();
   const hasToc = post.headings.length > 0;
-
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   return (
     <>
       <ReadingProgress />
+      <BackToTop />
 
       <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
         <Link
@@ -82,6 +87,16 @@ export default function PostContent({ post, allPosts }: Props) {
             {/* 文章内容 */}
             <ArticleContent html={post.contentHtml} />
 
+            {/* 文章前后导航 */}
+            <PostNav
+              prev={prev}
+              next={next}
+              labels={{
+                prev: t("post.prev"),
+                next: t("post.next"),
+              }}
+            />
+
             {/* 相关文章推荐 */}
             {post.tags && post.tags.length > 0 && (
               <RelatedPosts
@@ -90,6 +105,9 @@ export default function PostContent({ post, allPosts }: Props) {
                 allPosts={allPosts}
               />
             )}
+
+            {/* 评论区 */}
+            <Comments slug={post.slug} />
 
             {/* 文章底部订阅 */}
             <Subscribe />

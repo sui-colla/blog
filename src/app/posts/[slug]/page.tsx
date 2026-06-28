@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getPostBySlug, getAllPosts } from "@/lib/posts";
+import { getPostBySlug, getAllPosts, getAdjacentPosts } from "@/lib/posts";
 import PostContent from "@/components/PostContent";
 
 export function generateStaticParams() {
@@ -47,6 +47,7 @@ export default async function PostPage({
   if (!post) notFound();
 
   const allPosts = getAllPosts();
+  const { prev, next } = getAdjacentPosts(slug);
 
-  return <PostContent post={post} allPosts={allPosts} />;
+  return <PostContent post={post} allPosts={allPosts} prev={prev} next={next} />;
 }

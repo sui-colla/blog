@@ -97,6 +97,16 @@ const translations: Record<Locale, Record<string, string>> = {
     // 站点描述
     "site.description": "LunaPath 的博客，记录思考和分享知识的地方",
     "site.rssTitle": "LunaPath RSS",
+
+    // 404 页
+    "notFound.title": "页面走丢了",
+    "notFound.desc": "你要找的页面不存在，可能已被移除或地址有误。",
+    "notFound.backHome": "返回首页",
+    "notFound.browseTags": "浏览标签",
+
+    // 文章导航
+    "post.prev": "上一篇",
+    "post.next": "下一篇",
   },
 
   en: {
@@ -185,6 +195,16 @@ const translations: Record<Locale, Record<string, string>> = {
     // Site description
     "site.description": "LunaPath's blog — notes on tech, thoughts, and life",
     "site.rssTitle": "LunaPath RSS",
+
+    // 404
+    "notFound.title": "Page Not Found",
+    "notFound.desc": "The page you're looking for doesn't exist — it may have been moved or the link is incorrect.",
+    "notFound.backHome": "Back to Home",
+    "notFound.browseTags": "Browse Tags",
+
+    // Post nav
+    "post.prev": "Previous",
+    "post.next": "Next",
   },
 };
 
