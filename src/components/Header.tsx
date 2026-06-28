@@ -28,6 +28,9 @@ export default function Header() {
           <Link href="/tags" className="hover:text-orange-500 transition-colors">
             {t("nav.tags")}
           </Link>
+          <Link href="/archive" className="hover:text-orange-500 transition-colors">
+            {t("nav.archive")}
+          </Link>
           <Search />
           <ThemeToggle />
           <LanguageToggle />

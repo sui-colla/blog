@@ -107,6 +107,9 @@ const translations: Record<Locale, Record<string, string>> = {
     // 文章导航
     "post.prev": "上一篇",
     "post.next": "下一篇",
+
+    // 归档
+    "nav.archive": "归档",
   },
 
   en: {
@@ -205,6 +208,9 @@ const translations: Record<Locale, Record<string, string>> = {
     // Post nav
     "post.prev": "Previous",
     "post.next": "Next",
+
+    // Archive
+    "nav.archive": "Archive",
   },
 };
 

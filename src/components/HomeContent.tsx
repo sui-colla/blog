@@ -6,6 +6,7 @@ import TagLink from "@/components/TagLink";
 import Sidebar from "@/components/Sidebar";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/posts";
+import { useState } from "react";
 
 interface Tag {
   tag: string;
@@ -77,6 +78,11 @@ export default function HomeContent({ posts, tags }: Props) {
                       </span>
                     </div>
                     <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
+                      {post.pinned && (
+                        <span className="inline-block mr-2 text-xs font-medium text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded-full align-middle">
+                          📌 {locale === "zh" ? "置顶" : "Pinned"}
+                        </span>
+                      )}
                       {post.title}
                     </h3>
                     <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">

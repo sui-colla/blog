@@ -21,6 +21,7 @@ export default function Sidebar({ tags }: Props) {
     { href: "/", label: t("nav.home"), icon: "🏠" },
     { href: "/about", label: t("nav.about"), icon: "👤" },
     { href: "/tags", label: t("nav.tags"), icon: "🏷️" },
+    { href: "/archive", label: t("nav.archive"), icon: "📚" },
   ];
 
   return (

@@ -19,6 +19,9 @@ export interface PostMeta {
   tags?: string[];
   cover?: string; // 封面图路径
   readingTime: number; // 分钟
+  pinned?: boolean; // 是否置顶
+  draft?: boolean; // 是否草稿
+  publishAt?: string; // 定时发布时间（ISO 日期）
 }
 
 export interface Post extends PostMeta {
@@ -51,10 +54,14 @@ function calcReadingTime(text: string): number {
 }
 
 /**
- * 读取所有文章的元数据（按日期倒序）
+ * 读取所有文章的元数据（按日期倒序，置顶优先）
+ * - draft: true 的文章不会显示
+ * - publishAt: 未来日期的文章不会显示（定时发布）
+ * - pinned: true 的文章置顶显示
  */
 export function getAllPosts(): PostMeta[] {
   const filenames = fs.readdirSync(postsDirectory);
+  const now = new Date();
 
   const posts = filenames
     .filter((f) => f.endsWith(".md"))
@@ -72,12 +79,24 @@ export function getAllPosts(): PostMeta[] {
         tags: data.tags as string[] | undefined,
         cover: data.cover as string | undefined,
         readingTime: calcReadingTime(content),
+        pinned: data.pinned as boolean | undefined,
+        draft: data.draft as boolean | undefined,
+        publishAt: data.publishAt as string | undefined,
       };
+    })
+    // 过滤：排除草稿和未到发布时间的文章
+    .filter((post) => {
+      if (post.draft) return false;
+      if (post.publishAt && new Date(post.publishAt) > now) return false;
+      return true;
     });
 
-  return posts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  // 排序：置顶优先，然后按日期倒序
+  return posts.sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
 }
 
 /**
@@ -157,6 +176,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     tags: data.tags as string[] | undefined,
     cover: data.cover as string | undefined,
     readingTime: calcReadingTime(content),
+    pinned: data.pinned as boolean | undefined,
+    draft: data.draft as boolean | undefined,
+    publishAt: data.publishAt as string | undefined,
     contentHtml,
     headings,
   };

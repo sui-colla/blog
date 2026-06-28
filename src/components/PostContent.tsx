@@ -11,6 +11,7 @@ import RelatedPosts from "@/components/RelatedPosts";
 import Comments from "@/components/Comments";
 import PostNav from "@/components/PostNav";
 import BackToTop from "@/components/BackToTop";
+import Donate from "@/components/Donate";
 
 interface Props {
   post: Post;
@@ -119,6 +120,9 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
 
             {/* 评论区 */}
             <Comments slug={post.slug} />
+
+            {/* 赞赏支持 */}
+            <Donate />
 
             {/* 文章底部订阅 */}
             <Subscribe />
