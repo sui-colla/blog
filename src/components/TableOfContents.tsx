@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { TocHeading } from "@/lib/posts";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   headings: TocHeading[];
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function TableOfContents({ headings, showTitle = true }: Props) {
+  const { t } = useI18n();
   const [activeId, setActiveId] = useState<string>("");
   const visibleSet = useRef<Set<string>>(new Set());
   const initialized = useRef(false);
@@ -90,10 +92,10 @@ export default function TableOfContents({ headings, showTitle = true }: Props) {
   if (headings.length === 0) return null;
 
   return (
-    <nav aria-label="文章目录" className="toc-nav">
+    <nav aria-label={t("toc.ariaLabel")} className="toc-nav">
       {showTitle && (
         <h4 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3 tracking-wide">
-          目录
+          {t("toc.title")}
         </h4>
       )}
 

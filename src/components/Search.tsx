@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Fuse, { type FuseResult } from "fuse.js";
+import { useI18n } from "@/lib/i18n";
 
 interface SearchItem {
   slug: string;
@@ -13,6 +14,7 @@ interface SearchItem {
 }
 
 export default function Search() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<FuseResult<SearchItem>[]>([]);
@@ -24,7 +26,6 @@ export default function Search() {
   const listRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
 
-  // 加载搜索索引
   const loadIndex = useCallback(async () => {
     if (fuse) return;
     setLoading(true);
@@ -44,13 +45,12 @@ export default function Search() {
       });
       setFuse(instance);
     } catch {
-      // 静默失败
+      // silent
     } finally {
       setLoading(false);
     }
   }, [fuse]);
 
-  // 全局快捷键 Ctrl+K / Cmd+K
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -65,7 +65,6 @@ export default function Search() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [loadIndex]);
 
-  // 打开时聚焦输入框
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -76,7 +75,6 @@ export default function Search() {
     }
   }, [open]);
 
-  // 搜索
   useEffect(() => {
     if (!fuse || !query.trim()) {
       setResults([]);
@@ -88,7 +86,6 @@ export default function Search() {
     setActiveIndex(0);
   }, [query, fuse]);
 
-  // 键盘导航
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {
       setOpen(false);
@@ -104,13 +101,11 @@ export default function Search() {
     }
   }
 
-  // 跳转到文章
   function navigateTo(slug: string) {
     setOpen(false);
     router.push(`/posts/${slug}`);
   }
 
-  // 滚动到当前选中项
   useEffect(() => {
     if (listRef.current) {
       const activeEl = listRef.current.children[activeIndex] as HTMLElement;
@@ -118,7 +113,6 @@ export default function Search() {
     }
   }, [activeIndex]);
 
-  // 高亮匹配文字
   function highlightMatch(text: string, key: string): React.ReactNode {
     const match = results[activeIndex]?.matches?.find((m) => m.key === key);
     if (!match) return text;
@@ -146,14 +140,13 @@ export default function Search() {
 
   return (
     <>
-      {/* 搜索触发按钮 */}
       <button
         onClick={() => {
           loadIndex();
           setOpen(true);
         }}
         className="search-trigger"
-        aria-label="搜索文章"
+        aria-label={t("search.ariaLabel")}
       >
         <svg
           width="16"
@@ -168,11 +161,10 @@ export default function Search() {
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.3-4.3" />
         </svg>
-        <span className="hidden sm:inline">搜索</span>
+        <span className="hidden sm:inline">{t("search.label")}</span>
         <kbd className="search-kbd hidden sm:inline">⌘K</kbd>
       </button>
 
-      {/* 搜索模态框 */}
       {open && (
         <div
           className="search-overlay"
@@ -180,8 +172,7 @@ export default function Search() {
             if (e.target === e.currentTarget) setOpen(false);
           }}
         >
-          <div className="search-modal" role="dialog" aria-label="搜索">
-            {/* 搜索输入框 */}
+          <div className="search-modal" role="dialog" aria-label={t("search.modalAria")}>
             <div className="search-input-wrapper">
               <svg
                 className="search-input-icon"
@@ -201,20 +192,19 @@ export default function Search() {
                 ref={inputRef}
                 type="text"
                 className="search-input"
-                placeholder="搜索文章标题、摘要、标签..."
+                placeholder={t("search.placeholder")}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoComplete="off"
               />
-              {loading && <span className="search-loading">加载中...</span>}
+              {loading && <span className="search-loading">{t("search.loading")}</span>}
             </div>
 
-            {/* 搜索结果 */}
             {query.trim() && (
               <div className="search-results">
                 {results.length === 0 ? (
-                  <div className="search-empty">没有找到相关文章</div>
+                  <div className="search-empty">{t("search.empty")}</div>
                 ) : (
                   <ul ref={listRef} role="listbox">
                     {results.map((result, index) => (
@@ -250,16 +240,15 @@ export default function Search() {
               </div>
             )}
 
-            {/* 底部提示 */}
             <div className="search-footer">
               <span>
-                <kbd className="search-kbd">↑↓</kbd> 移动
+                <kbd className="search-kbd">↑↓</kbd> {t("search.move")}
               </span>
               <span>
-                <kbd className="search-kbd">Enter</kbd> 跳转
+                <kbd className="search-kbd">Enter</kbd> {t("search.goto")}
               </span>
               <span>
-                <kbd className="search-kbd">Esc</kbd> 关闭
+                <kbd className="search-kbd">Esc</kbd> {t("search.close")}
               </span>
             </div>
           </div>

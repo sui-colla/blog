@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface Props {
   html: string;
 }
 
 export default function ArticleContent({ html }: Props) {
+  const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,8 +24,8 @@ export default function ArticleContent({ html }: Props) {
 
       const btn = document.createElement("button");
       btn.className = "copy-btn";
-      btn.textContent = "复制";
-      btn.setAttribute("aria-label", "复制代码");
+      btn.textContent = t("copy.btn");
+      btn.setAttribute("aria-label", t("copy.ariaLabel"));
 
       btn.addEventListener("click", async () => {
         const code = pre.querySelector("code");
@@ -31,23 +33,23 @@ export default function ArticleContent({ html }: Props) {
 
         try {
           await navigator.clipboard.writeText(code.textContent ?? "");
-          btn.textContent = "已复制!";
+          btn.textContent = t("copy.success");
           btn.classList.add("copy-btn--success");
           setTimeout(() => {
-            btn.textContent = "复制";
+            btn.textContent = t("copy.btn");
             btn.classList.remove("copy-btn--success");
           }, 2000);
         } catch {
-          btn.textContent = "失败";
+          btn.textContent = t("copy.fail");
           setTimeout(() => {
-            btn.textContent = "复制";
+            btn.textContent = t("copy.btn");
           }, 2000);
         }
       });
 
       pre.appendChild(btn);
     });
-  }, [html]);
+  }, [html, t]);
 
   return (
     <div

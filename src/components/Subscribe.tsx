@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useI18n } from "@/lib/i18n";
 
 export default function Subscribe() {
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -10,18 +12,17 @@ export default function Subscribe() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    // 简单前端校验
     const trimmed = email.trim();
     if (!trimmed) {
       setStatus("error");
-      setMessage("请输入邮箱地址");
+      setMessage(t("subscribe.errorEmpty"));
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmed)) {
       setStatus("error");
-      setMessage("邮箱格式不正确，请检查后再试");
+      setMessage(t("subscribe.errorFormat"));
       return;
     }
 
@@ -39,52 +40,48 @@ export default function Subscribe() {
 
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message || "订阅成功！");
+        setMessage(data.message || t("subscribe.success"));
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(data.error || "订阅失败，请稍后再试");
+        setMessage(data.error || t("subscribe.errorFail"));
       }
     } catch {
       setStatus("error");
-      setMessage("网络出错了，请稍后再试");
+      setMessage(t("subscribe.errorNetwork"));
     }
   }
 
   return (
     <div className="subscribe-box">
-      <h3 className="subscribe-title">📬 订阅博客</h3>
-      <p className="subscribe-desc">
-        不想错过新文章？留下邮箱，有新内容时我会通知你。
-      </p>
+      <h3 className="subscribe-title">{t("subscribe.title")}</h3>
+      <p className="subscribe-desc">{t("subscribe.desc")}</p>
 
       <form className="subscribe-form" onSubmit={handleSubmit}>
         <input
           type="email"
           className="subscribe-input"
-          placeholder="your@email.com"
+          placeholder={t("subscribe.placeholder")}
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            // 输入时清除错误/成功状态
             if (status === "error" || status === "success") {
               setStatus("idle");
               setMessage("");
             }
           }}
           disabled={status === "loading"}
-          aria-label="邮箱地址"
+          aria-label={t("subscribe.ariaLabel")}
         />
         <button
           type="submit"
           className="subscribe-btn"
           disabled={status === "loading"}
         >
-          {status === "loading" ? "提交中..." : "订阅"}
+          {status === "loading" ? t("subscribe.loading") : t("subscribe.btn")}
         </button>
       </form>
 
-      {/* 状态消息 */}
       {message && (
         <p
           className={

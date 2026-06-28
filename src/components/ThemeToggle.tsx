@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 type Theme = "system" | "light" | "dark";
 
@@ -21,6 +22,7 @@ function applyTheme(theme: Theme) {
 }
 
 export default function ThemeToggle() {
+  const { t } = useI18n();
   const [theme, setTheme] = useState<Theme>("system");
   const [mounted, setMounted] = useState(false);
 
@@ -74,9 +76,9 @@ export default function ThemeToggle() {
   };
 
   const labels: Record<Theme, string> = {
-    system: "跟随系统",
-    light: "浅色模式",
-    dark: "深色模式",
+    system: t("theme.system"),
+    light: t("theme.light"),
+    dark: t("theme.dark"),
   };
 
   return (
@@ -84,7 +86,7 @@ export default function ThemeToggle() {
       onClick={cycleTheme}
       className="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-orange-500 hover:bg-orange-50 dark:text-zinc-400 dark:hover:text-orange-400 dark:hover:bg-zinc-800 transition-colors"
       title={labels[theme]}
-      aria-label={`当前：${labels[theme]}，点击切换`}
+      aria-label={`${t("theme.ariaPrefix")}${labels[theme]}${t("theme.ariaSuffix")}`}
     >
       {icons[theme]}
     </button>
