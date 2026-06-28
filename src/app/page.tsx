@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
+import Subscribe from "@/components/Subscribe";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -63,6 +64,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* 订阅组件 */}
+      <Subscribe />
     </div>
   );
 }

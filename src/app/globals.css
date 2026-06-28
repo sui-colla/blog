@@ -27,6 +27,23 @@ body {
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
   color: #c2410c;
+  scroll-margin-top: 5rem;
+}
+
+.prose h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 5rem;
+}
+
+.prose h4 {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 5rem;
 }
 
 .prose p {
@@ -86,4 +103,169 @@ body {
 
 .prose blockquote p {
   margin-bottom: 0;
+}
+
+/* ==============================
+   订阅表单样式
+   ============================== */
+
+.subscribe-box {
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border: 1px solid #fed7aa;
+}
+
+/* 暗色模式 */
+@media (prefers-color-scheme: dark) {
+  .subscribe-box {
+    background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+    border-color: #44403c;
+  }
+}
+
+.subscribe-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #c2410c;
+  margin-bottom: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .subscribe-title {
+    color: #fdba74;
+  }
+}
+
+.subscribe-desc {
+  font-size: 0.9375rem;
+  color: var(--color-zinc-500);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.subscribe-form {
+  display: flex;
+  gap: 0.625rem;
+  max-width: 420px;
+}
+
+.subscribe-input {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: 1px solid #fed7aa;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--color-zinc-800);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.subscribe-input::placeholder {
+  color: #a8a29e;
+}
+
+.subscribe-input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+.subscribe-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .subscribe-input {
+    background: #292524;
+    border-color: #44403c;
+    color: var(--color-zinc-100);
+  }
+
+  .subscribe-input:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25);
+  }
+}
+
+.subscribe-btn {
+  padding: 0.625rem 1.5rem;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.subscribe-btn:hover {
+  opacity: 0.9;
+}
+
+.subscribe-btn:active {
+  transform: scale(0.97);
+}
+
+.subscribe-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.subscribe-msg {
+  margin-top: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.subscribe-msg--success {
+  color: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .subscribe-msg--success {
+    color: #4ade80;
+  }
+}
+
+.subscribe-msg--error {
+  color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  .subscribe-msg--error {
+    color: #f87171;
+  }
+}
+
+/* 移动端表单改为竖向排列 */
+@media (max-width: 480px) {
+  .subscribe-form {
+    flex-direction: column;
+  }
+}
+
+/* ==============================
+   文章目录 (TOC) 样式
+   ============================== */
+
+/* 隐藏 <details> 默认三角标记 */
+.toc-details summary::-webkit-details-marker {
+  display: none;
+}
+.toc-details summary::marker {
+  content: none;
+}
+
+/* TOC 导航整体样式 */
+.toc-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }

@@ -5,8 +5,11 @@ import { remark } from "remark";
 import remarkRehype from "remark-rehype";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
+import { rehypeTocPlugin, type TocHeading } from "./rehype-toc";
 
 const postsDirectory = path.join(process.cwd(), "content", "posts");
+
+export { type TocHeading } from "./rehype-toc";
 
 export interface PostMeta {
   slug: string;
@@ -18,6 +21,7 @@ export interface PostMeta {
 
 export interface Post extends PostMeta {
   contentHtml: string;
+  headings: TocHeading[];
 }
 
 /**
@@ -60,12 +64,16 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const fileContent = fs.readFileSync(fullPath, "utf-8");
   const { data, content } = matter(fileContent);
+
+  const headings: TocHeading[] = [];
+
   const processed = await remark()
     .use(remarkRehype)
     .use(rehypePrettyCode, {
       theme: "one-dark-pro",
       keepBackground: true,
     })
+    .use(rehypeTocPlugin, { headings })
     .use(rehypeStringify)
     .process(content);
   const contentHtml = processed.toString();
@@ -77,5 +85,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     summary: data.summary as string,
     tags: data.tags as string[] | undefined,
     contentHtml,
+    headings,
   };
 }
