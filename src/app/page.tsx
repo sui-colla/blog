@@ -32,16 +32,17 @@ export default function Home() {
                 href={`/posts/${post.slug}`}
                 className="group block rounded-xl p-5 -mx-5 hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
               >
-                <time
-                  dateTime={post.date}
-                  className="text-sm text-zinc-400 dark:text-zinc-500"
-                >
-                  {new Date(post.date).toLocaleDateString("zh-CN", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
+                <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString("zh-CN", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <span>·</span>
+                  <span>{post.readingTime} 分钟阅读</span>
+                </div>
                 <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
                   {post.title}
                 </h3>

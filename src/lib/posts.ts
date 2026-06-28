@@ -17,11 +17,36 @@ export interface PostMeta {
   date: string;
   summary: string;
   tags?: string[];
+  readingTime: number; // 分钟
 }
 
 export interface Post extends PostMeta {
   contentHtml: string;
   headings: TocHeading[];
+}
+
+/**
+ * 计算阅读时间（分钟）
+ * 中文按每分钟 300 字，英文按每分钟 200 词
+ */
+function calcReadingTime(text: string): number {
+  // 移除 markdown 语法
+  const plain = text
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`]*`/g, "")
+    .replace(/[#*_~>\[\]()!|-]/g, "")
+    .trim();
+
+  // 统计中文字符数
+  const cjk = plain.match(/[一-鿿㐀-䶿]/g)?.length ?? 0;
+  // 统计英文单词数
+  const words = plain
+    .replace(/[一-鿿㐀-䶿]/g, "")
+    .split(/\s+/)
+    .filter((w) => w.length > 0).length;
+
+  const minutes = cjk / 300 + words / 200;
+  return Math.max(1, Math.round(minutes));
 }
 
 /**
@@ -36,7 +61,7 @@ export function getAllPosts(): PostMeta[] {
       const slug = filename.replace(/\.md$/, "");
       const fullPath = path.join(postsDirectory, filename);
       const fileContent = fs.readFileSync(fullPath, "utf-8");
-      const { data } = matter(fileContent);
+      const { data, content } = matter(fileContent);
 
       return {
         slug,
@@ -44,6 +69,7 @@ export function getAllPosts(): PostMeta[] {
         date: data.date as string,
         summary: data.summary as string,
         tags: data.tags as string[] | undefined,
+        readingTime: calcReadingTime(content),
       };
     });
 
@@ -112,6 +138,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     date: data.date as string,
     summary: data.summary as string,
     tags: data.tags as string[] | undefined,
+    readingTime: calcReadingTime(content),
     contentHtml,
     headings,
   };

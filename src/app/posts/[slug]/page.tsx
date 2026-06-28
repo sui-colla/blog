@@ -3,6 +3,9 @@ import Link from "next/link";
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import TableOfContents from "@/components/TableOfContents";
 import Subscribe from "@/components/Subscribe";
+import ArticleContent from "@/components/ArticleContent";
+import ReadingProgress from "@/components/ReadingProgress";
+import RelatedPosts from "@/components/RelatedPosts";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -49,80 +52,93 @@ export default async function PostPage({
   if (!post) notFound();
 
   const hasToc = post.headings.length > 0;
+  const allPosts = getAllPosts();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
-      >
-        &larr; 返回首页
-      </Link>
+    <>
+      <ReadingProgress />
 
-      <div className="lg:flex lg:gap-10">
-        {/* 主内容区 */}
-        <article className="min-w-0 flex-1">
-          <header className="mb-10">
-            <time
-              dateTime={post.date}
-              className="text-sm text-zinc-400 dark:text-zinc-500"
-            >
-              {new Date(post.date).toLocaleDateString("zh-CN", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
-            <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-              <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
-                {post.title}
-              </span>
-            </h1>
-            {post.tags && post.tags.length > 0 && (
-              <div className="mt-4 flex gap-2">
-                {post.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    href={`/tags/${encodeURIComponent(tag)}`}
-                    className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
-                  >
-                    {tag}
-                  </Link>
-                ))}
+      <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
+        >
+          &larr; 返回首页
+        </Link>
+
+        <div className="lg:flex lg:gap-10">
+          {/* 主内容区 */}
+          <article className="min-w-0 flex-1">
+            <header className="mb-10">
+              <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+                <time dateTime={post.date}>
+                  {new Date(post.date).toLocaleDateString("zh-CN", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>·</span>
+                <span>{post.readingTime} 分钟阅读</span>
               </div>
+              <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+                  {post.title}
+                </span>
+              </h1>
+              {post.tags && post.tags.length > 0 && (
+                <div className="mt-4 flex gap-2">
+                  {post.tags.map((tag) => (
+                    <Link
+                      key={tag}
+                      href={`/tags/${encodeURIComponent(tag)}`}
+                      className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
+                    >
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </header>
+
+            {/* 移动端折叠目录 */}
+            {hasToc && (
+              <details className="toc-details lg:hidden mb-8 rounded-lg border border-orange-200 dark:border-zinc-700 bg-orange-50/50 dark:bg-zinc-900/50">
+                <summary className="px-4 py-2.5 text-sm font-medium text-orange-600 dark:text-orange-400 cursor-pointer select-none">
+                  目录
+                </summary>
+                <div className="px-4 pb-3">
+                  <TableOfContents headings={post.headings} showTitle={false} />
+                </div>
+              </details>
             )}
-          </header>
 
-          {/* 移动端折叠目录 */}
+            {/* 文章内容（含代码复制按钮） */}
+            <ArticleContent html={post.contentHtml} />
+
+            {/* 相关文章推荐 */}
+            {post.tags && post.tags.length > 0 && (
+              <RelatedPosts
+                currentSlug={post.slug}
+                currentTags={post.tags}
+                allPosts={allPosts}
+              />
+            )}
+
+            {/* 文章底部订阅 */}
+            <Subscribe />
+          </article>
+
+          {/* 桌面端粘性侧边栏目录 */}
           {hasToc && (
-            <details className="toc-details lg:hidden mb-8 rounded-lg border border-orange-200 dark:border-zinc-700 bg-orange-50/50 dark:bg-zinc-900/50">
-              <summary className="px-4 py-2.5 text-sm font-medium text-orange-600 dark:text-orange-400 cursor-pointer select-none">
-                目录
-              </summary>
-              <div className="px-4 pb-3">
-                <TableOfContents headings={post.headings} showTitle={false} />
+            <aside className="hidden lg:block w-56 shrink-0">
+              <div className="sticky top-24">
+                <TableOfContents headings={post.headings} />
               </div>
-            </details>
+            </aside>
           )}
-
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.contentHtml }}
-          />
-
-          {/* 文章底部订阅 */}
-          <Subscribe />
-        </article>
-
-        {/* 桌面端粘性侧边栏目录 */}
-        {hasToc && (
-          <aside className="hidden lg:block w-56 shrink-0">
-            <div className="sticky top-24">
-              <TableOfContents headings={post.headings} />
-            </div>
-          </aside>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
