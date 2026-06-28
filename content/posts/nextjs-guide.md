@@ -3,6 +3,7 @@ title: "Next.js 博客搭建指南"
 date: "2026-06-20"
 summary: "从零开始用 Next.js App Router 搭建一个静态博客，含 TypeScript 和 Tailwind CSS。"
 tags: ["技术", "Next.js"]
+cover: "/images/posts/nextjs.jpg"
 ---
 
 ## 为什么选 Next.js

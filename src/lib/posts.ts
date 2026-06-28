@@ -17,6 +17,7 @@ export interface PostMeta {
   date: string;
   summary: string;
   tags?: string[];
+  cover?: string; // 封面图路径
   readingTime: number; // 分钟
 }
 
@@ -69,6 +70,7 @@ export function getAllPosts(): PostMeta[] {
         date: data.date as string,
         summary: data.summary as string,
         tags: data.tags as string[] | undefined,
+        cover: data.cover as string | undefined,
         readingTime: calcReadingTime(content),
       };
     });
@@ -153,6 +155,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     date: data.date as string,
     summary: data.summary as string,
     tags: data.tags as string[] | undefined,
+    cover: data.cover as string | undefined,
     readingTime: calcReadingTime(content),
     contentHtml,
     headings,

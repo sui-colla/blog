@@ -37,8 +37,19 @@ export default function HomeContent({ posts }: Props) {
             <article key={post.slug}>
               <Link
                 href={`/posts/${post.slug}`}
-                className="group block rounded-xl p-5 -mx-5 hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
+                className="group block rounded-xl overflow-hidden -mx-5 hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
               >
+                {post.cover && (
+                  <div className="aspect-video overflow-hidden">
+                    <img
+                      src={post.cover}
+                      alt={post.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className="p-5">
                 <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                   <time dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString("zh-CN", {
@@ -67,6 +78,7 @@ export default function HomeContent({ posts }: Props) {
                     ))}
                   </div>
                 )}
+                </div>
               </Link>
             </article>
           ))}

@@ -40,6 +40,17 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
         <div className="lg:flex lg:gap-10">
           {/* 主内容区 */}
           <article className="min-w-0 flex-1">
+            {/* 封面图 */}
+            {post.cover && (
+              <div className="mb-8 rounded-xl overflow-hidden">
+                <img
+                  src={post.cover}
+                  alt={post.title}
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+            )}
+
             <header className="mb-10">
               <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                 <time dateTime={post.date}>
