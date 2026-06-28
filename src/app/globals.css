@@ -11,6 +11,42 @@ body {
   font-family: var(--font-sans);
 }
 
+/* ==============================
+   动态渐变背景
+   ============================== */
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5, #fef3c7, #fff7ed, #fed7aa);
+  background-size: 400% 400%;
+  animation: gradientFlow 20s ease infinite;
+}
+
+/* 暗色模式：深色渐变 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body {
+    background: linear-gradient(135deg, #0c0a09, #1c1917, #292524, #1c1917, #0c0a09);
+    background-size: 400% 400%;
+    animation: gradientFlow 20s ease infinite;
+  }
+}
+[data-theme="dark"] body {
+  background: linear-gradient(135deg, #0c0a09, #1c1917, #292524, #1c1917, #0c0a09);
+  background-size: 400% 400%;
+  animation: gradientFlow 20s ease infinite;
+}
+
 /* 文章内容排版 */
 .prose h1 {
   font-size: var(--text-2xl);

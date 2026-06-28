@@ -58,7 +58,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-orange-50/30 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 font-sans">
+      <body className="min-h-screen flex flex-col text-zinc-800 dark:text-zinc-100 font-sans">
         <I18nProvider>
           <Header />
           <main className="flex-1">{children}</main>
