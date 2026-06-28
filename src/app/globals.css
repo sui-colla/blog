@@ -105,6 +105,22 @@ body {
   text-align: center;
 }
 
+/* 导航项之间的分隔符 */
+.sidebar-nav-divider {
+  height: 1px;
+  background: var(--color-zinc-200);
+  margin: 0.25rem 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .sidebar-nav-divider {
+    background: var(--color-zinc-700);
+  }
+}
+[data-theme="dark"] .sidebar-nav-divider {
+  background: var(--color-zinc-700);
+}
+
 /* 分割线 */
 .sidebar-divider {
   height: 1px;

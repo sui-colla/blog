@@ -27,17 +27,19 @@ export default function Sidebar({ tags }: Props) {
     <aside className="sidebar">
       {/* 导航链接 */}
       <nav className="sidebar-nav">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`sidebar-link ${
-              pathname === item.href ? "sidebar-link--active" : ""
-            }`}
-          >
-            <span className="sidebar-link-icon">{item.icon}</span>
-            {item.label}
-          </Link>
+        {navItems.map((item, index) => (
+          <div key={item.href}>
+            {index > 0 && <div className="sidebar-nav-divider" />}
+            <Link
+              href={item.href}
+              className={`sidebar-link ${
+                pathname === item.href ? "sidebar-link--active" : ""
+              }`}
+            >
+              <span className="sidebar-link-icon">{item.icon}</span>
+              {item.label}
+            </Link>
+          </div>
         ))}
       </nav>
 
