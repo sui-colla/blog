@@ -107,9 +107,47 @@ const translations: Record<Locale, Record<string, string>> = {
     // 文章导航
     "post.prev": "上一篇",
     "post.next": "下一篇",
+    "post.wordCount": "字",
 
     // 归档
     "nav.archive": "归档",
+
+    // 联系表单
+    "contact.title": "联系我",
+    "contact.desc": "有任何问题或想法？欢迎通过下面的表单联系我。",
+    "contact.name": "你的名字",
+    "contact.namePlaceholder": "LunaPath",
+    "contact.email": "邮箱地址",
+    "contact.emailPlaceholder": "your@email.com",
+    "contact.message": "留言内容",
+    "contact.messagePlaceholder": "写下你想说的...",
+    "contact.submit": "发送",
+    "contact.sending": "发送中...",
+    "contact.success": "发送成功！感谢你的留言。",
+    "contact.errorEmpty": "请填写所有字段",
+    "contact.errorEmail": "邮箱格式不正确",
+    "contact.errorFail": "发送失败，请稍后再试",
+    "contact.errorNetwork": "网络出错了，请稍后再试",
+
+    // 图片灯箱
+    "lightbox.close": "关闭",
+    "lightbox.prev": "上一张",
+    "lightbox.next": "下一张",
+    "lightbox.zoom": "放大",
+
+    // 分页
+    "pagination.prev": "上一页",
+    "pagination.next": "下一页",
+    "pagination.aria": "分页导航",
+
+    // 社交分享
+    "share.title": "分享文章",
+    "share.shareTo": "分享到",
+    "share.copyLink": "复制链接",
+    "share.copied": "已复制!",
+
+    // 系列文章
+    "series.title": "系列文章",
   },
 
   en: {
@@ -208,9 +246,47 @@ const translations: Record<Locale, Record<string, string>> = {
     // Post nav
     "post.prev": "Previous",
     "post.next": "Next",
+    "post.wordCount": "words",
 
     // Archive
     "nav.archive": "Archive",
+
+    // Contact form
+    "contact.title": "Contact Me",
+    "contact.desc": "Have a question or thought? Feel free to reach out via the form below.",
+    "contact.name": "Your Name",
+    "contact.namePlaceholder": "LunaPath",
+    "contact.email": "Email Address",
+    "contact.emailPlaceholder": "your@email.com",
+    "contact.message": "Message",
+    "contact.messagePlaceholder": "Write your message...",
+    "contact.submit": "Send",
+    "contact.sending": "Sending...",
+    "contact.success": "Message sent! Thanks for reaching out.",
+    "contact.errorEmpty": "Please fill in all fields",
+    "contact.errorEmail": "Invalid email format",
+    "contact.errorFail": "Failed to send, please try again",
+    "contact.errorNetwork": "Network error, please try again",
+
+    // Lightbox
+    "lightbox.close": "Close",
+    "lightbox.prev": "Previous",
+    "lightbox.next": "Next",
+    "lightbox.zoom": "Zoom",
+
+    // Pagination
+    "pagination.prev": "Prev",
+    "pagination.next": "Next",
+    "pagination.aria": "Pagination",
+
+    // Share
+    "share.title": "Share",
+    "share.shareTo": "Share to",
+    "share.copyLink": "Copy Link",
+    "share.copied": "Copied!",
+
+    // Series
+    "series.title": "Series",
   },
 };
 

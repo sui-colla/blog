@@ -11,9 +11,10 @@ interface Tag {
 
 interface Props {
   tags: Tag[];
+  postCount: number;
 }
 
-export default function Sidebar({ tags }: Props) {
+export default function Sidebar({ tags, postCount }: Props) {
   const { t } = useI18n();
   const pathname = usePathname();
 
@@ -68,7 +69,7 @@ export default function Sidebar({ tags }: Props) {
       <div className="sidebar-divider" />
       <div className="sidebar-stats">
         <div className="sidebar-stat">
-          <span className="sidebar-stat-value">6</span>
+          <span className="sidebar-stat-value">{postCount}</span>
           <span className="sidebar-stat-label">文章</span>
         </div>
         <div className="sidebar-stat">

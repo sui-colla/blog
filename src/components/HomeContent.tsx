@@ -6,7 +6,6 @@ import TagLink from "@/components/TagLink";
 import Sidebar from "@/components/Sidebar";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/posts";
-import { useState } from "react";
 
 interface Tag {
   tag: string;
@@ -16,16 +15,26 @@ interface Tag {
 interface Props {
   posts: PostMeta[];
   tags: Tag[];
+  page?: number;
 }
 
-export default function HomeContent({ posts, tags }: Props) {
+const POSTS_PER_PAGE = 5;
+
+export default function HomeContent({ posts, tags, page = 1 }: Props) {
   const { t, locale } = useI18n();
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
+
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const currentPage = Math.max(1, Math.min(page, totalPages));
+  const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
+  const pagePosts = posts.slice(startIdx, startIdx + POSTS_PER_PAGE);
+  const hasPrev = currentPage > 1;
+  const hasNext = currentPage < totalPages;
 
   return (
     <div className="home-layout">
       {/* 左侧边栏 */}
-      <Sidebar tags={tags} />
+      <Sidebar tags={tags} postCount={posts.length} />
 
       {/* 右侧主内容 */}
       <div className="home-main">
@@ -47,22 +56,12 @@ export default function HomeContent({ posts, tags }: Props) {
             {t("home.latestPosts")}
           </h2>
           <div className="flex flex-col gap-8">
-            {posts.map((post) => (
+            {pagePosts.map((post) => (
               <article key={post.slug}>
                 <Link
                   href={`/posts/${post.slug}`}
                   className="group block rounded-xl overflow-hidden hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
                 >
-                  {post.cover && (
-                    <div className="aspect-video overflow-hidden rounded-t-xl">
-                      <img
-                        src={post.cover}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
                   <div className="p-5">
                     <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                       <time dateTime={post.date}>
@@ -104,6 +103,39 @@ export default function HomeContent({ posts, tags }: Props) {
               </article>
             ))}
           </div>
+
+          {/* 分页导航 */}
+          {totalPages > 1 && (
+            <nav className="flex items-center justify-center gap-2 mt-10" aria-label={t("pagination.aria")}>
+              {hasPrev ? (
+                <Link
+                  href={`/?page=${currentPage - 1}`}
+                  className="pagination-btn"
+                >
+                  ← {t("pagination.prev")}
+                </Link>
+              ) : (
+                <span className="pagination-btn pagination-btn--disabled">
+                  ← {t("pagination.prev")}
+                </span>
+              )}
+              <span className="pagination-info">
+                {currentPage} / {totalPages}
+              </span>
+              {hasNext ? (
+                <Link
+                  href={`/?page=${currentPage + 1}`}
+                  className="pagination-btn"
+                >
+                  {t("pagination.next")} →
+                </Link>
+              ) : (
+                <span className="pagination-btn pagination-btn--disabled">
+                  {t("pagination.next")} →
+                </span>
+              )}
+            </nav>
+          )}
         </section>
 
         {/* 移动端标签云（桌面端由 Sidebar 显示） */}

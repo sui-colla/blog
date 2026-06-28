@@ -1,0 +1,16 @@
+{
+  "name": "LunaPath",
+  "short_name": "LunaPath",
+  "description": "LunaPath 的博客，记录思考和分享知识的地方",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fdf2f8",
+  "theme_color": "#f97316",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

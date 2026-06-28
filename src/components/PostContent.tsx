@@ -12,18 +12,24 @@ import Comments from "@/components/Comments";
 import PostNav from "@/components/PostNav";
 import BackToTop from "@/components/BackToTop";
 import Donate from "@/components/Donate";
+import ShareButtons from "@/components/ShareButtons";
+import PostSeries from "@/components/PostSeries";
+
+const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
 
 interface Props {
   post: Post;
   allPosts: PostMeta[];
   prev: PostMeta | null;
   next: PostMeta | null;
+  seriesPosts?: PostMeta[];
 }
 
-export default function PostContent({ post, allPosts, prev, next }: Props) {
+export default function PostContent({ post, allPosts, prev, next, seriesPosts }: Props) {
   const { t, locale } = useI18n();
   const hasToc = post.headings.length > 0;
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
+  const postUrl = `${SITE_URL}/posts/${post.slug}`;
 
   return (
     <>
@@ -41,17 +47,6 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
         <div className="lg:flex lg:gap-10">
           {/* 主内容区 */}
           <article className="min-w-0 flex-1">
-            {/* 封面图 */}
-            {post.cover && (
-              <div className="mb-8 rounded-xl overflow-hidden">
-                <img
-                  src={post.cover}
-                  alt={post.title}
-                  className="w-full aspect-video object-cover"
-                />
-              </div>
-            )}
-
             <header className="mb-10">
               <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                 <time dateTime={post.date}>
@@ -63,6 +58,8 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
                 </time>
                 <span>·</span>
                 <span>{post.readingTime} {t("post.readingTime")}</span>
+                <span>·</span>
+                <span>{post.wordCount.toLocaleString()} {t("post.wordCount")}</span>
               </div>
               <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
                 <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
@@ -84,6 +81,15 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
               )}
             </header>
 
+            {/* 系列文章导航 */}
+            {post.series && seriesPosts && seriesPosts.length > 1 && (
+              <PostSeries
+                seriesName={post.series}
+                posts={seriesPosts}
+                currentSlug={post.slug}
+              />
+            )}
+
             {/* 移动端折叠目录 */}
             {hasToc && (
               <details className="toc-details lg:hidden mb-8 rounded-lg border border-orange-200 dark:border-zinc-700 bg-orange-50/50 dark:bg-zinc-900/50">
@@ -98,6 +104,9 @@ export default function PostContent({ post, allPosts, prev, next }: Props) {
 
             {/* 文章内容 */}
             <ArticleContent html={post.contentHtml} />
+
+            {/* 分享 + 复制链接 */}
+            <ShareButtons title={post.title} url={postUrl} />
 
             {/* 文章前后导航 */}
             <PostNav

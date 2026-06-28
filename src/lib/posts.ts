@@ -19,9 +19,11 @@ export interface PostMeta {
   tags?: string[];
   cover?: string; // 封面图路径
   readingTime: number; // 分钟
+  wordCount: number; // 总字数（中文字符 + 英文单词）
   pinned?: boolean; // 是否置顶
   draft?: boolean; // 是否草稿
   publishAt?: string; // 定时发布时间（ISO 日期）
+  series?: string; // 系列/专栏名称
 }
 
 export interface Post extends PostMeta {
@@ -30,10 +32,10 @@ export interface Post extends PostMeta {
 }
 
 /**
- * 计算阅读时间（分钟）
+ * 计算阅读时间（分钟）和总字数
  * 中文按每分钟 300 字，英文按每分钟 200 词
  */
-function calcReadingTime(text: string): number {
+function calcReadingStats(text: string): { readingTime: number; wordCount: number } {
   // 移除 markdown 语法
   const plain = text
     .replace(/```[\s\S]*?```/g, "")
@@ -49,8 +51,12 @@ function calcReadingTime(text: string): number {
     .split(/\s+/)
     .filter((w) => w.length > 0).length;
 
+  const wordCount = cjk + words;
   const minutes = cjk / 300 + words / 200;
-  return Math.max(1, Math.round(minutes));
+  return {
+    readingTime: Math.max(1, Math.round(minutes)),
+    wordCount,
+  };
 }
 
 /**
@@ -71,6 +77,8 @@ export function getAllPosts(): PostMeta[] {
       const fileContent = fs.readFileSync(fullPath, "utf-8");
       const { data, content } = matter(fileContent);
 
+      const { readingTime, wordCount } = calcReadingStats(content);
+
       return {
         slug,
         title: data.title as string,
@@ -78,10 +86,12 @@ export function getAllPosts(): PostMeta[] {
         summary: data.summary as string,
         tags: data.tags as string[] | undefined,
         cover: data.cover as string | undefined,
-        readingTime: calcReadingTime(content),
+        readingTime,
+        wordCount,
         pinned: data.pinned as boolean | undefined,
         draft: data.draft as boolean | undefined,
         publishAt: data.publishAt as string | undefined,
+        series: data.series as string | undefined,
       };
     })
     // 过滤：排除草稿和未到发布时间的文章
@@ -128,6 +138,14 @@ export function getPostsByTag(tag: string): PostMeta[] {
 }
 
 /**
+ * 获取同系列的文章列表
+ */
+export function getPostsBySeries(series: string): PostMeta[] {
+  const posts = getAllPosts();
+  return posts.filter((post) => post.series === series);
+}
+
+/**
  * 获取当前文章的上一篇和下一篇（按日期排序）
  */
 export function getAdjacentPosts(slug: string): { prev: PostMeta | null; next: PostMeta | null } {
@@ -168,6 +186,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     .process(content);
   const contentHtml = processed.toString();
 
+  const { readingTime, wordCount } = calcReadingStats(content);
+
   return {
     slug,
     title: data.title as string,
@@ -175,10 +195,12 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     summary: data.summary as string,
     tags: data.tags as string[] | undefined,
     cover: data.cover as string | undefined,
-    readingTime: calcReadingTime(content),
+    readingTime,
+    wordCount,
     pinned: data.pinned as boolean | undefined,
     draft: data.draft as boolean | undefined,
     publishAt: data.publishAt as string | undefined,
+    series: data.series as string | undefined,
     contentHtml,
     headings,
   };

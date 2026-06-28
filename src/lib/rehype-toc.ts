@@ -56,6 +56,21 @@ function walk(
         const id = makeSlug(text, counts);
         el.properties = el.properties ?? {};
         el.properties.id = id;
+        el.properties.className = [
+          ...(Array.isArray(el.properties.className) ? el.properties.className : []),
+          "heading-with-anchor",
+        ];
+        // 添加锚点链接
+        el.children.push({
+          type: "element",
+          tagName: "a",
+          properties: {
+            href: `#${id}`,
+            className: ["heading-anchor"],
+            ariaLabel: "Link to this section",
+          },
+          children: [{ type: "text", value: "#" }],
+        } as Element);
         headings.push({
           id,
           text,
