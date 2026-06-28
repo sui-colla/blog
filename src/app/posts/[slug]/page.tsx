@@ -8,6 +8,8 @@ export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
 
+const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
+
 export async function generateMetadata({
   params,
 }: {
@@ -16,9 +18,23 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: "未找到" };
+
   return {
     title: post.title,
     description: post.summary,
+    openGraph: {
+      title: post.title,
+      description: post.summary,
+      type: "article" as const,
+      url: `${SITE_URL}/posts/${slug}`,
+      publishedTime: post.date,
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary" as const,
+      title: post.title,
+      description: post.summary,
+    },
   };
 }
 
@@ -65,12 +81,13 @@ export default async function PostPage({
             {post.tags && post.tags.length > 0 && (
               <div className="mt-4 flex gap-2">
                 {post.tags.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
-                    className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
+                    href={`/tags/${encodeURIComponent(tag)}`}
+                    className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
                   >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}

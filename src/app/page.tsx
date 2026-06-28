@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
 import Subscribe from "@/components/Subscribe";
+import TagLink from "@/components/TagLink";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -50,12 +51,11 @@ export default function Home() {
                 {post.tags && post.tags.length > 0 && (
                   <div className="mt-3 flex gap-2">
                     {post.tags.map((tag) => (
-                      <span
+                      <TagLink
                         key={tag}
-                        className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
-                      >
-                        {tag}
-                      </span>
+                        tag={tag}
+                        className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
+                      />
                     ))}
                   </div>
                 )}

@@ -53,6 +53,34 @@ export function getAllPosts(): PostMeta[] {
 }
 
 /**
+ * 获取所有标签及其文章数量
+ */
+export function getAllTags(): { tag: string; count: number }[] {
+  const posts = getAllPosts();
+  const tagMap = new Map<string, number>();
+
+  for (const post of posts) {
+    if (post.tags) {
+      for (const tag of post.tags) {
+        tagMap.set(tag, (tagMap.get(tag) ?? 0) + 1);
+      }
+    }
+  }
+
+  return Array.from(tagMap.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * 根据标签获取文章列表
+ */
+export function getPostsByTag(tag: string): PostMeta[] {
+  const posts = getAllPosts();
+  return posts.filter((post) => post.tags?.includes(tag));
+}
+
+/**
  * 根据 slug 读取完整文章（含 HTML 内容）
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {

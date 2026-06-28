@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import Search from "@/components/Search";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,12 +15,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
+
 export const metadata: Metadata = {
   title: {
     default: "LunaPath",
     template: "%s | LunaPath",
   },
   description: "LunaPath 的博客，记录思考和分享知识的地方",
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    title: "LunaPath",
+    description: "LunaPath 的博客，记录思考和分享知识的地方",
+    url: SITE_URL,
+    siteName: "LunaPath",
+    locale: "zh_CN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "LunaPath",
+    description: "LunaPath 的博客，记录思考和分享知识的地方",
+  },
 };
 
 export default function RootLayout({
@@ -31,7 +48,16 @@ export default function RootLayout({
     <html
       lang="zh-CN"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <link rel="alternate" type="application/rss+xml" title="LunaPath RSS" href="/feed.xml" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-orange-50/30 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 font-sans">
         <header className="sticky top-0 z-10 border-b border-orange-100 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/80">
           <nav className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
@@ -54,7 +80,14 @@ export default function RootLayout({
               >
                 关于
               </Link>
+              <Link
+                href="/tags"
+                className="hover:text-orange-500 transition-colors"
+              >
+                标签
+              </Link>
               <Search />
+              <ThemeToggle />
             </div>
           </nav>
         </header>
