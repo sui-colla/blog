@@ -11,14 +11,11 @@ interface Props {
 
 export default function ArchiveContent({ groups, sortedKeys }: Props) {
   const { t, locale } = useI18n();
-  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   const monthNames: Record<string, string[]> = {
     zh: ["1 月", "2 月", "3 月", "4 月", "5 月", "6 月", "7 月", "8 月", "9 月", "10 月", "11 月", "12 月"],
     en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   };
-
-  let currentYear = "";
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
@@ -36,10 +33,10 @@ export default function ArchiveContent({ groups, sortedKeys }: Props) {
       </h1>
 
       <div className="archive-timeline">
-        {sortedKeys.map((key) => {
+        {sortedKeys.map((key, index) => {
           const [year, month] = key.split("-");
-          const showYear = year !== currentYear;
-          currentYear = year;
+          const previousYear = index > 0 ? sortedKeys[index - 1].split("-")[0] : "";
+          const showYear = year !== previousYear;
 
           return (
             <div key={key}>

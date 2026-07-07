@@ -1,32 +1,36 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/posts";
+import { absoluteUrl, siteConfig } from "@/config/site";
 import PostContent from "@/components/PostContent";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
 
-const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: "未找到" };
 
-  const ogImageUrl = `${SITE_URL}/api/og?slug=${encodeURIComponent(slug)}`;
+  const postUrl = absoluteUrl(`/posts/${slug}`);
+  const ogImageUrl = absoluteUrl(`/api/og?slug=${encodeURIComponent(slug)}`);
 
   return {
     title: post.title,
     description: post.summary,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.summary,
-      type: "article" as const,
-      url: `${SITE_URL}/posts/${slug}`,
+      type: "article",
+      url: postUrl,
       publishedTime: post.date,
       tags: post.tags,
       images: [
@@ -39,7 +43,7 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "summary_large_image" as const,
+      card: "summary_large_image",
       title: post.title,
       description: post.summary,
       images: [ogImageUrl],
@@ -49,6 +53,10 @@ export async function generateMetadata({
 
 function buildArticleJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>, slug: string) {
   if (!post) return null;
+
+  const postUrl = absoluteUrl(`/posts/${slug}`);
+  const imageUrl = absoluteUrl(`/api/og?slug=${encodeURIComponent(slug)}`);
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -56,21 +64,21 @@ function buildArticleJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>, slu
     description: post.summary,
     datePublished: post.date,
     dateModified: post.date,
-    url: `${SITE_URL}/posts/${slug}`,
-    image: `${SITE_URL}/api/og?slug=${encodeURIComponent(slug)}`,
+    url: postUrl,
+    image: imageUrl,
     author: {
       "@type": "Person",
-      name: "LunaPath",
-      url: SITE_URL,
+      name: siteConfig.author.name,
+      url: siteConfig.author.url,
     },
     publisher: {
       "@type": "Organization",
-      name: "LunaPath",
-      url: SITE_URL,
+      name: siteConfig.name,
+      url: siteConfig.url,
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${SITE_URL}/posts/${slug}`,
+      "@id": postUrl,
     },
     wordCount: post.wordCount,
     keywords: post.tags?.join(", "),

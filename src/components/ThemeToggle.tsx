@@ -29,9 +29,11 @@ export default function ThemeToggle() {
   // 初始化：从 localStorage 读取并应用
   useEffect(() => {
     const stored = getStoredTheme();
-    setTheme(stored);
     applyTheme(stored);
-    setMounted(true);
+    requestAnimationFrame(() => {
+      setTheme(stored);
+      setMounted(true);
+    });
   }, []);
 
   // 切换主题

@@ -23,6 +23,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
     "home.latestPosts": "最新文章",
 
+    // 热门文章
+    "popular.title": "热门文章",
+    "popular.empty": "暂无热门文章",
+
     // 文章页
     "post.notFound": "未找到",
     "post.backHome": "返回首页",
@@ -56,7 +60,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "subscribe.success": "订阅成功！感谢你的关注。",
     "subscribe.errorEmpty": "请输入邮箱地址",
     "subscribe.errorFormat": "邮箱格式不正确，请检查后再试",
+    "subscribe.errorTooLong": "邮箱地址太长，请检查后再试",
     "subscribe.errorFail": "订阅失败，请稍后再试",
+    "subscribe.errorUnavailable": "订阅服务暂不可用，请稍后再试",
     "subscribe.errorNetwork": "网络出错了，请稍后再试",
     "subscribe.already": "你已经订阅过了！",
 
@@ -126,7 +132,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.success": "发送成功！感谢你的留言。",
     "contact.errorEmpty": "请填写所有字段",
     "contact.errorEmail": "邮箱格式不正确",
+    "contact.errorTooLong": "内容太长，请精简后再发送",
     "contact.errorFail": "发送失败，请稍后再试",
+    "contact.errorUnavailable": "联系服务暂不可用，请稍后再试",
     "contact.errorNetwork": "网络出错了，请稍后再试",
 
     // 图片灯箱
@@ -162,6 +170,10 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.tagline": "A place for notes on tech, thoughts, and life. Writing helps me think clearly — hope it inspires you too.",
     "home.latestPosts": "Latest Posts",
 
+    // Popular posts
+    "popular.title": "Popular Posts",
+    "popular.empty": "No popular posts yet",
+
     // Post
     "post.notFound": "Not Found",
     "post.backHome": "Back to Home",
@@ -195,7 +207,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "subscribe.success": "Subscribed! Thanks for following.",
     "subscribe.errorEmpty": "Please enter your email",
     "subscribe.errorFormat": "Invalid email format, please check",
+    "subscribe.errorTooLong": "Email address is too long, please check and try again",
     "subscribe.errorFail": "Subscription failed, please try again",
+    "subscribe.errorUnavailable": "Subscription service is temporarily unavailable, please try again later",
     "subscribe.errorNetwork": "Network error, please try again",
     "subscribe.already": "You're already subscribed!",
 
@@ -265,7 +279,9 @@ const translations: Record<Locale, Record<string, string>> = {
     "contact.success": "Message sent! Thanks for reaching out.",
     "contact.errorEmpty": "Please fill in all fields",
     "contact.errorEmail": "Invalid email format",
+    "contact.errorTooLong": "Message is too long, please shorten it and try again",
     "contact.errorFail": "Failed to send, please try again",
+    "contact.errorUnavailable": "Contact service is temporarily unavailable, please try again later",
     "contact.errorNetwork": "Network error, please try again",
 
     // Lightbox
@@ -298,10 +314,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem("locale") as Locale | null;
-    if (stored === "zh" || stored === "en") {
-      setLocaleState(stored);
-    }
-    setMounted(true);
+    requestAnimationFrame(() => {
+      if (stored === "zh" || stored === "en") {
+        setLocaleState(stored);
+      }
+      setMounted(true);
+    });
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {

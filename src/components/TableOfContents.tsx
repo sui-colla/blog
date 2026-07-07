@@ -63,10 +63,9 @@ export default function TableOfContents({ headings, showTitle = true }: Props) {
 
     const hash = window.location.hash.slice(1);
     if (hash && headings.some((h) => h.id === hash)) {
-      setActiveId(hash);
-
       // 延迟滚动到锚点位置（等页面完全渲染后）
       requestAnimationFrame(() => {
+        setActiveId(hash);
         const el = document.getElementById(hash);
         if (el) {
           el.scrollIntoView({ behavior: "smooth" });

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import type { PostMeta } from "@/lib/posts";
 
 interface Tag {
   tag: string;
@@ -12,9 +13,10 @@ interface Tag {
 interface Props {
   tags: Tag[];
   postCount: number;
+  popularPosts: PostMeta[];
 }
 
-export default function Sidebar({ tags, postCount }: Props) {
+export default function Sidebar({ tags, postCount, popularPosts }: Props) {
   const { t } = useI18n();
   const pathname = usePathname();
 
@@ -44,6 +46,35 @@ export default function Sidebar({ tags, postCount }: Props) {
           </div>
         ))}
       </nav>
+
+      {/* 分割线 */}
+      <div className="sidebar-divider" />
+
+      {/* 热门文章 */}
+      <div className="sidebar-section">
+        <h3 className="sidebar-section-title">{t("popular.title")}</h3>
+        {popularPosts.length > 0 ? (
+          <ol className="sidebar-popular-list">
+            {popularPosts.map((post, index) => (
+              <li key={post.slug}>
+                <Link href={`/posts/${post.slug}`} className="sidebar-popular-link">
+                  <span className="sidebar-popular-rank">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="sidebar-popular-content">
+                    <span className="sidebar-popular-title">{post.title}</span>
+                    <span className="sidebar-popular-meta">
+                      {post.readingTime} {t("post.readingTime")}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="sidebar-empty">{t("popular.empty")}</p>
+        )}
+      </div>
 
       {/* 分割线 */}
       <div className="sidebar-divider" />

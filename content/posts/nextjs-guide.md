@@ -463,27 +463,29 @@ return <h1>{t("home.greeting")}</h1>;
 
 ### 订阅表单
 
-前端表单 POST 到 `/api/subscribe`，后端存储到 JSON 文件：
+前端表单 POST 到 `/api/subscribe`，后端 Route Handler 负责校验邮箱并调用 Resend Audience API：
 
 ```typescript
 // src/app/api/subscribe/route.ts
 export async function POST(request: Request) {
-  const { email } = await request.json();
-  const subscribers = loadSubscribers();
+  const payload = await request.json();
+  const validation = validateSubscribePayload(payload);
 
-  if (subscribers.includes(email)) {
-    return NextResponse.json({ ok: false, error: "already" });
+  if (!validation.ok) {
+    return Response.json(
+      { ok: false, error: validation.error },
+      { status: validation.status }
+    );
   }
 
-  subscribers.push(email);
-  fs.writeFileSync(filePath, JSON.stringify(subscribers));
-  return NextResponse.json({ ok: true });
+  const result = await addSubscriber(validation.data.email);
+  return Response.json({ ok: true, code: result.code });
 }
 ```
 
 ### 联系表单
 
-同样的模式，存储到 `data/messages.json`。
+联系表单 POST 到 `/api/contact`，服务端校验姓名、邮箱和留言长度后，通过 Resend 把内容发送到站长邮箱。这样适合部署到 Vercel/serverless，不依赖运行时写入本地 JSON 文件。
 
 ---
 
