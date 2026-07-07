@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type Fuse from "fuse.js";
-import type { FuseResult, FuseResultMatch } from "fuse.js";
+import type { FuseResultMatch } from "fuse.js";
 import { useI18n } from "@/lib/i18n";
 
 interface SearchItem {
@@ -12,31 +12,74 @@ interface SearchItem {
   summary: string;
   tags: string[];
   content: string;
+  series?: string;
 }
+
+interface SearchResult {
+  item: SearchItem;
+  matches?: readonly FuseResultMatch[];
+}
+
+const SNIPPET_RADIUS = 56;
+const SNIPPET_LENGTH = 150;
 
 export default function Search() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [items, setItems] = useState<SearchItem[]>([]);
   const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedTag, setSelectedTag] = useState("");
+  const [selectedSeries, setSelectedSeries] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const results = useMemo<FuseResult<SearchItem>[]>(() => {
-    if (!fuse || !query.trim()) return [];
-    return fuse.search(query.trim());
-  }, [query, fuse]);
+  const trimmedQuery = query.trim();
+  const hasFilters = Boolean(selectedTag || selectedSeries);
+
+  const tagOptions = useMemo(() => {
+    const tags = new Set<string>();
+    for (const item of items) {
+      for (const tag of item.tags) tags.add(tag);
+    }
+    return Array.from(tags).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  }, [items]);
+
+  const seriesOptions = useMemo(() => {
+    const series = new Set<string>();
+    for (const item of items) {
+      if (item.series) series.add(item.series);
+    }
+    return Array.from(series).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  }, [items]);
+
+  const results = useMemo<SearchResult[]>(() => {
+    const source: SearchResult[] = trimmedQuery
+      ? fuse?.search(trimmedQuery) ?? []
+      : hasFilters
+        ? items.map((item) => ({ item }))
+        : [];
+
+    return source.filter(({ item }) => {
+      const tagMatched = !selectedTag || item.tags.includes(selectedTag);
+      const seriesMatched = !selectedSeries || item.series === selectedSeries;
+      return tagMatched && seriesMatched;
+    });
+  }, [trimmedQuery, fuse, hasFilters, items, selectedTag, selectedSeries]);
+
   const safeActiveIndex = Math.min(activeIndex, Math.max(results.length - 1, 0));
   const activeResult = results[safeActiveIndex];
 
   const closeSearch = useCallback(() => {
     setOpen(false);
     setQuery("");
+    setSelectedTag("");
+    setSelectedSeries("");
     setActiveIndex(0);
   }, []);
 
@@ -48,18 +91,20 @@ export default function Search() {
         import("fuse.js"),
         fetch("/api/search-index"),
       ]);
-      const items: SearchItem[] = await res.json();
-      const instance = new FuseConstructor(items, {
+      const searchItems: SearchItem[] = await res.json();
+      const instance = new FuseConstructor(searchItems, {
         keys: [
           { name: "title", weight: 3 },
           { name: "summary", weight: 2 },
           { name: "tags", weight: 1.5 },
           { name: "content", weight: 1 },
+          { name: "series", weight: 0.75 },
         ],
         threshold: 0.4,
         includeMatches: true,
         minMatchCharLength: 2,
       });
+      setItems(searchItems);
       setFuse(instance);
     } catch {
       // silent
@@ -70,7 +115,7 @@ export default function Search() {
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setOpen((prev) => {
           if (!prev) loadIndex();
@@ -119,7 +164,7 @@ export default function Search() {
 
     const focusable = Array.from(
       modalRef.current.querySelectorAll<HTMLElement>(
-        'button, [href], input, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, [tabindex]:not([tabindex="-1"])'
       )
     ).filter((el) => !el.hasAttribute("disabled"));
 
@@ -148,33 +193,87 @@ export default function Search() {
     }
   }, [safeActiveIndex]);
 
-  function highlightMatch(
-    text: string,
-    matches: readonly FuseResultMatch[] | undefined,
-    key: string
-  ): React.ReactNode {
-    const match = matches?.find((m) => m.key === key);
-    if (!match) return text;
+  function resetActiveIndex() {
+    setActiveIndex(0);
+  }
 
-    const indices = match.indices as [number, number][];
+  function getRanges(match: FuseResultMatch | undefined): [number, number][] {
+    if (!match) return [];
+    return match.indices
+      .map(([start, end]) => [start, end] as [number, number])
+      .sort((a, b) => a[0] - b[0]);
+  }
+
+  function highlightRanges(text: string, ranges: [number, number][] = []): React.ReactNode {
+    if (ranges.length === 0) return text;
+
     const parts: React.ReactNode[] = [];
-    let lastIndex = 0;
+    const merged: [number, number][] = [];
 
-    for (const [start, end] of indices) {
+    for (const [rawStart, rawEnd] of ranges) {
+      const start = Math.max(0, rawStart);
+      const end = Math.min(text.length - 1, rawEnd);
+      if (start > end) continue;
+
+      const last = merged[merged.length - 1];
+      if (last && start <= last[1] + 1) {
+        last[1] = Math.max(last[1], end);
+      } else {
+        merged.push([start, end]);
+      }
+    }
+
+    let lastIndex = 0;
+    merged.forEach(([start, end], index) => {
       if (start > lastIndex) {
         parts.push(text.slice(lastIndex, start));
       }
       parts.push(
-        <mark key={start} className="search-highlight">
+        <mark key={`${start}-${end}-${index}`} className="search-highlight">
           {text.slice(start, end + 1)}
         </mark>
       );
       lastIndex = end + 1;
-    }
+    });
+
     if (lastIndex < text.length) {
       parts.push(text.slice(lastIndex));
     }
     return parts.length > 0 ? parts : text;
+  }
+
+  function highlightMatch(
+    text: string,
+    matches: readonly FuseResultMatch[] | undefined,
+    key: string,
+    value?: string
+  ): React.ReactNode {
+    const match = matches?.find((m) => m.key === key && (!value || m.value === value));
+    return highlightRanges(text, getRanges(match));
+  }
+
+  function buildContentSnippet(
+    text: string,
+    matches: readonly FuseResultMatch[] | undefined
+  ): { prefix: string; suffix: string; text: string; ranges: [number, number][] } | null {
+    const match = matches?.find((m) => m.key === "content");
+    const ranges = getRanges(match);
+    const firstRange = ranges[0];
+    if (!firstRange) return null;
+
+    const start = Math.max(0, firstRange[0] - SNIPPET_RADIUS);
+    const end = Math.min(text.length, start + SNIPPET_LENGTH);
+    const snippetText = text.slice(start, end).trim();
+    const adjustedRanges = ranges
+      .map(([rangeStart, rangeEnd]) => [rangeStart - start, rangeEnd - start] as [number, number])
+      .filter(([rangeStart, rangeEnd]) => rangeEnd >= 0 && rangeStart < snippetText.length);
+
+    return {
+      prefix: start > 0 ? "…" : "",
+      suffix: end < text.length ? "…" : "",
+      text: snippetText,
+      ranges: adjustedRanges,
+    };
   }
 
   return (
@@ -246,7 +345,7 @@ export default function Search() {
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
-                  setActiveIndex(0);
+                  resetActiveIndex();
                 }}
                 onKeyDown={handleInputKeyDown}
                 autoComplete="off"
@@ -258,41 +357,117 @@ export default function Search() {
               {loading && <span className="search-loading">{t("search.loading")}</span>}
             </div>
 
-            {query.trim() && (
+            {(tagOptions.length > 0 || seriesOptions.length > 0) && (
+              <div className="search-filters" aria-label={t("search.filters")}>
+                <span className="search-filters-label">{t("search.filters")}</span>
+                {tagOptions.length > 0 && (
+                  <label className="search-filter-field">
+                    <span className="sr-only">{t("search.filterTag")}</span>
+                    <select
+                      className="search-filter-select"
+                      value={selectedTag}
+                      onChange={(e) => {
+                        setSelectedTag(e.target.value);
+                        resetActiveIndex();
+                      }}
+                    >
+                      <option value="">{t("search.allTags")}</option>
+                      {tagOptions.map((tag) => (
+                        <option key={tag} value={tag}>
+                          {tag}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                {seriesOptions.length > 0 && (
+                  <label className="search-filter-field">
+                    <span className="sr-only">{t("search.filterSeries")}</span>
+                    <select
+                      className="search-filter-select"
+                      value={selectedSeries}
+                      onChange={(e) => {
+                        setSelectedSeries(e.target.value);
+                        resetActiveIndex();
+                      }}
+                    >
+                      <option value="">{t("search.allSeries")}</option>
+                      {seriesOptions.map((series) => (
+                        <option key={series} value={series}>
+                          {series}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                {hasFilters && (
+                  <button
+                    type="button"
+                    className="search-filter-clear"
+                    onClick={() => {
+                      setSelectedTag("");
+                      setSelectedSeries("");
+                      resetActiveIndex();
+                    }}
+                  >
+                    {t("search.clearFilters")}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {(trimmedQuery || hasFilters) && (
               <div className="search-results">
                 {results.length === 0 ? (
                   <div className="search-empty">{t("search.empty")}</div>
                 ) : (
                   <ul ref={listRef} id="search-results" role="listbox">
-                    {results.map((result, index) => (
-                      <li
-                        id={`search-result-${result.item.slug}`}
-                        key={result.item.slug}
-                        role="option"
-                        aria-selected={index === safeActiveIndex}
-                        className={`search-result-item ${
-                          index === safeActiveIndex ? "search-result-active" : ""
-                        }`}
-                        onClick={() => navigateTo(result.item.slug)}
-                        onMouseEnter={() => setActiveIndex(index)}
-                      >
-                        <h4 className="search-result-title">
-                          {highlightMatch(result.item.title, result.matches, "title")}
-                        </h4>
-                        <p className="search-result-summary">
-                          {highlightMatch(result.item.summary, result.matches, "summary")}
-                        </p>
-                        {result.item.tags.length > 0 && (
-                          <div className="search-result-tags">
-                            {result.item.tags.map((tag) => (
-                              <span key={tag} className="search-result-tag">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </li>
-                    ))}
+                    {results.map((result, index) => {
+                      const snippet = buildContentSnippet(result.item.content, result.matches);
+
+                      return (
+                        <li
+                          id={`search-result-${result.item.slug}`}
+                          key={result.item.slug}
+                          role="option"
+                          aria-selected={index === safeActiveIndex}
+                          className={`search-result-item ${
+                            index === safeActiveIndex ? "search-result-active" : ""
+                          }`}
+                          onClick={() => navigateTo(result.item.slug)}
+                          onMouseEnter={() => setActiveIndex(index)}
+                        >
+                          <h4 className="search-result-title">
+                            {highlightMatch(result.item.title, result.matches, "title")}
+                          </h4>
+                          <p className="search-result-summary">
+                            {highlightMatch(result.item.summary, result.matches, "summary")}
+                          </p>
+                          {snippet && (
+                            <p className="search-result-snippet">
+                              {snippet.prefix}
+                              {highlightRanges(snippet.text, snippet.ranges)}
+                              {snippet.suffix}
+                            </p>
+                          )}
+                          {(result.item.tags.length > 0 || result.item.series) && (
+                            <div className="search-result-tags">
+                              {result.item.series && (
+                                <span className="search-result-tag search-result-tag--series">
+                                  {t("search.seriesPrefix")}
+                                  {highlightMatch(result.item.series, result.matches, "series")}
+                                </span>
+                              )}
+                              {result.item.tags.map((tag) => (
+                                <span key={tag} className="search-result-tag">
+                                  {highlightMatch(tag, result.matches, "tags", tag)}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>

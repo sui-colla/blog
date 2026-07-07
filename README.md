@@ -24,11 +24,12 @@ npm run dev
 常用命令：
 
 ```bash
-npm run lint       # ESLint 检查
-npm run typecheck  # TypeScript 类型检查
-npm run build      # 生产构建
-npm run check      # lint + typecheck + build
-npm run start      # 启动生产构建
+npm run lint           # ESLint 检查
+npm run typecheck      # TypeScript 类型检查
+npm run check:content  # Markdown 文章内容质量检查
+npm run build          # 生产构建
+npm run check          # lint + typecheck + check:content + build
+npm run start          # 启动生产构建
 ```
 
 ## 站点配置
@@ -97,6 +98,28 @@ series: "Next.js 实战"
 | `publishAt` | 否 | 未来时间不会发布；静态部署需要重新构建后才会出现 |
 | `series` | 否 | 系列/专栏名称，相同系列会生成系列导航 |
 
+### 内容质量检查
+
+新增或修改文章后，建议先运行：
+
+```bash
+npm run check:content
+```
+
+检查内容包括：
+
+- `title`、`date`、`summary` 等必填 frontmatter。
+- `date`、`publishAt` 日期格式。
+- `tags`、`series` 命名是否为空、重复或存在首尾空格。
+- 文章内站内链接、相对链接和本地图片路径是否存在。
+- Markdown 图片是否填写 alt 文本；图片体积过大时会给出压缩建议。
+
+本地图片建议放在 `public/images` 下，并使用 `/images/xxx.jpg` 这样的路径引用。默认检查不会访问外网，避免 CI 因网络波动失败；如需检查外链可用性，可手动运行：
+
+```bash
+npm run check:content -- --external
+```
+
 ## 内容与路由
 
 核心文件：
@@ -140,6 +163,41 @@ FORM_ALLOWED_ORIGINS=https://your-domain.com
 可以参考 `.env.example`。注意：Resend 密钥和邮箱配置不要使用 `NEXT_PUBLIC_` 前缀，避免暴露到浏览器端。
 
 Giscus 评论需要在 `src/components/Comments.tsx` 中配置真实的 `repoId` 和 `categoryId`。
+
+## 后台管理页
+
+`/admin` 是私有只读运营面板，用于查看文章统计、Resend/联系表单配置状态、Umami 状态和部署信息。它不会出现在公开导航或 sitemap 中，也不会展示 API Key、完整私密邮箱列表或联系表单记录。
+
+需要配置 Basic Auth 环境变量：
+
+```bash
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=change-this-password
+# 可选：后台显示的 Umami 快捷入口
+UMAMI_DASHBOARD_URL=https://cloud.umami.is
+```
+
+如果 `ADMIN_USERNAME` 或 `ADMIN_PASSWORD` 缺失，`/admin` 会 fail closed，不渲染管理面板。
+
+## PWA 与离线阅读
+
+站点包含 Web App Manifest、PWA 图标、离线 fallback 页面和生产环境 service worker。生产构建中，浏览器会注册 `/sw.js` 并缓存基础资源、搜索索引和访问过的公开页面。
+
+缓存策略保持保守：
+
+- `/admin`、`/admin/*` 永远不缓存。
+- `/api/subscribe`、`/api/contact` 和非 GET 请求不缓存。
+- 公开页面使用 network-first，断网时回退到已缓存页面或 `/offline`。
+- `/_next/static/*` 使用 cache-first；`/api/search-index` 使用 stale-while-revalidate。
+
+本地验证 PWA 行为时，请使用生产模式：
+
+```bash
+npm run build
+npm run start
+```
+
+然后在浏览器 DevTools 的 Application 面板检查 manifest、icons、service worker 和离线状态。
 
 ## 部署
 

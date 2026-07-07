@@ -38,6 +38,7 @@ export interface SearchIndexItem {
   summary: string;
   tags: string[];
   content: string;
+  series?: string;
 }
 
 interface ParsedPostFile {
@@ -287,6 +288,7 @@ export function getSearchIndexItems(): SearchIndexItem[] {
       summary: post.summary,
       tags: post.tags ?? [],
       content: markdownToPlainText(parsed.content),
+      series: post.series,
     };
   });
 }
