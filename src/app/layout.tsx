@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import { I18nProvider } from "@/lib/i18n";
 import { siteConfig } from "@/config/site";
+import { buildWebsiteJsonLd, serializeJsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +34,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -54,18 +57,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    description: siteConfig.description,
-    publisher: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
-  };
+  const websiteJsonLd = buildWebsiteJsonLd();
 
   return (
     <html
@@ -80,7 +72,7 @@ export default function RootLayout({
         <meta name="theme-color" content={siteConfig.themeColor} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
         <script
           dangerouslySetInnerHTML={{
@@ -99,6 +91,7 @@ export default function RootLayout({
           <Footer />
         </I18nProvider>
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/posts";
-import { absoluteUrl, siteConfig } from "@/config/site";
+import { absoluteUrl } from "@/config/site";
+import { buildArticleJsonLd, serializeJsonLd } from "@/lib/structured-data";
 import PostContent from "@/components/PostContent";
 
 export function generateStaticParams() {
@@ -51,40 +52,6 @@ export async function generateMetadata({
   };
 }
 
-function buildArticleJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>, slug: string) {
-  if (!post) return null;
-
-  const postUrl = absoluteUrl(`/posts/${slug}`);
-  const imageUrl = absoluteUrl(`/api/og?slug=${encodeURIComponent(slug)}`);
-
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.summary,
-    datePublished: post.date,
-    dateModified: post.date,
-    url: postUrl,
-    image: imageUrl,
-    author: {
-      "@type": "Person",
-      name: siteConfig.author.name,
-      url: siteConfig.author.url,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: siteConfig.url,
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": postUrl,
-    },
-    wordCount: post.wordCount,
-    keywords: post.tags?.join(", "),
-  };
-}
-
 export default async function PostPage({
   params,
 }: {
@@ -105,7 +72,7 @@ export default async function PostPage({
       {jsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       )}
       <PostContent post={post} allPosts={allPosts} prev={prev} next={next} seriesPosts={seriesPosts} />
