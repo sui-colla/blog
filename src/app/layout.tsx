@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
 import { I18nProvider } from "@/lib/i18n";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,30 +17,35 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
-
 export const metadata: Metadata = {
   title: {
-    default: "LunaPath",
-    template: "%s | LunaPath",
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "LunaPath 的博客，记录思考和分享知识的地方",
-  metadataBase: new URL(SITE_URL),
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": siteConfig.rss.path,
+    },
+  },
   icons: {
     icon: "/favicon.svg",
   },
+  manifest: "/manifest.json",
   openGraph: {
-    title: "LunaPath",
-    description: "LunaPath 的博客，记录思考和分享知识的地方",
-    url: SITE_URL,
-    siteName: "LunaPath",
-    locale: "zh_CN",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: siteConfig.locale,
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "LunaPath",
-    description: "LunaPath 的博客，记录思考和分享知识的地方",
+    title: siteConfig.name,
+    description: siteConfig.description,
   },
 };
 
@@ -50,27 +57,27 @@ export default function RootLayout({
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "LunaPath",
-    url: SITE_URL,
-    description: "LunaPath 的博客，记录思考和分享知识的地方",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
     publisher: {
       "@type": "Person",
-      name: "LunaPath",
-      url: SITE_URL,
+      name: siteConfig.author.name,
+      url: siteConfig.author.url,
     },
   };
 
   return (
     <html
-      lang="zh-CN"
+      lang={siteConfig.language}
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       suppressHydrationWarning
     >
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="alternate" type="application/rss+xml" title="LunaPath RSS" href="/feed.xml" />
-        <meta name="theme-color" content="#f97316" />
+        <link rel="alternate" type="application/rss+xml" title={siteConfig.rss.title} href={siteConfig.rss.path} />
+        <meta name="theme-color" content={siteConfig.themeColor} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
@@ -91,6 +98,7 @@ export default function RootLayout({
           <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   );

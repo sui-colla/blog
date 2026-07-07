@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import { useI18n } from "@/lib/i18n";
@@ -21,10 +23,11 @@ export default function Lightbox({ images, initialIndex, onClose }: Props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    requestAnimationFrame(() => setMounted(true));
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, []);
 

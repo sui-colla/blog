@@ -1,4 +1,4 @@
-import { getAllPosts, getAllTags } from "@/lib/posts";
+import { getAllPosts, getAllTags, getPopularPosts } from "@/lib/posts";
 import HomeContent from "@/components/HomeContent";
 
 export default async function Home({
@@ -9,5 +9,14 @@ export default async function Home({
   const { page } = await searchParams;
   const posts = getAllPosts();
   const tags = getAllTags();
-  return <HomeContent posts={posts} tags={tags} page={Number(page) || 1} />;
+  const popularPosts = getPopularPosts(5);
+
+  return (
+    <HomeContent
+      posts={posts}
+      tags={tags}
+      popularPosts={popularPosts}
+      page={Number(page) || 1}
+    />
+  );
 }

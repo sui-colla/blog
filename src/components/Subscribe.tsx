@@ -3,6 +3,21 @@
 import { useState, type FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 
+function getSubscribeSuccessMessage(code: unknown, t: (key: string) => string) {
+  if (code === "already_subscribed") return t("subscribe.already");
+  return t("subscribe.success");
+}
+
+function getSubscribeErrorMessage(error: unknown, t: (key: string) => string) {
+  if (error === "missing_fields") return t("subscribe.errorEmpty");
+  if (error === "invalid_email") return t("subscribe.errorFormat");
+  if (error === "email_too_long") return t("subscribe.errorTooLong");
+  if (error === "service_unavailable" || error === "provider_error") {
+    return t("subscribe.errorUnavailable");
+  }
+  return t("subscribe.errorFail");
+}
+
 export default function Subscribe() {
   const { t } = useI18n();
   const [email, setEmail] = useState("");
@@ -38,13 +53,13 @@ export default function Subscribe() {
 
       const data = await res.json();
 
-      if (res.ok) {
+      if (res.ok && data.ok) {
         setStatus("success");
-        setMessage(data.message || t("subscribe.success"));
+        setMessage(getSubscribeSuccessMessage(data.code, t));
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(data.error || t("subscribe.errorFail"));
+        setMessage(getSubscribeErrorMessage(data.error, t));
       }
     } catch {
       setStatus("error");

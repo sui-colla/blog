@@ -14,8 +14,7 @@ import BackToTop from "@/components/BackToTop";
 import Donate from "@/components/Donate";
 import ShareButtons from "@/components/ShareButtons";
 import PostSeries from "@/components/PostSeries";
-
-const SITE_URL = "https://lunapath.dev"; // TODO: 替换为实际域名
+import { absoluteUrl } from "@/config/site";
 
 interface Props {
   post: Post;
@@ -29,7 +28,7 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
   const { t, locale } = useI18n();
   const hasToc = post.headings.length > 0;
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
-  const postUrl = `${SITE_URL}/posts/${post.slug}`;
+  const postUrl = absoluteUrl(`/posts/${post.slug}`);
 
   return (
     <>

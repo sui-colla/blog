@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import Fuse, { type FuseResult } from "fuse.js";
+import type Fuse from "fuse.js";
+import type { FuseResult, FuseResultMatch } from "fuse.js";
 import { useI18n } from "@/lib/i18n";
 
 interface SearchItem {
@@ -17,22 +18,38 @@ export default function Search() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<FuseResult<SearchItem>[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
   const [loading, setLoading] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const results = useMemo<FuseResult<SearchItem>[]>(() => {
+    if (!fuse || !query.trim()) return [];
+    return fuse.search(query.trim());
+  }, [query, fuse]);
+  const safeActiveIndex = Math.min(activeIndex, Math.max(results.length - 1, 0));
+  const activeResult = results[safeActiveIndex];
+
+  const closeSearch = useCallback(() => {
+    setOpen(false);
+    setQuery("");
+    setActiveIndex(0);
+  }, []);
 
   const loadIndex = useCallback(async () => {
     if (fuse) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/search-index");
+      const [{ default: FuseConstructor }, res] = await Promise.all([
+        import("fuse.js"),
+        fetch("/api/search-index"),
+      ]);
       const items: SearchItem[] = await res.json();
-      const instance = new Fuse(items, {
+      const instance = new FuseConstructor(items, {
         keys: [
           { name: "title", weight: 3 },
           { name: "summary", weight: 2 },
@@ -66,55 +83,77 @@ export default function Search() {
   }, [loadIndex]);
 
   useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery("");
-      setResults([]);
-      setActiveIndex(0);
-    }
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    setTimeout(() => inputRef.current?.focus(), 50);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
   }, [open]);
 
-  useEffect(() => {
-    if (!fuse || !query.trim()) {
-      setResults([]);
-      setActiveIndex(0);
-      return;
-    }
-    const items = fuse.search(query.trim());
-    setResults(items);
-    setActiveIndex(0);
-  }, [query, fuse]);
-
-  function handleKeyDown(e: React.KeyboardEvent) {
+  function handleInputKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {
-      setOpen(false);
+      closeSearch();
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => Math.min(i + 1, results.length - 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(i - 1, 0));
-    } else if (e.key === "Enter" && results.length > 0) {
+    } else if (e.key === "Enter" && activeResult) {
       e.preventDefault();
-      navigateTo(results[activeIndex].item.slug);
+      navigateTo(activeResult.item.slug);
+    }
+  }
+
+  function handleDialogKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      closeSearch();
+      return;
+    }
+
+    if (e.key !== "Tab" || !modalRef.current) return;
+
+    const focusable = Array.from(
+      modalRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.hasAttribute("disabled"));
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (!first || !last) return;
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   }
 
   function navigateTo(slug: string) {
-    setOpen(false);
+    closeSearch();
     router.push(`/posts/${slug}`);
   }
 
   useEffect(() => {
     if (listRef.current) {
-      const activeEl = listRef.current.children[activeIndex] as HTMLElement;
+      const activeEl = listRef.current.children[safeActiveIndex] as HTMLElement;
       activeEl?.scrollIntoView({ block: "nearest" });
     }
-  }, [activeIndex]);
+  }, [safeActiveIndex]);
 
-  function highlightMatch(text: string, key: string): React.ReactNode {
-    const match = results[activeIndex]?.matches?.find((m) => m.key === key);
+  function highlightMatch(
+    text: string,
+    matches: readonly FuseResultMatch[] | undefined,
+    key: string
+  ): React.ReactNode {
+    const match = matches?.find((m) => m.key === key);
     if (!match) return text;
 
     const indices = match.indices as [number, number][];
@@ -147,6 +186,8 @@ export default function Search() {
         }}
         className="search-trigger"
         aria-label={t("search.ariaLabel")}
+        aria-expanded={open}
+        aria-haspopup="dialog"
       >
         <svg
           width="16"
@@ -157,6 +198,7 @@ export default function Search() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          aria-hidden="true"
         >
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.3-4.3" />
@@ -169,10 +211,17 @@ export default function Search() {
         <div
           className="search-overlay"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false);
+            if (e.target === e.currentTarget) closeSearch();
           }}
         >
-          <div className="search-modal" role="dialog" aria-label={t("search.modalAria")}>
+          <div
+            ref={modalRef}
+            className="search-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("search.modalAria")}
+            onKeyDown={handleDialogKeyDown}
+          >
             <div className="search-input-wrapper">
               <svg
                 className="search-input-icon"
@@ -184,6 +233,7 @@ export default function Search() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                aria-hidden="true"
               >
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.3-4.3" />
@@ -194,9 +244,16 @@ export default function Search() {
                 className="search-input"
                 placeholder={t("search.placeholder")}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={handleKeyDown}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setActiveIndex(0);
+                }}
+                onKeyDown={handleInputKeyDown}
                 autoComplete="off"
+                role="combobox"
+                aria-expanded={results.length > 0}
+                aria-controls="search-results"
+                aria-activedescendant={activeResult ? `search-result-${activeResult.item.slug}` : undefined}
               />
               {loading && <span className="search-loading">{t("search.loading")}</span>}
             </div>
@@ -206,23 +263,24 @@ export default function Search() {
                 {results.length === 0 ? (
                   <div className="search-empty">{t("search.empty")}</div>
                 ) : (
-                  <ul ref={listRef} role="listbox">
+                  <ul ref={listRef} id="search-results" role="listbox">
                     {results.map((result, index) => (
                       <li
+                        id={`search-result-${result.item.slug}`}
                         key={result.item.slug}
                         role="option"
-                        aria-selected={index === activeIndex}
+                        aria-selected={index === safeActiveIndex}
                         className={`search-result-item ${
-                          index === activeIndex ? "search-result-active" : ""
+                          index === safeActiveIndex ? "search-result-active" : ""
                         }`}
                         onClick={() => navigateTo(result.item.slug)}
                         onMouseEnter={() => setActiveIndex(index)}
                       >
                         <h4 className="search-result-title">
-                          {highlightMatch(result.item.title, "title")}
+                          {highlightMatch(result.item.title, result.matches, "title")}
                         </h4>
                         <p className="search-result-summary">
-                          {highlightMatch(result.item.summary, "summary")}
+                          {highlightMatch(result.item.summary, result.matches, "summary")}
                         </p>
                         {result.item.tags.length > 0 && (
                           <div className="search-result-tags">

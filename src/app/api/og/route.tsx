@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
+import { absoluteUrl, siteConfig } from "@/config/site";
 import { getPostBySlug } from "@/lib/posts";
 
 export const runtime = "nodejs";
-
-const SITE_URL = "https://lunapath.dev";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
               color: "transparent",
             }}
           >
-            LunaPath
+            {siteConfig.name}
           </div>
           <div
             style={{
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
               marginTop: 16,
             }}
           >
-            A place for notes on tech, thoughts, and life
+            {siteConfig.englishDescription}
           </div>
         </div>
       ),
@@ -58,7 +58,7 @@ export async function GET(request: Request) {
   const coverUrl = post.cover
     ? post.cover.startsWith("http")
       ? post.cover
-      : `${SITE_URL}${post.cover}`
+      : absoluteUrl(post.cover)
     : null;
 
   return new ImageResponse(
@@ -118,6 +118,7 @@ export async function GET(request: Request) {
                 <div
                   key={tag}
                   style={{
+                    display: "flex",
                     fontSize: 18,
                     fontWeight: 600,
                     color: "rgba(255,255,255,0.9)",
@@ -135,6 +136,7 @@ export async function GET(request: Request) {
           {/* 标题 */}
           <div
             style={{
+              display: "flex",
               fontSize: post.title.length > 40 ? 40 : 52,
               fontWeight: 800,
               color: "#fff",
@@ -149,14 +151,12 @@ export async function GET(request: Request) {
           {/* 摘要 */}
           <div
             style={{
+              display: "flex",
               fontSize: 22,
               color: "rgba(255,255,255,0.85)",
               marginTop: 20,
               lineHeight: 1.5,
               maxWidth: "75%",
-              display: "-webkit-box",
-              WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 2,
               overflow: "hidden",
             }}
           >
@@ -175,15 +175,17 @@ export async function GET(request: Request) {
           >
             <div
               style={{
+                display: "flex",
                 fontSize: 20,
                 fontWeight: 700,
                 color: "#fff",
               }}
             >
-              LunaPath
+              {siteConfig.name}
             </div>
             <div
               style={{
+                display: "flex",
                 fontSize: 18,
                 color: "rgba(255,255,255,0.7)",
               }}

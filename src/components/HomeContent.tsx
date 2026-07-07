@@ -15,12 +15,13 @@ interface Tag {
 interface Props {
   posts: PostMeta[];
   tags: Tag[];
+  popularPosts: PostMeta[];
   page?: number;
 }
 
 const POSTS_PER_PAGE = 5;
 
-export default function HomeContent({ posts, tags, page = 1 }: Props) {
+export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Props) {
   const { t, locale } = useI18n();
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
@@ -34,7 +35,7 @@ export default function HomeContent({ posts, tags, page = 1 }: Props) {
   return (
     <div className="home-layout">
       {/* 左侧边栏 */}
-      <Sidebar tags={tags} postCount={posts.length} />
+      <Sidebar tags={tags} postCount={posts.length} popularPosts={popularPosts} />
 
       {/* 右侧主内容 */}
       <div className="home-main">
@@ -135,6 +136,38 @@ export default function HomeContent({ posts, tags, page = 1 }: Props) {
                 </span>
               )}
             </nav>
+          )}
+        </section>
+
+        {/* 移动端热门文章（桌面端由 Sidebar 显示） */}
+        <section className="lg:hidden mt-12">
+          <h2 className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-orange-500 border-b-2 border-orange-300 pb-1">
+            {t("popular.title")}
+          </h2>
+          {popularPosts.length > 0 ? (
+            <div className="mobile-popular-list">
+              {popularPosts.map((post, index) => (
+                <Link
+                  key={post.slug}
+                  href={`/posts/${post.slug}`}
+                  className="mobile-popular-link"
+                >
+                  <span className="mobile-popular-rank">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mobile-popular-content">
+                    <span className="mobile-popular-title">{post.title}</span>
+                    <span className="mobile-popular-meta">
+                      {post.readingTime} {t("post.readingTime")}
+                    </span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {t("popular.empty")}
+            </p>
           )}
         </section>
 

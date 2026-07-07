@@ -4,6 +4,22 @@ import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 
+function getContactErrorMessage(error: unknown, t: (key: string) => string) {
+  if (error === "missing_fields") return t("contact.errorEmpty");
+  if (error === "invalid_email") return t("contact.errorEmail");
+  if (
+    error === "name_too_long" ||
+    error === "email_too_long" ||
+    error === "message_too_long"
+  ) {
+    return t("contact.errorTooLong");
+  }
+  if (error === "service_unavailable" || error === "provider_error") {
+    return t("contact.errorUnavailable");
+  }
+  return t("contact.errorFail");
+}
+
 export default function AboutContent() {
   const { t } = useI18n();
   const [name, setName] = useState("");
@@ -40,13 +56,13 @@ export default function AboutContent() {
 
       const data = await res.json();
 
-      if (data.ok) {
+      if (res.ok && data.ok) {
         setStatus("success");
         setName("");
         setEmail("");
         setMessage("");
       } else {
-        setErrorMsg(t("contact.errorFail"));
+        setErrorMsg(getContactErrorMessage(data.error, t));
         setStatus("error");
       }
     } catch {

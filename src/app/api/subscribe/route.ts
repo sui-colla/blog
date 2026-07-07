@@ -1,57 +1,44 @@
-import { NextRequest } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { addSubscriber } from "@/lib/forms/resend";
+import {
+  validateRequestOrigin,
+  validateSubscribePayload,
+} from "@/lib/forms/validation";
 
-const dataFile = path.join(process.cwd(), "data", "subscribers.json");
-
-async function readSubscribers(): Promise<{ email: string; subscribedAt: string }[]> {
+async function readJson(request: Request): Promise<unknown> {
   try {
-    const raw = await fs.readFile(dataFile, "utf-8");
-    return JSON.parse(raw);
+    return await request.json();
   } catch {
-    // 文件不存在时返回空数组
-    return [];
+    return null;
   }
 }
 
-async function writeSubscribers(
-  subscribers: { email: string; subscribedAt: string }[]
-): Promise<void> {
-  await fs.writeFile(dataFile, JSON.stringify(subscribers, null, 2), "utf-8");
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const { email } = await request.json();
-
-    // 校验：必须是非空字符串
-    if (!email || typeof email !== "string") {
-      return Response.json({ error: "请输入有效的邮箱地址" }, { status: 400 });
-    }
-
-    // 简单的邮箱格式校验
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      return Response.json({ error: "邮箱格式不正确" }, { status: 400 });
-    }
-
-    const normalized = email.trim().toLowerCase();
-    const subscribers = await readSubscribers();
-
-    // 检查是否已订阅
-    if (subscribers.find((s) => s.email === normalized)) {
-      return Response.json({ message: "你已经订阅过了！" });
-    }
-
-    // 写入新订阅者
-    subscribers.push({
-      email: normalized,
-      subscribedAt: new Date().toISOString(),
-    });
-    await writeSubscribers(subscribers);
-
-    return Response.json({ message: "订阅成功！感谢你的关注。" });
-  } catch {
-    return Response.json({ error: "服务器内部错误，请稍后再试" }, { status: 500 });
+export async function POST(request: Request) {
+  const origin = validateRequestOrigin(request);
+  if (!origin.ok) {
+    return Response.json(
+      { ok: false, error: origin.error },
+      { status: origin.status }
+    );
   }
+
+  const payload = await readJson(request);
+  const validation = validateSubscribePayload(payload);
+
+  if (!validation.ok) {
+    return Response.json(
+      { ok: false, error: validation.error },
+      { status: validation.status }
+    );
+  }
+
+  const result = await addSubscriber(validation.data.email);
+
+  if (!result.ok) {
+    return Response.json(
+      { ok: false, error: result.error },
+      { status: result.status }
+    );
+  }
+
+  return Response.json({ ok: true, code: result.code });
 }
