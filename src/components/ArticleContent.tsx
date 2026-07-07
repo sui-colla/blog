@@ -11,7 +11,10 @@ interface Props {
 interface LightboxImage {
   src: string;
   alt: string;
+  caption?: string;
 }
+
+type EnhancedImage = HTMLImageElement & { _lightboxCleanup?: () => void };
 
 export default function ArticleContent({ html }: Props) {
   const { t } = useI18n();
@@ -30,25 +33,32 @@ export default function ArticleContent({ html }: Props) {
     const el = ref.current;
     if (!el) return;
 
-    // 复制按钮
-    const pres = el.querySelectorAll("pre");
-    pres.forEach((pre) => {
-      if (pre.querySelector(".copy-btn")) return;
+    const codeBlocks = Array.from(el.querySelectorAll<HTMLElement>(".code-block"));
+    const enhancedPres = new Set<HTMLPreElement>();
 
-      pre.style.position = "relative";
+    codeBlocks.forEach((block) => {
+      const pre = block.querySelector("pre");
+      const code = pre?.querySelector("code");
+      if (!pre || !code || block.querySelector(".copy-btn")) return;
 
+      enhancedPres.add(pre);
+      const actions = block.querySelector(".code-block-actions") ?? block;
       const btn = document.createElement("button");
+      btn.type = "button";
       btn.className = "copy-btn";
       btn.textContent = t("copy.btn");
       btn.setAttribute("aria-label", t("copy.ariaLabel"));
+      btn.setAttribute("aria-live", "polite");
 
       btn.addEventListener("click", async () => {
-        const code = pre.querySelector("code");
-        if (!code) return;
+        btn.textContent = t("copy.copying");
+        btn.classList.remove("copy-btn--success", "copy-btn--error");
+        btn.classList.add("copy-btn--loading");
 
         try {
           await navigator.clipboard.writeText(code.textContent ?? "");
           btn.textContent = t("copy.success");
+          btn.classList.remove("copy-btn--loading");
           btn.classList.add("copy-btn--success");
           setTimeout(() => {
             btn.textContent = t("copy.btn");
@@ -56,8 +66,55 @@ export default function ArticleContent({ html }: Props) {
           }, 2000);
         } catch {
           btn.textContent = t("copy.fail");
+          btn.classList.remove("copy-btn--loading");
+          btn.classList.add("copy-btn--error");
           setTimeout(() => {
             btn.textContent = t("copy.btn");
+            btn.classList.remove("copy-btn--error");
+          }, 2000);
+        }
+      });
+
+      actions.appendChild(btn);
+    });
+
+    const pres = el.querySelectorAll("pre");
+    pres.forEach((pre) => {
+      if (enhancedPres.has(pre) || pre.querySelector(".copy-btn")) return;
+
+      pre.style.position = "relative";
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "copy-btn";
+      btn.textContent = t("copy.btn");
+      btn.setAttribute("aria-label", t("copy.ariaLabel"));
+      btn.setAttribute("aria-live", "polite");
+
+      btn.addEventListener("click", async () => {
+        const code = pre.querySelector("code");
+        if (!code) return;
+
+        btn.textContent = t("copy.copying");
+        btn.classList.remove("copy-btn--success", "copy-btn--error");
+        btn.classList.add("copy-btn--loading");
+
+        try {
+          await navigator.clipboard.writeText(code.textContent ?? "");
+          btn.textContent = t("copy.success");
+          btn.classList.remove("copy-btn--loading");
+          btn.classList.add("copy-btn--success");
+          setTimeout(() => {
+            btn.textContent = t("copy.btn");
+            btn.classList.remove("copy-btn--success");
+          }, 2000);
+        } catch {
+          btn.textContent = t("copy.fail");
+          btn.classList.remove("copy-btn--loading");
+          btn.classList.add("copy-btn--error");
+          setTimeout(() => {
+            btn.textContent = t("copy.btn");
+            btn.classList.remove("copy-btn--error");
           }, 2000);
         }
       });
@@ -65,25 +122,41 @@ export default function ArticleContent({ html }: Props) {
       pre.appendChild(btn);
     });
 
-    // 图片灯箱
     const imgs = Array.from(el.querySelectorAll("img"));
-    const imageData: LightboxImage[] = imgs.map((img) => ({
-      src: (img as HTMLImageElement).src,
-      alt: img.alt || "",
-    }));
+    const imageData: LightboxImage[] = imgs.map((img) => {
+      const figure = img.closest("figure");
+      const caption = figure?.querySelector("figcaption")?.textContent?.trim();
+      return {
+        src: (img as HTMLImageElement).src,
+        alt: img.alt || "",
+        caption: caption || undefined,
+      };
+    });
 
     imgs.forEach((img, idx) => {
+      const enhanced = img as EnhancedImage;
       const handler = () => openLightbox(imageData, idx);
+      const keyHandler = (event: KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handler();
+        }
+      };
+
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      img.setAttribute("aria-label", `${t("lightbox.zoom")}: ${img.alt || imageData[idx].caption || "image"}`);
       img.addEventListener("click", handler);
-      // 清理函数存储在元素上
-      (img as HTMLImageElement & { _lightboxCleanup?: () => void })._lightboxCleanup = () => {
+      img.addEventListener("keydown", keyHandler);
+      enhanced._lightboxCleanup = () => {
         img.removeEventListener("click", handler);
+        img.removeEventListener("keydown", keyHandler);
       };
     });
 
     return () => {
       imgs.forEach((img) => {
-        const cleanup = (img as HTMLImageElement & { _lightboxCleanup?: () => void })._lightboxCleanup;
+        const cleanup = (img as EnhancedImage)._lightboxCleanup;
         cleanup?.();
       });
     };

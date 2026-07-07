@@ -140,16 +140,24 @@ function extractMarkdownLinks(content) {
   return links;
 }
 
-function parseMarkdownTarget(rawTarget) {
+function parseMarkdownTargetDetails(rawTarget) {
   let target = rawTarget.trim();
   if (target.startsWith("<") && target.includes(">")) {
-    return target.slice(1, target.indexOf(">"));
+    const closingIndex = target.indexOf(">");
+    const url = target.slice(1, closingIndex);
+    const rest = target.slice(closingIndex + 1).trim();
+    const titleMatch = rest.match(/^["'](.*)["']$/);
+    return { target: url, title: titleMatch?.[1]?.trim() ?? "" };
   }
 
-  const titleMatch = target.match(/^([^\s]+)\s+["'].*["']$/);
-  if (titleMatch) return titleMatch[1];
+  const titleMatch = target.match(/^([^\s]+)\s+["'](.*)["']$/);
+  if (titleMatch) return { target: titleMatch[1], title: titleMatch[2].trim() };
 
-  return target;
+  return { target, title: "" };
+}
+
+function parseMarkdownTarget(rawTarget) {
+  return parseMarkdownTargetDetails(rawTarget).target;
 }
 
 function withoutHashAndQuery(target) {
@@ -295,11 +303,14 @@ async function checkPostFile(filename) {
   const searchableContent = stripCode(content);
 
   for (const image of extractMarkdownImages(searchableContent)) {
-    const target = parseMarkdownTarget(image.rawTarget);
+    const { target, title } = parseMarkdownTargetDetails(image.rawTarget);
     if (!image.alt.trim()) {
       addError(report, `图片 "${target}" 缺少 alt 文本`);
     } else if (image.alt.trim().length < 4) {
       addWarning(report, `图片 "${target}" 的 alt 文本过短，建议写得更具体`);
+    }
+    if (title && title.length < 4) {
+      addWarning(report, `图片 "${target}" 的 caption 过短，建议写得更具体`);
     }
 
     const targetType = classifyTarget(target);

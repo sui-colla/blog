@@ -87,6 +87,33 @@ export default function AboutContent() {
       <div className="prose max-w-none mt-8">
         <p>{t("about.intro")}</p>
         <p>{t("about.bio")}</p>
+      </div>
+
+      <section className="mt-10">
+        <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
+          {t("about.more")}
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {[
+            { href: "/projects", title: t("nav.projects"), desc: t("about.moreProjects"), icon: "✨" },
+            { href: "/now", title: t("nav.now"), desc: t("about.moreNow"), icon: "🌿" },
+            { href: "/links", title: t("nav.links"), desc: t("about.moreLinks"), icon: "🔗" },
+            { href: "/uses", title: t("nav.uses"), desc: t("about.moreUses"), icon: "🧰" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-2xl border border-orange-100 bg-white/80 p-4 text-sm transition hover:border-orange-200 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-orange-900/60"
+            >
+              <span className="text-xl" aria-hidden="true">{item.icon}</span>
+              <span className="mt-2 block font-semibold text-zinc-900 dark:text-zinc-50">{item.title}</span>
+              <span className="mt-1 block leading-6 text-zinc-500 dark:text-zinc-400">{item.desc}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <div className="prose max-w-none mt-10">
         <h2>{t("about.contact")}</h2>
         <p>{t("about.contactDesc")}</p>
       </div>

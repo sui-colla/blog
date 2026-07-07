@@ -27,6 +27,9 @@ export default function Header() {
             <Link href="/about" className="hover:text-orange-500 transition-colors">
               {t("nav.about")}
             </Link>
+            <Link href="/projects" className="hover:text-orange-500 transition-colors">
+              {t("nav.projects")}
+            </Link>
             <Link href="/tags" className="hover:text-orange-500 transition-colors">
               {t("nav.tags")}
             </Link>

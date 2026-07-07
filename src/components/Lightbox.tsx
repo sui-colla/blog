@@ -9,6 +9,7 @@ import { useI18n } from "@/lib/i18n";
 interface LightboxImage {
   src: string;
   alt: string;
+  caption?: string;
 }
 
 interface Props {
@@ -53,11 +54,19 @@ export default function Lightbox({ images, initialIndex, onClose }: Props) {
 
   const current = images[index];
   const hasMultiple = images.length > 1;
+  const caption = current.caption || current.alt;
 
   return createPortal(
-    <div className="lightbox-overlay" onClick={onClose}>
+    <div
+      className="lightbox-overlay"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={caption || t("lightbox.zoom")}
+    >
       <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
         <img src={current.src} alt={current.alt} />
+        {caption && <p className="lightbox-caption">{caption}</p>}
       </div>
 
       {/* 关闭按钮 */}

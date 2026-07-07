@@ -27,6 +27,13 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
     { href: "/archive", label: t("nav.archive"), icon: "📚" },
   ];
 
+  const exploreItems = [
+    { href: "/projects", label: t("nav.projects"), icon: "✨" },
+    { href: "/now", label: t("nav.now"), icon: "🌿" },
+    { href: "/links", label: t("nav.links"), icon: "🔗" },
+    { href: "/uses", label: t("nav.uses"), icon: "🧰" },
+  ];
+
   return (
     <aside className="sidebar">
       {/* 导航链接 */}
@@ -46,6 +53,28 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
           </div>
         ))}
       </nav>
+
+      <div className="sidebar-divider" />
+
+      <div className="sidebar-section">
+        <h3 className="sidebar-section-title">{t("nav.explore")}</h3>
+        <nav className="sidebar-nav" aria-label={t("nav.explore")}>
+          {exploreItems.map((item, index) => (
+            <div key={item.href}>
+              {index > 0 && <div className="sidebar-nav-divider" />}
+              <Link
+                href={item.href}
+                className={`sidebar-link ${
+                  pathname === item.href ? "sidebar-link--active" : ""
+                }`}
+              >
+                <span className="sidebar-link-icon">{item.icon}</span>
+                {item.label}
+              </Link>
+            </div>
+          ))}
+        </nav>
+      </div>
 
       {/* 分割线 */}
       <div className="sidebar-divider" />

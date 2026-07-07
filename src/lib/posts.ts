@@ -6,6 +6,8 @@ import remarkRehype from "remark-rehype";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import { popularPostSlugs } from "@/config/popular-posts";
+import { rehypeCodeMetaPlugin } from "./rehype-code-meta";
+import { rehypeFiguresPlugin } from "./rehype-figures";
 import { rehypeTocPlugin, type TocHeading } from "./rehype-toc";
 
 const postsDirectory = path.join(process.cwd(), "content", "posts");
@@ -313,6 +315,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       theme: "one-dark-pro",
       keepBackground: true,
     })
+    .use(rehypeFiguresPlugin)
+    .use(rehypeCodeMetaPlugin)
     .use(rehypeTocPlugin, { headings })
     .use(rehypeStringify)
     .process(parsed.content);

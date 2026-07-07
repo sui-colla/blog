@@ -55,6 +55,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.6,
     },
+    {
+      url: absoluteUrl("/projects"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: absoluteUrl("/now"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: absoluteUrl("/links"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: absoluteUrl("/uses"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     ...postEntries,
     ...tagEntries,
   ];
