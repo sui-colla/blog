@@ -59,14 +59,14 @@ export default function ThemeToggle() {
 
   const icons: Record<Theme, React.ReactNode> = {
     system: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="2" y="3" width="20" height="14" rx="2" />
         <path d="M8 21h8" />
         <path d="M12 17v4" />
       </svg>
     ),
     light: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2" />
         <path d="M12 20v2" />
@@ -79,7 +79,7 @@ export default function ThemeToggle() {
       </svg>
     ),
     dark: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
       </svg>
     ),
@@ -93,6 +93,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      type="button"
       onClick={cycleTheme}
       className="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-orange-500 hover:bg-orange-50 dark:text-zinc-400 dark:hover:text-orange-400 dark:hover:bg-zinc-800 transition-colors"
       title={labels[theme]}

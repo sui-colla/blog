@@ -28,7 +28,7 @@ export default function ArchiveContent({ groups, sortedKeys }: Props) {
 
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl mb-10">
         <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
-          {locale === "zh" ? "文章归档" : "Archive"}
+          {t("archive.title")}
         </span>
       </h1>
 
@@ -51,7 +51,7 @@ export default function ArchiveContent({ groups, sortedKeys }: Props) {
                   {groups[key].map((post) => (
                     <li key={post.slug} className="archive-post-item">
                       <span className="archive-post-date">
-                        {new Date(post.date).getDate()} {locale === "zh" ? "日" : ""}
+                        {new Date(post.date).getDate()}{t("archive.daySuffix") ? ` ${t("archive.daySuffix")}` : ""}
                       </span>
                       <Link
                         href={`/posts/${post.slug}`}

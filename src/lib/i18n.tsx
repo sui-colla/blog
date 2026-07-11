@@ -36,6 +36,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.greeting": "欢迎来到露比的工作室",
     "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
     "home.latestPosts": "最新文章",
+    "home.empty": "暂时还没有文章，稍后再来看看吧。",
 
     // 热门文章
     "popular.title": "热门文章",
@@ -55,7 +56,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "comments.missingDesc": "请先在环境变量中配置 Giscus 的 repoId 和 categoryId，然后重新部署。",
     "comments.setupGuide": "前往 giscus.app 获取配置 →",
     "comments.reload": "重新加载评论",
-    "comments.loadErrorDesc": "评论加载超时，请检查网络连接后点击重试。",
+    "comments.loadErrorDesc": "评论加载超时，请检查网络连接后重试。",
 
     // 标签页
     "tags.title": "标签",
@@ -129,6 +130,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "search.placeholder": "搜索文章标题、摘要、标签...",
     "search.loading": "加载中...",
     "search.empty": "没有找到相关文章",
+    "search.error": "搜索索引加载失败，请稍后再试。",
+    "search.retry": "重试",
     "search.filters": "筛选",
     "search.filterTag": "按标签筛选",
     "search.filterSeries": "按系列筛选",
@@ -150,6 +153,22 @@ const translations: Record<Locale, Record<string, string>> = {
     "theme.dark": "深色模式",
     "theme.ariaPrefix": "当前：",
     "theme.ariaSuffix": "，点击切换",
+
+    // 侧边栏统计
+    "sidebar.posts": "文章",
+    "sidebar.tags": "标签",
+
+    // 文章置顶
+    "post.pinned": "置顶",
+
+    // 浏览导航
+    "browse.title": "浏览",
+    "browse.allTags": "所有标签",
+    "browse.archive": "按时间归档",
+
+    // 归档页
+    "archive.title": "文章归档",
+    "archive.daySuffix": "日",
 
     // 相关文章
     "related.title": "相关文章",
@@ -173,6 +192,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "notFound.desc": "你要找的页面不存在，可能已被移除或地址有误。",
     "notFound.backHome": "返回首页",
     "notFound.browseTags": "浏览标签",
+
+    // 离线页
+    "offline.badge": "Offline",
+    "offline.title": "现在处于离线状态",
+    "offline.desc": "网络连接不可用。你仍然可以打开之前访问过并已缓存的文章；如果这是第一次访问该页面，请恢复网络后重试。",
+    "offline.backHome": "返回首页",
+    "offline.reload": "重新加载",
+
+    // 跳过导航
+    "a11y.skipToContent": "跳到主要内容",
 
     // 文章导航
     "post.prev": "上一篇",
@@ -212,6 +241,19 @@ const translations: Record<Locale, Record<string, string>> = {
     "pagination.next": "下一页",
     "pagination.aria": "分页导航",
 
+    // 回到顶部
+    "backToTop.label": "回到顶部",
+
+    // 赞赏支持
+    "donate.title": "☕ 赞赏支持",
+    "donate.desc": "如果这篇文章对你有帮助，可以请作者喝杯咖啡~",
+    "donate.wechat": "微信",
+    "donate.alipay": "支付宝",
+    "donate.scanWechat": "请打开微信扫一扫",
+    "donate.scanAlipay": "请打开支付宝扫一扫",
+    "donate.qrPlaceholder": "收款码占位",
+    "donate.replaceHint": "将收款码图片放到 public/donate/ 目录即可替换",
+
     // 社交分享
     "share.title": "分享文章",
     "share.shareTo": "分享到",
@@ -238,6 +280,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.greeting": "Hello, welcome.",
     "home.tagline": "A place for notes on tech, thoughts, and life. Writing helps me think clearly — hope it inspires you too.",
     "home.latestPosts": "Latest Posts",
+    "home.empty": "No posts yet. Check back soon.",
 
     // Popular posts
     "popular.title": "Popular Posts",
@@ -331,6 +374,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "search.placeholder": "Search titles, summaries, tags...",
     "search.loading": "Loading...",
     "search.empty": "No articles found",
+    "search.error": "Failed to load the search index. Please try again.",
+    "search.retry": "Retry",
     "search.filters": "Filters",
     "search.filterTag": "Filter by tag",
     "search.filterSeries": "Filter by series",
@@ -352,6 +397,22 @@ const translations: Record<Locale, Record<string, string>> = {
     "theme.dark": "Dark",
     "theme.ariaPrefix": "Current: ",
     "theme.ariaSuffix": ", click to switch",
+
+    // Sidebar stats
+    "sidebar.posts": "posts",
+    "sidebar.tags": "tags",
+
+    // Post pinned
+    "post.pinned": "Pinned",
+
+    // Browse navigation
+    "browse.title": "Browse",
+    "browse.allTags": "All tags",
+    "browse.archive": "Archive by date",
+
+    // Archive page
+    "archive.title": "Archive",
+    "archive.daySuffix": "",
 
     // Related Posts
     "related.title": "Related Posts",
@@ -375,6 +436,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "notFound.desc": "The page you're looking for doesn't exist — it may have been moved or the link is incorrect.",
     "notFound.backHome": "Back to Home",
     "notFound.browseTags": "Browse Tags",
+
+    // Offline
+    "offline.badge": "Offline",
+    "offline.title": "You are offline",
+    "offline.desc": "The network is unavailable. You can still open previously visited and cached pages. If this is your first visit, please reconnect and try again.",
+    "offline.backHome": "Back to Home",
+    "offline.reload": "Reload",
+
+    // Skip link
+    "a11y.skipToContent": "Skip to content",
 
     // Post nav
     "post.prev": "Previous",
@@ -413,6 +484,19 @@ const translations: Record<Locale, Record<string, string>> = {
     "pagination.prev": "Prev",
     "pagination.next": "Next",
     "pagination.aria": "Pagination",
+
+    // Back to top
+    "backToTop.label": "Back to top",
+
+    // Donate
+    "donate.title": "☕ Support",
+    "donate.desc": "If this article helped you, consider buying the author a coffee~",
+    "donate.wechat": "WeChat",
+    "donate.alipay": "Alipay",
+    "donate.scanWechat": "Open WeChat to scan",
+    "donate.scanAlipay": "Open Alipay to scan",
+    "donate.qrPlaceholder": "QR Code Placeholder",
+    "donate.replaceHint": "Drop QR images into public/donate/ to replace",
 
     // Share
     "share.title": "Share",

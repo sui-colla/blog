@@ -22,7 +22,8 @@ export default function RelatedPosts({
   allPosts,
   maxItems = 3,
 }: Props) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   if (currentTags.length === 0) return null;
 
@@ -52,7 +53,7 @@ export default function RelatedPosts({
               dateTime={post.date}
               className="text-xs text-zinc-400 dark:text-zinc-500"
             >
-              {new Date(post.date).toLocaleDateString("zh-CN", {
+              {new Date(post.date).toLocaleDateString(dateLocale, {
                 year: "numeric",
                 month: "short",
                 day: "numeric",

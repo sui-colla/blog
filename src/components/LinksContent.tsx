@@ -55,7 +55,7 @@ export default function LinksContent({ data }: Props) {
               <div className="flex items-start gap-4">
                 {link.avatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={link.avatar} alt="" className="h-12 w-12 rounded-full object-cover" loading="lazy" />
+                  <img src={link.avatar} alt={`${link.name} avatar`} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
                 ) : (
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-orange-100 text-lg font-bold text-orange-600 dark:bg-orange-900/30 dark:text-orange-300">
                     {getInitial(link.name)}

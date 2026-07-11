@@ -42,12 +42,14 @@ export default function Search() {
   const [items, setItems] = useState<SearchItem[]>([]);
   const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedSeries, setSelectedSeries] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
 
   const trimmedQuery = query.trim();
@@ -92,18 +94,24 @@ export default function Search() {
     setSelectedTag("");
     setSelectedSeries("");
     setActiveIndex(0);
+    // 关闭后把焦点还给触发按钮，保持键盘导航连续
+    requestAnimationFrame(() => {
+      triggerRef.current?.focus();
+    });
   }, []);
 
   // 懒加载：首次打开搜索时才加载 Fuse.js 库和搜索索引数据，
   // 减少首页 JS 包体积。Promise.all 并行加载两者。
   const loadIndex = useCallback(async () => {
-    if (fuse) return;
+    if (fuse || loading) return;
     setLoading(true);
+    setLoadError(false);
     try {
       const [{ default: FuseConstructor }, res] = await Promise.all([
         import("fuse.js"),
         fetch("/api/search-index"),
       ]);
+      if (!res.ok) throw new Error("search index request failed");
       const searchItems: SearchItem[] = await res.json();
       const instance = new FuseConstructor(searchItems, {
         keys: [
@@ -119,12 +127,13 @@ export default function Search() {
       });
       setItems(searchItems);
       setFuse(instance);
+      setLoadError(false);
     } catch {
-      // silent
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
-  }, [fuse]);
+  }, [fuse, loading]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -179,7 +188,7 @@ export default function Search() {
       modalRef.current.querySelectorAll<HTMLElement>(
         'button, [href], input, select, [tabindex]:not([tabindex="-1"])'
       )
-    ).filter((el) => !el.hasAttribute("disabled"));
+    ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -292,6 +301,8 @@ export default function Search() {
   return (
     <>
       <button
+        ref={triggerRef}
+        type="button"
         onClick={() => {
           loadIndex();
           setOpen(true);
@@ -300,6 +311,7 @@ export default function Search() {
         aria-label={t("search.ariaLabel")}
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-controls={open ? "search-dialog" : undefined}
       >
         <svg
           width="16"
@@ -328,6 +340,7 @@ export default function Search() {
         >
           <div
             ref={modalRef}
+            id="search-dialog"
             className="search-modal"
             role="dialog"
             aria-modal="true"
@@ -352,7 +365,7 @@ export default function Search() {
               </svg>
               <input
                 ref={inputRef}
-                type="text"
+                type="search"
                 className="search-input"
                 placeholder={t("search.placeholder")}
                 value={query}
@@ -363,16 +376,48 @@ export default function Search() {
                 onKeyDown={handleInputKeyDown}
                 autoComplete="off"
                 role="combobox"
+                aria-label={t("search.ariaLabel")}
+                aria-autocomplete="list"
                 aria-expanded={results.length > 0}
                 aria-controls="search-results"
                 aria-activedescendant={activeResult ? `search-result-${activeResult.item.slug}` : undefined}
               />
-              {loading && <span className="search-loading">{t("search.loading")}</span>}
+              {loading && (
+                <span className="search-loading" role="status" aria-live="polite">
+                  {t("search.loading")}
+                </span>
+              )}
+              <button
+                type="button"
+                className="search-close"
+                onClick={closeSearch}
+                aria-label={t("search.close")}
+              >
+                ×
+              </button>
             </div>
 
+            {loadError && (
+              <div className="search-error" role="alert" aria-live="assertive">
+                {t("search.error")}
+                <button
+                  type="button"
+                  className="search-filter-clear"
+                  onClick={() => {
+                    setLoadError(false);
+                    loadIndex();
+                  }}
+                >
+                  {t("search.retry")}
+                </button>
+              </div>
+            )}
+
             {(tagOptions.length > 0 || seriesOptions.length > 0) && (
-              <div className="search-filters" aria-label={t("search.filters")}>
-                <span className="search-filters-label">{t("search.filters")}</span>
+              <div className="search-filters" role="group" aria-label={t("search.filters")}>
+                <span className="search-filters-label" aria-hidden="true">
+                  {t("search.filters")}
+                </span>
                 {tagOptions.length > 0 && (
                   <label className="search-filter-field">
                     <span className="sr-only">{t("search.filterTag")}</span>
@@ -429,12 +474,14 @@ export default function Search() {
               </div>
             )}
 
-            {(trimmedQuery || hasFilters) && (
+            {(trimmedQuery || hasFilters) && !loadError && (
               <div className="search-results">
                 {results.length === 0 ? (
-                  <div className="search-empty">{t("search.empty")}</div>
+                  <div className="search-empty" role="status" aria-live="polite">
+                    {loading ? t("search.loading") : t("search.empty")}
+                  </div>
                 ) : (
-                  <ul ref={listRef} id="search-results" role="listbox">
+                  <ul ref={listRef} id="search-results" role="listbox" aria-label={t("search.modalAria")}>
                     {results.map((result, index) => {
                       const snippet = buildContentSnippet(result.item.content, result.matches);
 
@@ -443,6 +490,7 @@ export default function Search() {
                           id={`search-result-${result.item.slug}`}
                           key={result.item.slug}
                           role="option"
+                          tabIndex={-1}
                           aria-selected={index === safeActiveIndex}
                           className={`search-result-item ${
                             index === safeActiveIndex ? "search-result-active" : ""
@@ -486,7 +534,7 @@ export default function Search() {
               </div>
             )}
 
-            <div className="search-footer">
+            <div className="search-footer" aria-hidden="true">
               <span>
                 <kbd className="search-kbd">↑↓</kbd> {t("search.move")}
               </span>

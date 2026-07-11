@@ -71,6 +71,17 @@ export default function AboutContent() {
     }
   }
 
+  function clearStatusOnEdit() {
+    if (status === "error" || status === "success") {
+      setStatus("idle");
+      setErrorMsg("");
+    }
+  }
+
+  const messageId = "contact-form-message";
+  const hasError = status === "error" && Boolean(errorMsg);
+  const statusMessage = status === "success" ? t("contact.success") : hasError ? errorMsg : "";
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <Link
@@ -89,8 +100,8 @@ export default function AboutContent() {
         <p>{t("about.bio")}</p>
       </div>
 
-      <section className="mt-10">
-        <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
+      <section className="mt-10" aria-labelledby="about-more-heading">
+        <h2 id="about-more-heading" className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
           {t("about.more")}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -120,13 +131,18 @@ export default function AboutContent() {
 
       {/* 联系表单 */}
       <div className="mt-8">
-        <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-2">
+        <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-2" id="contact-heading">
           {t("contact.title")}
         </h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
           {t("contact.desc")}
         </p>
-        <form onSubmit={handleSubmit} className="contact-form">
+        <form
+          onSubmit={handleSubmit}
+          className="contact-form"
+          noValidate
+          aria-labelledby="contact-heading"
+        >
           <div className="contact-field">
             <label htmlFor="contact-name" className="contact-label">
               {t("contact.name")}
@@ -134,11 +150,19 @@ export default function AboutContent() {
             <input
               id="contact-name"
               type="text"
+              name="name"
               className="contact-input"
               placeholder={t("contact.namePlaceholder")}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                clearStatusOnEdit();
+              }}
               disabled={status === "loading"}
+              aria-invalid={hasError || undefined}
+              aria-describedby={statusMessage ? messageId : undefined}
+              autoComplete="name"
+              required
             />
           </div>
           <div className="contact-field">
@@ -148,11 +172,19 @@ export default function AboutContent() {
             <input
               id="contact-email"
               type="email"
+              name="email"
               className="contact-input"
               placeholder={t("contact.emailPlaceholder")}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                clearStatusOnEdit();
+              }}
               disabled={status === "loading"}
+              aria-invalid={hasError || undefined}
+              aria-describedby={statusMessage ? messageId : undefined}
+              autoComplete="email"
+              required
             />
           </div>
           <div className="contact-field">
@@ -161,29 +193,41 @@ export default function AboutContent() {
             </label>
             <textarea
               id="contact-message"
+              name="message"
               className="contact-textarea"
               placeholder={t("contact.messagePlaceholder")}
               rows={5}
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                clearStatusOnEdit();
+              }}
               disabled={status === "loading"}
+              aria-invalid={hasError || undefined}
+              aria-describedby={statusMessage ? messageId : undefined}
+              required
             />
           </div>
           <button
             type="submit"
             className="contact-btn"
             disabled={status === "loading"}
+            aria-busy={status === "loading" || undefined}
           >
             {status === "loading" ? t("contact.sending") : t("contact.submit")}
           </button>
-          {status === "success" && (
-            <p className="contact-msg contact-msg--success">
-              {t("contact.success")}
-            </p>
-          )}
-          {status === "error" && errorMsg && (
-            <p className="contact-msg contact-msg--error">
-              {errorMsg}
+          {statusMessage && (
+            <p
+              id={messageId}
+              role="status"
+              aria-live="polite"
+              className={
+                status === "success"
+                  ? "contact-msg contact-msg--success"
+                  : "contact-msg contact-msg--error"
+              }
+            >
+              {statusMessage}
             </p>
           )}
         </form>

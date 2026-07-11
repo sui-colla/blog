@@ -24,7 +24,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={project.cover}
-          alt=""
+          alt={`${project.name} cover`}
           className="mb-4 h-36 w-full rounded-xl object-cover"
           loading="lazy"
         />
@@ -34,7 +34,8 @@ function ProjectCard({ project }: { project: ProjectItem }) {
           {project.name}
         </h2>
         <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-600 dark:bg-orange-900/20 dark:text-orange-300">
-          {statusIcon[project.status]} {t(`projects.status.${project.status}`)}
+          <span aria-hidden="true">{statusIcon[project.status]}</span>{" "}
+          {t(`projects.status.${project.status}`)}
         </span>
       </div>
       <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">

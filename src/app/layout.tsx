@@ -16,6 +16,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import SkipToContent from "@/components/SkipToContent";
 import { I18nProvider } from "@/lib/i18n";
 import { siteConfig } from "@/config/site";
 import { buildWebsiteJsonLd, serializeJsonLd } from "@/lib/structured-data";
@@ -95,13 +96,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col text-zinc-800 dark:text-zinc-100 font-sans">
-        {/* 跳过导航链接 - 无障碍 */}
-        <a href="#main-content" className="skip-to-content">
-          Skip to content
-        </a>
         <I18nProvider>
+          <SkipToContent />
           <Header />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="main-content flex-1" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
         </I18nProvider>
         <Analytics />

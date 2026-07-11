@@ -156,7 +156,10 @@ export default function ArticleContent({ html }: Props) {
 
       img.setAttribute("tabindex", "0");
       img.setAttribute("role", "button");
-      img.setAttribute("aria-label", `${t("lightbox.zoom")}: ${img.alt || imageData[idx].caption || "image"}`);
+      img.setAttribute(
+        "aria-label",
+        `${t("lightbox.zoom")}: ${img.alt || imageData[idx].caption || t("lightbox.zoom")}`
+      );
       img.addEventListener("click", handler);
       img.addEventListener("keydown", keyHandler);
       enhanced._lightboxCleanup = () => {
