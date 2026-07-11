@@ -1423,6 +1423,299 @@ body {
   border-top-color: var(--color-zinc-700);
 }
 
+.comments-header {
+  margin-bottom: 1rem;
+}
+
+.comments-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-zinc-800);
+  margin-bottom: 0.375rem;
+}
+
+.comments-desc {
+  font-size: 0.875rem;
+  color: var(--color-zinc-500);
+  line-height: 1.6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .comments-title {
+    color: var(--color-zinc-100);
+  }
+
+  :root:not([data-theme="light"]) .comments-desc {
+    color: var(--color-zinc-400);
+  }
+}
+
+[data-theme="dark"] .comments-title {
+  color: var(--color-zinc-100);
+}
+
+[data-theme="dark"] .comments-desc {
+  color: var(--color-zinc-400);
+}
+
+.comments-shell {
+  position: relative;
+  min-height: 24rem;
+}
+
+.comments-loading-layer {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.comments-loading-layer--hidden {
+  opacity: 0;
+  transform: translateY(-0.25rem);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.comments-loading-card,
+.comments-error-card {
+  min-height: 24rem;
+  border: 1px solid var(--color-zinc-200);
+  border-radius: 1rem;
+  background: var(--color-zinc-50);
+  padding: 1.25rem;
+}
+
+.comments-error-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.comments-error-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-zinc-800);
+}
+
+.comments-error-desc {
+  font-size: 0.875rem;
+  color: var(--color-zinc-500);
+  line-height: 1.6;
+}
+
+.comments-skeleton-line {
+  height: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.comments-skeleton-line--title {
+  width: 42%;
+  height: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.comments-skeleton-line--short {
+  width: 32%;
+}
+
+.comments-skeleton-line--medium {
+  width: 62%;
+}
+
+.comments-skeleton-panel {
+  margin-top: 1.5rem;
+  min-height: 16rem;
+  border-radius: 0.875rem;
+}
+
+.comments-widget {
+  position: relative;
+}
+
+.comments-widget--loading {
+  min-height: 24rem;
+}
+
+.comments-widget iframe {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .comments-loading-card,
+  :root:not([data-theme="light"]) .comments-error-card {
+    border-color: var(--color-zinc-700);
+    background: var(--color-zinc-800);
+  }
+
+  :root:not([data-theme="light"]) .comments-error-title {
+    color: var(--color-zinc-100);
+  }
+
+  :root:not([data-theme="light"]) .comments-error-desc {
+    color: var(--color-zinc-400);
+  }
+}
+
+[data-theme="dark"] .comments-loading-card,
+[data-theme="dark"] .comments-error-card {
+  border-color: var(--color-zinc-700);
+  background: var(--color-zinc-800);
+}
+
+[data-theme="dark"] .comments-error-title {
+  color: var(--color-zinc-100);
+}
+
+[data-theme="dark"] .comments-error-desc {
+  color: var(--color-zinc-400);
+}
+
+/* 评论配置引导 */
+.comments-setup-guide {
+  margin-top: 0.75rem;
+}
+
+.comments-setup-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-orange-600);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.comments-setup-link:hover,
+.comments-setup-link:focus-visible {
+  border-bottom-color: var(--color-orange-500);
+  color: var(--color-orange-500);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .comments-setup-link {
+    color: var(--color-orange-400);
+  }
+
+  :root:not([data-theme="light"]) .comments-setup-link:hover,
+  :root:not([data-theme="light"]) .comments-setup-link:focus-visible {
+    color: var(--color-orange-300);
+    border-bottom-color: var(--color-orange-300);
+  }
+}
+
+[data-theme="dark"] .comments-setup-link {
+  color: var(--color-orange-400);
+}
+
+[data-theme="dark"] .comments-setup-link:hover,
+[data-theme="dark"] .comments-setup-link:focus-visible {
+  color: var(--color-orange-300);
+  border-bottom-color: var(--color-orange-300);
+}
+
+/* 评论加载失败 */
+.comments-load-error {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--color-zinc-200);
+  border-radius: 0.75rem;
+  background: var(--color-zinc-50);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.comments-load-error-desc {
+  font-size: 0.875rem;
+  color: var(--color-zinc-500);
+  margin: 0;
+}
+
+.comments-reload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-orange-600);
+  background: var(--color-orange-50);
+  border: 1px solid var(--color-orange-200);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.comments-reload-btn:hover {
+  background: var(--color-orange-100);
+  border-color: var(--color-orange-300);
+}
+
+.comments-reload-btn:active {
+  background: var(--color-orange-200);
+}
+
+.comments-reload-btn:focus-visible {
+  outline: 2px solid var(--color-orange-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .comments-load-error {
+    border-color: var(--color-zinc-700);
+    background: var(--color-zinc-800);
+  }
+
+  :root:not([data-theme="light"]) .comments-load-error-desc {
+    color: var(--color-zinc-400);
+  }
+
+  :root:not([data-theme="light"]) .comments-reload-btn {
+    color: var(--color-orange-400);
+    background: var(--color-zinc-700);
+    border-color: var(--color-zinc-600);
+  }
+
+  :root:not([data-theme="light"]) .comments-reload-btn:hover {
+    background: var(--color-zinc-600);
+    border-color: var(--color-zinc-500);
+  }
+
+  :root:not([data-theme="light"]) .comments-reload-btn:active {
+    background: var(--color-zinc-500);
+  }
+}
+
+[data-theme="dark"] .comments-load-error {
+  border-color: var(--color-zinc-700);
+  background: var(--color-zinc-800);
+}
+
+[data-theme="dark"] .comments-load-error-desc {
+  color: var(--color-zinc-400);
+}
+
+[data-theme="dark"] .comments-reload-btn {
+  color: var(--color-orange-400);
+  background: var(--color-zinc-700);
+  border-color: var(--color-zinc-600);
+}
+
+[data-theme="dark"] .comments-reload-btn:hover {
+  background: var(--color-zinc-600);
+  border-color: var(--color-zinc-500);
+}
+
+[data-theme="dark"] .comments-reload-btn:active {
+  background: var(--color-zinc-500);
+}
+
 /* ==============================
    回到顶部按钮
    ============================== */

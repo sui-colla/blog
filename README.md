@@ -198,7 +198,22 @@ FORM_ALLOWED_ORIGINS=https://your-domain.com
 
 可以参考 `.env.example`。注意：Resend 密钥和邮箱配置不要使用 `NEXT_PUBLIC_` 前缀，避免暴露到浏览器端。
 
-Giscus 评论需要在 `src/components/Comments.tsx` 中配置真实的 `repoId` 和 `categoryId`。
+Giscus 评论需要在 `.env.local` 中配置真实的 `NEXT_PUBLIC_GISCUS_REPO_ID` 和 `NEXT_PUBLIC_GISCUS_CATEGORY_ID`，`src/components/Comments.tsx` 会自动读取这些值。
+
+配置步骤：
+
+1. 访问 [giscus.app](https://giscus.app)，使用 GitHub 登录。
+2. 在 **Configuration** 区域选择仓库（需开启 Discussions 功能）。
+3. 选择或创建评论分类（建议使用 Announcements）。
+4. 复制页面上生成的 `data-repo-id` 和 `data-category-id` 值。
+5. 填入 `.env.local`：
+
+```bash
+NEXT_PUBLIC_GISCUS_REPO_ID=R_xxxxxxxxxxxxx
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=DIC_xxxxxxxxxxxxxxxxxxxx
+```
+
+如果环境变量为空，评论区会显示「评论暂时不可用」提示和配置引导链接，不会加载 Giscus 脚本。
 
 ## 后台管理页
 

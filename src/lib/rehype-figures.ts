@@ -1,3 +1,11 @@
+/**
+ * rehype-figures 插件
+ *
+ * 将 Markdown 中独立的图片（<p><img></p>）转换为语义化的 <figure> 结构：
+ * - 图片的 title 属性或 alt 文本作为 <figcaption> 显示
+ * - 自动添加 loading="lazy" 和 decoding="async" 优化加载性能
+ * - 区分有/无标题的样式变体（article-figure--captioned / --plain）
+ */
 import type { Element, Root, Text } from "hast";
 
 type HastChild = Root["children"][number];

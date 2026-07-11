@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * 文章目录（Table of Contents）
+ *
+ * 高亮原理：
+ * - IntersectionObserver 监听所有标题元素的可见性
+ * - rootMargin: "-80px 0px -65% 0px" 含义：
+ *   · top -80px 避开 sticky header
+ *   · bottom -65% 只检测视口上方 35% 区域，确保高亮的是"正在阅读"的章节
+ * - visibleSet 记录当前可见的标题 id，取 DOM 顺序中第一个作为 activeId
+ *
+ * 初始加载时检查 URL hash，自动滚动到锚点位置并高亮对应目录项。
+ */
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { TocHeading } from "@/lib/posts";
 import { useI18n } from "@/lib/i18n";

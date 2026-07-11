@@ -1,3 +1,13 @@
+/**
+ * rehype-toc 插件
+ *
+ * 遍历 HAST 树中的 h2/h3/h4 标题元素：
+ * 1. 为每个标题生成 URL 友好的锚点 id（支持中文，自动去重）
+ * 2. 在标题末尾追加 <a href="#id"> 锚点链接（.heading-anchor）
+ * 3. 将标题信息收集到 options.headings 数组，供 TableOfContents 组件使用
+ *
+ * 必须在 rehype-pretty-code 之后运行，否则代码块内的 # 会被误识别为标题。
+ */
 import type { Element, Root, Text } from "hast";
 
 export interface TocHeading {

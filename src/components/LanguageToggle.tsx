@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * 语言切换按钮：中文 ↔ 英文，通过 I18nContext 全局生效。
+ */
 import { useI18n } from "@/lib/i18n";
 
 export default function LanguageToggle() {

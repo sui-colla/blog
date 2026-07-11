@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * 文章正文渲染器
+ *
+ * 职责：
+ * 1. 通过 dangerouslySetInnerHTML 注入服务端渲染好的 HTML
+ * 2. 客户端增强：为代码块注入「复制」按钮（rehype 插件只生成容器结构）
+ * 3. 为所有 <img> 绑定点击事件 → 打开 Lightbox 灯箱查看大图
+ *
+ * 为什么不在服务端完成复制按钮？
+ * clipboard API 和事件监听只能在客户端运行，所以这里用 useEffect 做 DOM 增强。
+ */
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 import Lightbox from "@/components/Lightbox";

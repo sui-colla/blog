@@ -1,5 +1,16 @@
 "use client";
 
+/**
+ * 全站搜索（模态框）
+ *
+ * 工作原理：
+ * 1. 首次打开时懒加载搜索索引（GET /api/search-index）和 Fuse.js 库
+ * 2. Fuse.js 在客户端执行模糊匹配，支持按标题/摘要/标签/正文/系列加权搜索
+ * 3. 可选按标签或系列下拉筛选（纯客户端过滤，不重新请求）
+ * 4. 匹配文本高亮：Fuse 返回的 match.indices 标记匹配区间，用 <mark> 渲染
+ *
+ * 快捷键：Cmd/Ctrl+K 打开/关闭，上下箭头导航，Enter 跳转，Esc 关闭
+ */
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type Fuse from "fuse.js";
@@ -83,6 +94,8 @@ export default function Search() {
     setActiveIndex(0);
   }, []);
 
+  // 懒加载：首次打开搜索时才加载 Fuse.js 库和搜索索引数据，
+  // 减少首页 JS 包体积。Promise.all 并行加载两者。
   const loadIndex = useCallback(async () => {
     if (fuse) return;
     setLoading(true);

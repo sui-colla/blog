@@ -1,3 +1,11 @@
+/**
+ * Resend 邮件服务集成
+ *
+ * - addSubscriber: 将邮箱添加到 Resend Audience（自动识别重复订阅 409）
+ * - sendContactMessage: 通过 Resend Email API 发送联系表单邮件
+ * - 8 秒超时保护，避免 Resend 响应慢时阻塞请求
+ * - 环境变量缺失时返回 503，不抛出异常
+ */
 import type {
   ContactInput,
   ContactSuccessCode,

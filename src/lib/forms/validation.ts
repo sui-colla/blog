@@ -1,3 +1,12 @@
+/**
+ * 表单校验层
+ *
+ * 提供订阅和联系表单的服务端校验逻辑，返回类型安全的 ValidationResult：
+ * - ok: true  → 数据已清洗（邮箱标准化为小写）
+ * - ok: false → 带 HTTP 状态码和错误码，API 直接透传给客户端
+ *
+ * validateRequestOrigin: 可选的 CORS 白名单校验（通过 FORM_ALLOWED_ORIGINS 环境变量配置）
+ */
 export type FormErrorCode =
   | "invalid_payload"
   | "missing_fields"

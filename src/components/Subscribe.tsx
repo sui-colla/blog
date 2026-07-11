@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 邮箱订阅表单
+ *
+ * 客户端校验（邮箱格式、非空）后调用 POST /api/subscribe，
+ * 服务端通过 Resend API 将邮箱加入 audience 列表。
+ * 支持识别"已订阅"状态并显示友好提示。
+ */
 import { useState, type FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 

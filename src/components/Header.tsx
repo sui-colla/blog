@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 顶部导航栏
+ *
+ * - sticky 定位，滚动时半透明毛玻璃效果（backdrop-blur）
+ * - 桌面端显示完整导航链接，移动端由 Sidebar 提供导航
+ * - 集成 Search（⌘K）、ThemeToggle、LanguageToggle
+ */
 import Link from "next/link";
 import Search from "@/components/Search";
 import ThemeToggle from "@/components/ThemeToggle";

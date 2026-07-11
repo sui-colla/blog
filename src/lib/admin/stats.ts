@@ -1,3 +1,10 @@
+/**
+ * Admin 仪表盘数据聚合（仅服务端）
+ *
+ * server-only 确保此模块不会被客户端代码引用，防止敏感逻辑泄露。
+ * 聚合内容统计（文章/草稿/标签/系列）和服务配置状态（Resend/Umami/Vercel），
+ * 供 /admin 页面只读展示。不暴露 API Key 或完整邮箱列表。
+ */
 import "server-only";
 
 import fs from "fs";

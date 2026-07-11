@@ -1,3 +1,17 @@
+/**
+ * 内容层（Content Layer）
+ *
+ * 负责从 content/posts/*.md 读取文章，解析 frontmatter 和 Markdown 正文，
+ * 并提供文章列表、标签、搜索索引、系列等查询接口。
+ *
+ * 缓存策略（三级缓存，仅在同一次 Node 进程内有效）：
+ *   - postMetaCache:    所有文章元数据（首次全量读取后缓存）
+ *   - postFileCache:    单篇文章的原始解析结果（frontmatter + markdown 正文）
+ *   - postContentCache: 单篇文章的完整 HTML 渲染结果（含 rehype 插件处理）
+ *
+ * 构建时 Next.js 会调用 generateStaticParams 遍历所有文章，
+ * 因此缓存主要加速 SSG 期间的重复读取。
+ */
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -48,6 +62,8 @@ interface ParsedPostFile {
   content: string;
 }
 
+// 模块级单例缓存：在同一进程的生命周期内有效（如 next dev / SSG 构建期间）。
+// 在 serverless 环境（如 Vercel）中，每次冷启动都会重置，不会跨请求共享。
 let postMetaCache: PostMeta[] | null = null;
 const postFileCache = new Map<string, ParsedPostFile>();
 const postContentCache = new Map<string, Post>();
@@ -309,6 +325,13 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 
   const headings: TocHeading[] = [];
 
+  // 插件顺序很重要：
+  // remarkRehype       → MDAST → HAST 转换
+  // rehypePrettyCode   → 代码高亮（必须在 rehypeCodeMetaPlugin 之前，后者依赖其输出结构）
+  // rehypeFiguresPlugin → 将独立图片包装为 <figure>（在代码高亮之后，避免干扰代码块）
+  // rehypeCodeMetaPlugin → 为代码块添加标题栏和复制按钮容器
+  // rehypeTocPlugin    → 提取 h2/h3/h4 标题并注入锚点（必须在 rehypeStringify 之前）
+  // rehypeStringify    → HAST → HTML 字符串
   const processed = await remark()
     .use(remarkRehype)
     .use(rehypePrettyCode, {

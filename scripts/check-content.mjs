@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+/**
+ * 内容质量检查脚本（npm run check:content）
+ *
+ * 遍历 content/posts/*.md，校验：
+ * - frontmatter 必填字段（title/date/summary）及类型
+ * - 标签合法性（非空、无重复、大小写归一化无冲突）
+ * - 图片 alt 文本、本地图片/链接路径是否存在
+ * - 封面图路径、站内文章链接是否指向有效 slug
+ * - 图片体积警告（>500KB 建议压缩）
+ *
+ * 可选 --external 参数检查外链可达性（HEAD 请求，5s 超时）。
+ * 有错误时 exit code = 1，可集成到 CI。
+ */
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";

@@ -410,22 +410,31 @@ const results = fuse.search(keyword);
 
 ## 评论系统
 
-使用 [Giscus](https://giscus.app/) 基于 GitHub Discussions 的评论：
+使用 [Giscus](https://giscus.app/) 基于 GitHub Discussions 的评论。
 
 ```bash
 npm install @giscus/react
 ```
+
+在 `.env.local` 中配置：
+
+```bash
+NEXT_PUBLIC_GISCUS_REPO_ID=...
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=...
+```
+
+组件会自动读取环境变量并跟随站点主题 / 语言：
 
 ```tsx
 import Giscus from "@giscus/react";
 
 <Giscus
   repo="your-username/your-repo"
-  repoId="..."
+  repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ""}
   category="Announcements"
-  categoryId="..."
+  categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ""}
   mapping="pathname"
-  theme="preferred_color_scheme"
+  loading="lazy"
 />
 ```
 

@@ -1,3 +1,14 @@
+/**
+ * rehype-code-meta 插件
+ *
+ * 对 rehype-pretty-code 的输出做二次加工：
+ * - 为每个代码块的 <figure> 注入统一的 header 结构（标题 + 语言标签 + 操作区）
+ * - 操作区（.code-block-actions）供 ArticleContent 在客户端注入「复制」按钮
+ * - 如果 rehype-pretty-code 已生成 title 节点，则替换为自定义 header；
+ *   否则在 <pre> 前插入
+ *
+ * 为什么要拆分？让样式/结构（rehype）和交互逻辑（客户端）解耦。
+ */
 import type { Element, ElementContent, Root, Text } from "hast";
 
 function isElement(node: unknown): node is Element {

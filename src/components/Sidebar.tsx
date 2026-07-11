@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 首页左侧边栏
+ *
+ * 包含导航链接、探索区（项目/Now/链接/Uses）、热门文章排行、标签云和文章统计。
+ * 桌面端固定在首页左侧，移动端内容折叠到 HomeContent 底部显示。
+ * 通过 usePathname() 高亮当前所在页面的导航项。
+ */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";

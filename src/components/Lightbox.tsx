@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 图片灯箱（Lightbox）
+ *
+ * 使用 createPortal 将灯箱渲染到 document.body，脱离父组件的 overflow:hidden 约束。
+ * 支持键盘导航：← → 切换图片，Esc 关闭。
+ * 打开时锁定 body 滚动，关闭后恢复。
+ */
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useCallback, useState } from "react";

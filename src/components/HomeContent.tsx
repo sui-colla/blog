@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 首页内容（客户端组件）
+ *
+ * 布局：左侧 Sidebar + 右侧文章列表。
+ * 文章分页（POSTS_PER_PAGE=5）通过 URL ?page=N 控制。
+ * 移动端将 Sidebar 中的热门文章和标签云单独展示在主内容区底部。
+ */
 import Link from "next/link";
 import Subscribe from "@/components/Subscribe";
 import TagLink from "@/components/TagLink";

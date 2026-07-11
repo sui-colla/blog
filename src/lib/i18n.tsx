@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * 客户端国际化（i18n）
+ *
+ * 架构要点：
+ * - 仅客户端渲染，服务端默认输出中文（避免 SSR/CSR 水合不匹配）
+ * - 语言偏好持久化到 localStorage，切换时同步更新 <html lang="...">
+ * - 翻译字典以 key-value 平铺存储，用 t("section.key") 调用
+ * - I18nProvider 必须在布局顶层包裹，所有客户端组件通过 useI18n() 消费
+ */
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 type Locale = "zh" | "en";
@@ -37,6 +46,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "post.backHome": "返回首页",
     "post.readingTime": "分钟阅读",
     "post.toc": "目录",
+
+    // 评论
+    "comments.title": "评论",
+    "comments.desc": "欢迎留下你的想法、问题或补充，评论通过 GitHub Discussions 提供支持。",
+    "comments.loading": "评论加载中...",
+    "comments.missingTitle": "评论暂时不可用",
+    "comments.missingDesc": "请先在环境变量中配置 Giscus 的 repoId 和 categoryId，然后重新部署。",
+    "comments.setupGuide": "前往 giscus.app 获取配置 →",
+    "comments.reload": "重新加载评论",
+    "comments.loadErrorDesc": "评论加载超时，请检查网络连接后点击重试。",
 
     // 标签页
     "tags.title": "标签",
@@ -229,6 +248,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "post.backHome": "Back to Home",
     "post.readingTime": "min read",
     "post.toc": "Contents",
+
+    // Comments
+    "comments.title": "Comments",
+    "comments.desc": "Share your thoughts, questions, or additions. Comments are powered by GitHub Discussions.",
+    "comments.loading": "Loading comments...",
+    "comments.missingTitle": "Comments temporarily unavailable",
+    "comments.missingDesc": "Set Giscus repoId and categoryId in your environment variables, then redeploy.",
+    "comments.setupGuide": "Get config at giscus.app →",
+    "comments.reload": "Reload comments",
+    "comments.loadErrorDesc": "Comments failed to load. Please check your connection and try again.",
 
     // Tags
     "tags.title": "Tags",

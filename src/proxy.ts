@@ -1,3 +1,13 @@
+/**
+ * Admin 访问代理（Next.js Middleware）
+ *
+ * 拦截所有 /admin/* 请求，要求 HTTP Basic Auth 认证：
+ * - 凭据通过 ADMIN_USERNAME / ADMIN_PASSWORD 环境变量配置
+ * - 未配置凭据时返回 404（隐藏后台存在的事实）
+ * - 认证失败返回 401 + WWW-Authenticate 头触发浏览器登录弹窗
+ *
+ * matcher 配置见底部 config，仅匹配 /admin/:path*。
+ */
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 

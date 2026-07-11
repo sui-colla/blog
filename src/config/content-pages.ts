@@ -1,3 +1,9 @@
+/**
+ * 内容页数据配置
+ *
+ * 项目（Projects）、Now、链接（Links）、Uses 四个内容页的数据结构和静态数据均在此定义。
+ * 修改这些内容后重新构建即可生效，无需数据库。
+ */
 export type ProjectStatus = "featured" | "building" | "archived" | "paused";
 
 export interface ProjectItem {

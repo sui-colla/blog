@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * 主题切换按钮（system → light → dark → system 循环切换）
+ *
+ * - 偏好持久化到 localStorage("theme")
+ * - "system" 模式移除 data-theme 属性，让 CSS 的 prefers-color-scheme 媒体查询生效
+ * - "light"/"dark" 模式显式设置 data-theme，覆盖系统偏好
+ * - 未 mounted 时渲染空占位符，防止 SSR 水合不匹配
+ */
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 

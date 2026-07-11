@@ -1,9 +1,24 @@
+/**
+ * JSON-LD 结构化数据（Schema.org）
+ *
+ * 为搜索引擎生成富文本摘要：
+ * - buildWebsiteJsonLd: 全站级 WebSite + Person（站点名称、搜索框、作者）
+ * - buildArticleJsonLd: 文章级 Article + BreadcrumbList（标题、日期、封面、作者）
+ *
+ * 通过 <script type="application/ld+json"> 注入到 <head> 中，
+ * Google Rich Results Test 可验证输出是否正确。
+ */
 import { absoluteUrl, siteConfig } from "@/config/site";
 import type { Post } from "@/lib/posts";
 
+// @id 使用 fragment 形式，避免与真实 URL 冲突
 const personId = `${siteConfig.url}/#person`;
 const websiteId = `${siteConfig.url}/#website`;
 
+/**
+ * 序列化 JSON-LD 数据：转义 `<` 为 `<`，
+ * 防止 JSON 中的 `</script>` 提前截断 <script> 标签导致 XSS。
+ */
 export function serializeJsonLd(data: unknown) {
   return JSON.stringify(data).replace(/</g, "\\u003c");
 }

@@ -1,3 +1,9 @@
+/**
+ * RSS Feed 路由（/feed.xml）
+ *
+ * 生成标准 RSS 2.0 XML，包含全文内容（content:encoded）。
+ * force-static: 构建时生成一次，CDN 缓存 24 小时（s-maxage=86400）。
+ */
 import { absoluteUrl, siteConfig } from "@/config/site";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 
@@ -12,6 +18,7 @@ function escapeXml(value: string) {
     .replace(/'/g, "&apos;");
 }
 
+// 包裹 CDATA 段，同时处理内容中可能出现的 `]]>` 截断（拆分为两段 CDATA）
 function cdata(value: string) {
   return `<![CDATA[${value.replace(/\]\]>/g, "]]]]><![CDATA[>")}]]>`;
 }
