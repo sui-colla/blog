@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 邮箱订阅表单
+ *
+ * 客户端校验（邮箱格式、非空）后调用 POST /api/subscribe，
+ * 服务端通过 Resend API 将邮箱加入 audience 列表。
+ * 支持识别"已订阅"状态并显示友好提示。
+ */
 import { useState, type FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
 
@@ -67,12 +74,15 @@ export default function Subscribe() {
     }
   }
 
+  const messageId = "subscribe-message";
+  const hasError = status === "error" && Boolean(message);
+
   return (
     <div className="subscribe-box">
       <h3 className="subscribe-title">{t("subscribe.title")}</h3>
       <p className="subscribe-desc">{t("subscribe.desc")}</p>
 
-      <form className="subscribe-form" onSubmit={handleSubmit}>
+      <form className="subscribe-form" onSubmit={handleSubmit} noValidate>
         <input
           type="email"
           className="subscribe-input"
@@ -87,11 +97,16 @@ export default function Subscribe() {
           }}
           disabled={status === "loading"}
           aria-label={t("subscribe.ariaLabel")}
+          aria-invalid={hasError || undefined}
+          aria-describedby={message ? messageId : undefined}
+          autoComplete="email"
+          required
         />
         <button
           type="submit"
           className="subscribe-btn"
           disabled={status === "loading"}
+          aria-busy={status === "loading" || undefined}
         >
           {status === "loading" ? t("subscribe.loading") : t("subscribe.btn")}
         </button>
@@ -99,6 +114,9 @@ export default function Subscribe() {
 
       {message && (
         <p
+          id={messageId}
+          role="status"
+          aria-live="polite"
           className={
             status === "success"
               ? "subscribe-msg subscribe-msg--success"

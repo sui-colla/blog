@@ -1,7 +1,16 @@
+/**
+ * 管理后台页面（/admin）
+ *
+ * 只读运营面板，展示文章统计、服务配置状态和部署信息。
+ * - force-dynamic: 每次请求都重新生成，不缓存
+ * - 访问保护：通过 middleware（proxy.ts）的 Basic Auth 拦截未授权请求
+ * - robots: noindex/nofollow，防止搜索引擎收录
+ */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAdminDashboardData, type AdminStatusItem } from "@/lib/admin/stats";
 
+// 强制每次请求动态渲染，确保统计数据实时
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {

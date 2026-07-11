@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * 语言切换按钮：中文 ↔ 英文，通过 I18nContext 全局生效。
+ */
 import { useI18n } from "@/lib/i18n";
 
 export default function LanguageToggle() {
@@ -7,6 +10,7 @@ export default function LanguageToggle() {
 
   return (
     <button
+      type="button"
       onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
       className="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 hover:text-orange-500 hover:bg-orange-50 dark:text-zinc-400 dark:hover:text-orange-400 dark:hover:bg-zinc-800 transition-colors text-xs font-bold"
       title={locale === "zh" ? "Switch to English" : "切换到中文"}

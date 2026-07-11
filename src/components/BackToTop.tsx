@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 export default function BackToTop() {
+  const { t } = useI18n();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -21,10 +23,11 @@ export default function BackToTop() {
 
   return (
     <button
+      type="button"
       onClick={scrollToTop}
       className="back-to-top"
-      aria-label="回到顶部"
-      title="回到顶部"
+      aria-label={t("backToTop.label")}
+      title={t("backToTop.label")}
     >
       <svg
         width="20"
@@ -35,6 +38,7 @@ export default function BackToTop() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
       >
         <path d="m18 15-6-6-6 6" />
       </svg>

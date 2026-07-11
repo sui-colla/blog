@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * 阅读进度条：监听页面滚动事件，计算并展示顶部进度指示器。
+ * passive: true 避免阻塞滚动性能。
+ */
 import { useEffect, useState } from "react";
 
 export default function ReadingProgress() {

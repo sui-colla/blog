@@ -1,3 +1,9 @@
+/**
+ * 联系表单 API（POST /api/contact）
+ *
+ * 处理流程：校验请求来源 → 校验字段（姓名/邮箱/留言） → 通过 Resend 发送邮件。
+ * reply_to 设为访客邮箱，方便直接回复。
+ */
 import { sendContactMessage } from "@/lib/forms/resend";
 import {
   validateContactPayload,

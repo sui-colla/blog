@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 首页内容（客户端组件）
+ *
+ * 布局：左侧 Sidebar + 右侧文章列表。
+ * 文章分页（POSTS_PER_PAGE=5）通过 URL ?page=N 控制。
+ * 移动端将 Sidebar 中的热门文章和标签云单独展示在主内容区底部。
+ */
 import Link from "next/link";
 import Subscribe from "@/components/Subscribe";
 import TagLink from "@/components/TagLink";
@@ -56,54 +63,58 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
           <h2 className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-orange-500 border-b-2 border-orange-300 pb-1">
             {t("home.latestPosts")}
           </h2>
+          {pagePosts.length === 0 ? (
+            <p className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/60 p-8 text-center text-sm text-zinc-500 dark:border-orange-900/50 dark:bg-orange-950/20 dark:text-zinc-400" role="status">
+              {t("home.empty")}
+            </p>
+          ) : (
           <div className="flex flex-col gap-8">
             {pagePosts.map((post) => (
-              <article key={post.slug}>
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="group block rounded-xl overflow-hidden hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
-                >
-                  <div className="p-5">
-                    <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
-                      <time dateTime={post.date}>
-                        {new Date(post.date).toLocaleDateString(dateLocale, {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </time>
-                      <span>·</span>
-                      <span>
-                        {post.readingTime} {t("post.readingTime")}
-                      </span>
-                    </div>
-                    <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
-                      {post.pinned && (
-                        <span className="inline-block mr-2 text-xs font-medium text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded-full align-middle">
-                          📌 {locale === "zh" ? "置顶" : "Pinned"}
-                        </span>
-                      )}
-                      {post.title}
-                    </h3>
-                    <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                      {post.summary}
-                    </p>
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="mt-3 flex gap-2">
-                        {post.tags.map((tag) => (
-                          <TagLink
-                            key={tag}
-                            tag={tag}
-                            className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
-                          />
-                        ))}
-                      </div>
-                    )}
+              <article key={post.slug} className="group rounded-xl overflow-hidden hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors">
+                <div className="p-5">
+                  <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+                    <time dateTime={post.date}>
+                      {new Date(post.date).toLocaleDateString(dateLocale, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                    <span>
+                      {post.readingTime} {t("post.readingTime")}
+                    </span>
                   </div>
-                </Link>
+                  <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
+                    {post.pinned && (
+                      <span className="inline-block mr-2 text-xs font-medium text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded-full align-middle">
+                        <span aria-hidden="true">📌 </span>
+                        {t("post.pinned")}
+                      </span>
+                    )}
+                    <Link href={`/posts/${post.slug}`} className="hover:text-orange-600 dark:hover:text-orange-400">
+                      {post.title}
+                    </Link>
+                  </h3>
+                  <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    {post.summary}
+                  </p>
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="mt-3 flex gap-2">
+                      {post.tags.map((tag) => (
+                        <TagLink
+                          key={tag}
+                          tag={tag}
+                          className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </article>
             ))}
           </div>
+          )}
 
           {/* 分页导航 */}
           {totalPages > 1 && (

@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * 首页左侧边栏
+ *
+ * 包含导航链接（首页/关于）、探索区（项目/Now/链接/Uses）、热门文章排行、
+ * 标签云、浏览导航（所有标签/按时间归档）和文章统计。
+ * 桌面端固定在首页左侧，移动端内容折叠到 HomeContent 底部显示。
+ * 通过 usePathname() 高亮当前所在页面的导航项。
+ */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -23,8 +31,13 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
   const navItems = [
     { href: "/", label: t("nav.home"), icon: "🏠" },
     { href: "/about", label: t("nav.about"), icon: "👤" },
-    { href: "/tags", label: t("nav.tags"), icon: "🏷️" },
-    { href: "/archive", label: t("nav.archive"), icon: "📚" },
+  ];
+
+  const exploreItems = [
+    { href: "/projects", label: t("nav.projects"), icon: "✨" },
+    { href: "/now", label: t("nav.now"), icon: "🌿" },
+    { href: "/links", label: t("nav.links"), icon: "🔗" },
+    { href: "/uses", label: t("nav.uses"), icon: "🧰" },
   ];
 
   return (
@@ -40,12 +53,34 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
                 pathname === item.href ? "sidebar-link--active" : ""
               }`}
             >
-              <span className="sidebar-link-icon">{item.icon}</span>
+              <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>
               {item.label}
             </Link>
           </div>
         ))}
       </nav>
+
+      <div className="sidebar-divider" />
+
+      <div className="sidebar-section">
+        <h3 className="sidebar-section-title">{t("nav.explore")}</h3>
+        <nav className="sidebar-nav" aria-label={t("nav.explore")}>
+          {exploreItems.map((item, index) => (
+            <div key={item.href}>
+              {index > 0 && <div className="sidebar-nav-divider" />}
+              <Link
+                href={item.href}
+                className={`sidebar-link ${
+                  pathname === item.href ? "sidebar-link--active" : ""
+                }`}
+              >
+                <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>
+                {item.label}
+              </Link>
+            </div>
+          ))}
+        </nav>
+      </div>
 
       {/* 分割线 */}
       <div className="sidebar-divider" />
@@ -96,16 +131,33 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
         </div>
       </div>
 
+      {/* 浏览导航 */}
+      <div className="sidebar-divider" />
+      <div className="sidebar-section">
+        <h3 className="sidebar-section-title">{t("browse.title")}</h3>
+        <nav className="sidebar-nav" aria-label={t("browse.title")}>
+          <Link href="/tags" className="sidebar-link">
+            <span className="sidebar-link-icon" aria-hidden="true">🏷️</span>
+            {t("browse.allTags")}
+          </Link>
+          <div className="sidebar-nav-divider" />
+          <Link href="/archive" className="sidebar-link">
+            <span className="sidebar-link-icon" aria-hidden="true">📚</span>
+            {t("browse.archive")}
+          </Link>
+        </nav>
+      </div>
+
       {/* 统计信息 */}
       <div className="sidebar-divider" />
       <div className="sidebar-stats">
         <div className="sidebar-stat">
           <span className="sidebar-stat-value">{postCount}</span>
-          <span className="sidebar-stat-label">文章</span>
+          <span className="sidebar-stat-label">{t("sidebar.posts")}</span>
         </div>
         <div className="sidebar-stat">
           <span className="sidebar-stat-value">{tags.length}</span>
-          <span className="sidebar-stat-label">标签</span>
+          <span className="sidebar-stat-label">{t("sidebar.tags")}</span>
         </div>
       </div>
     </aside>

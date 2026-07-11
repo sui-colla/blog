@@ -1,5 +1,15 @@
 "use client";
 
+/**
+ * 文章详情页布局（客户端组件）
+ *
+ * 页面结构：
+ * - 顶部：阅读进度条 + 回到顶部按钮
+ * - 主体（lg:flex）：左侧文章区 + 右侧粘性目录（桌面端）
+ * - 文章区：元信息 → 系列导航 → 移动端折叠目录 → 正文 → 分享 → 上下篇 → 相关推荐 → 评论 → 赞赏 → 订阅
+ *
+ * 移动端目录折叠为 <details>，桌面端目录 sticky 固定在右侧。
+ */
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 import type { Post, PostMeta } from "@/lib/posts";
@@ -127,7 +137,7 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
             )}
 
             {/* 评论区 */}
-            <Comments slug={post.slug} />
+            <Comments />
 
             {/* 赞赏支持 */}
             <Donate />

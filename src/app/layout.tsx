@@ -1,9 +1,22 @@
+/**
+ * 根布局（Root Layout）— 服务端组件
+ *
+ * 所有页面的公共结构：<html>、<head> 元数据、Header、Footer、全局 Provider。
+ *
+ * 关键设计：
+ * - Geist 字体通过 next/font/google 加载，生成 CSS 变量避免布局偏移
+ * - 主题（亮/暗）通过内联 <script> 在 HTML 渲染前读取 localStorage 并设置 data-theme，
+ *   消除首次加载时的亮→暗闪烁（FOUC）
+ * - I18nProvider 包裹 Header/main/Footer，使所有子组件可用 useI18n()
+ * - Analytics 和 ServiceWorkerRegister 放在 body 末尾，不影响首屏渲染
+ */
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import SkipToContent from "@/components/SkipToContent";
 import { I18nProvider } from "@/lib/i18n";
 import { siteConfig } from "@/config/site";
 import { buildWebsiteJsonLd, serializeJsonLd } from "@/lib/structured-data";
@@ -74,6 +87,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
+        {/* FOUC 防护：在浏览器渲染前同步读取 localStorage 中的主题偏好，
+            直接设置 data-theme 属性，避免页面先显示亮色再跳暗色的闪烁 */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
@@ -81,13 +96,12 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col text-zinc-800 dark:text-zinc-100 font-sans">
-        {/* 跳过导航链接 - 无障碍 */}
-        <a href="#main-content" className="skip-to-content">
-          Skip to content
-        </a>
         <I18nProvider>
+          <SkipToContent />
           <Header />
-          <main id="main-content" className="flex-1">{children}</main>
+          <main id="main-content" className="main-content flex-1" tabIndex={-1}>
+            {children}
+          </main>
           <Footer />
         </I18nProvider>
         <Analytics />

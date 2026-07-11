@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+/**
+ * 内容质量检查脚本（npm run check:content）
+ *
+ * 遍历 content/posts/*.md，校验：
+ * - frontmatter 必填字段（title/date/summary）及类型
+ * - 标签合法性（非空、无重复、大小写归一化无冲突）
+ * - 图片 alt 文本、本地图片/链接路径是否存在
+ * - 封面图路径、站内文章链接是否指向有效 slug
+ * - 图片体积警告（>500KB 建议压缩）
+ *
+ * 可选 --external 参数检查外链可达性（HEAD 请求，5s 超时）。
+ * 有错误时 exit code = 1，可集成到 CI。
+ */
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
@@ -140,16 +153,24 @@ function extractMarkdownLinks(content) {
   return links;
 }
 
-function parseMarkdownTarget(rawTarget) {
+function parseMarkdownTargetDetails(rawTarget) {
   let target = rawTarget.trim();
   if (target.startsWith("<") && target.includes(">")) {
-    return target.slice(1, target.indexOf(">"));
+    const closingIndex = target.indexOf(">");
+    const url = target.slice(1, closingIndex);
+    const rest = target.slice(closingIndex + 1).trim();
+    const titleMatch = rest.match(/^["'](.*)["']$/);
+    return { target: url, title: titleMatch?.[1]?.trim() ?? "" };
   }
 
-  const titleMatch = target.match(/^([^\s]+)\s+["'].*["']$/);
-  if (titleMatch) return titleMatch[1];
+  const titleMatch = target.match(/^([^\s]+)\s+["'](.*)["']$/);
+  if (titleMatch) return { target: titleMatch[1], title: titleMatch[2].trim() };
 
-  return target;
+  return { target, title: "" };
+}
+
+function parseMarkdownTarget(rawTarget) {
+  return parseMarkdownTargetDetails(rawTarget).target;
 }
 
 function withoutHashAndQuery(target) {
@@ -295,11 +316,14 @@ async function checkPostFile(filename) {
   const searchableContent = stripCode(content);
 
   for (const image of extractMarkdownImages(searchableContent)) {
-    const target = parseMarkdownTarget(image.rawTarget);
+    const { target, title } = parseMarkdownTargetDetails(image.rawTarget);
     if (!image.alt.trim()) {
       addError(report, `图片 "${target}" 缺少 alt 文本`);
     } else if (image.alt.trim().length < 4) {
       addWarning(report, `图片 "${target}" 的 alt 文本过短，建议写得更具体`);
+    }
+    if (title && title.length < 4) {
+      addWarning(report, `图片 "${target}" 的 caption 过短，建议写得更具体`);
     }
 
     const targetType = classifyTarget(target);

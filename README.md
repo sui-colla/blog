@@ -1,6 +1,8 @@
 # LunaPath Blog
 
-一个基于 Next.js App Router 的个人博客框架，使用 Markdown 作为内容源，内置文章列表、标签、归档、RSS、sitemap、动态 OG 图片、站内搜索、评论、订阅和联系表单。
+[![CI](https://github.com/sui-colla/blog/actions/workflows/ci.yml/badge.svg)](https://github.com/sui-colla/blog/actions/workflows/ci.yml)
+
+一个基于 Next.js App Router 的个人博客，使用 Markdown 作为内容源，内置文章列表、标签、归档、RSS、sitemap、动态 OG 图片、站内搜索、评论、订阅、联系表单、PWA 离线阅读、后台只读面板和内容型页面。
 
 ## 技术栈
 
@@ -11,6 +13,20 @@
 - Markdown 内容：`gray-matter` + `remark` + `rehype-pretty-code` + `shiki`
 - 搜索：`fuse.js`
 - 评论：Giscus
+- 表单服务：Resend
+- 访问统计：可选 Umami
+
+## 功能概览
+
+- Markdown 文章、标签、系列、归档、RSS、sitemap 和 robots。
+- 搜索弹窗支持快捷键、关键词高亮、正文片段、标签/系列筛选。
+- 文章页支持目录、相关文章、上一篇/下一篇、分享、评论、打赏和订阅。
+- 图片支持 `figure`/`figcaption`、懒加载、灯箱和键盘打开。
+- 代码块支持 Shiki 高亮、文件名/语言 header、行高亮和复制状态反馈。
+- `/projects`、`/now`、`/links`、`/uses` 内容型页面增强个人主页属性。
+- `/admin` 私有只读后台查看内容统计、表单配置和外部服务入口。
+- PWA manifest、图标、service worker 与 `/offline` 离线 fallback。
+- `npm run check:content` 自动检查 frontmatter、站内链接和图片质量。
 
 ## 本地开发
 
@@ -84,6 +100,22 @@ series: "Next.js 实战"
 正文内容...
 ```
 
+文章图片可以使用 Markdown title 作为可见说明；没有 title 时会使用 alt 作为 caption：
+
+```md
+![图片替代文本](/images/example.jpg "图片说明")
+```
+
+代码块支持文件名和行高亮 meta：
+
+````md
+```ts title="src/app/page.tsx" {1,3-5}
+export default function Page() {
+  return null;
+}
+```
+````
+
 字段说明：
 
 | 字段 | 必填 | 说明 |
@@ -125,7 +157,11 @@ npm run check:content -- --external
 核心文件：
 
 - `src/lib/posts.ts`：读取 Markdown、校验 frontmatter、过滤草稿/未来文章、生成 HTML、标签、搜索索引等。
+- `src/lib/rehype-figures.ts`：把独立 Markdown 图片渲染为 `figure` + `figcaption`。
+- `src/lib/rehype-code-meta.ts`：为代码块生成文件名、语言和复制按钮动作区。
+- `src/config/content-pages.ts`：维护 `/projects`、`/now`、`/links`、`/uses` 的静态内容数据。
 - `src/app/posts/[slug]/page.tsx`：文章详情页与文章 metadata。
+- `src/app/projects/page.tsx`、`src/app/now/page.tsx`、`src/app/links/page.tsx`、`src/app/uses/page.tsx`：内容型页面。
 - `src/app/sitemap.ts`：动态 sitemap。
 - `src/app/robots.ts`：robots.txt。
 - `src/app/feed.xml/route.ts`：RSS 输出。
@@ -162,7 +198,22 @@ FORM_ALLOWED_ORIGINS=https://your-domain.com
 
 可以参考 `.env.example`。注意：Resend 密钥和邮箱配置不要使用 `NEXT_PUBLIC_` 前缀，避免暴露到浏览器端。
 
-Giscus 评论需要在 `src/components/Comments.tsx` 中配置真实的 `repoId` 和 `categoryId`。
+Giscus 评论需要在 `.env.local` 中配置真实的 `NEXT_PUBLIC_GISCUS_REPO_ID` 和 `NEXT_PUBLIC_GISCUS_CATEGORY_ID`，`src/components/Comments.tsx` 会自动读取这些值。
+
+配置步骤：
+
+1. 访问 [giscus.app](https://giscus.app)，使用 GitHub 登录。
+2. 在 **Configuration** 区域选择仓库（需开启 Discussions 功能）。
+3. 选择或创建评论分类（建议使用 Announcements）。
+4. 复制页面上生成的 `data-repo-id` 和 `data-category-id` 值。
+5. 填入 `.env.local`：
+
+```bash
+NEXT_PUBLIC_GISCUS_REPO_ID=R_xxxxxxxxxxxxx
+NEXT_PUBLIC_GISCUS_CATEGORY_ID=DIC_xxxxxxxxxxxxxxxxxxxx
+```
+
+如果环境变量为空，评论区会显示「评论暂时不可用」提示和配置引导链接，不会加载 Giscus 脚本。
 
 ## 后台管理页
 
@@ -198,6 +249,17 @@ npm run start
 ```
 
 然后在浏览器 DevTools 的 Application 面板检查 manifest、icons、service worker 和离线状态。
+
+## GitHub 工作流
+
+仓库包含基础 GitHub 配置：
+
+- `.github/workflows/ci.yml`：在 PR 和 `main` push 时运行 `npm run check`。
+- `.github/PULL_REQUEST_TEMPLATE.md`：PR 描述和验证清单。
+- `.github/ISSUE_TEMPLATE/content-task.md`：文章、页面和链接维护任务模板。
+- `.github/ISSUE_TEMPLATE/bug-report.md`：站点、构建或内容渲染问题模板。
+
+推荐流程：从功能分支提交 → 开 PR → 等 CI 通过 → 合并到 `main`。
 
 ## 部署
 

@@ -1,3 +1,9 @@
+/**
+ * Sitemap 生成（/sitemap.xml）
+ *
+ * 自动收集所有已发布文章、标签页和固定页面，输出标准 sitemap XML。
+ * 文章页 priority=0.8，固定页面 0.4–0.7，标签页 0.5。
+ */
 import type { MetadataRoute } from "next";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import { absoluteUrl } from "@/config/site";
@@ -54,6 +60,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latest,
       changeFrequency: "weekly",
       priority: 0.6,
+    },
+    {
+      url: absoluteUrl("/projects"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: absoluteUrl("/now"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: absoluteUrl("/links"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: absoluteUrl("/uses"),
+      lastModified: latest,
+      changeFrequency: "monthly",
+      priority: 0.5,
     },
     ...postEntries,
     ...tagEntries,

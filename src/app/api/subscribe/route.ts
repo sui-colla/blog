@@ -1,3 +1,9 @@
+/**
+ * 订阅 API（POST /api/subscribe）
+ *
+ * 处理流程：校验请求来源 → 校验邮箱格式 → 调用 Resend 添加到 audience。
+ * 返回结构化错误码供客户端显示对应的 i18n 提示。
+ */
 import { addSubscriber } from "@/lib/forms/resend";
 import {
   validateRequestOrigin,

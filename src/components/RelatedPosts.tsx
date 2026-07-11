@@ -1,3 +1,10 @@
+/**
+ * 相关文章推荐
+ *
+ * 根据标签重叠度（overlap）打分排序，取前 maxItems 篇展示。
+ * 标签重叠越多分数越高，无共同标签的文章不显示。
+ * 纯服务端计算，不依赖外部服务。
+ */
 import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
 import { useI18n } from "@/lib/i18n";
@@ -15,7 +22,8 @@ export default function RelatedPosts({
   allPosts,
   maxItems = 3,
 }: Props) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   if (currentTags.length === 0) return null;
 
@@ -45,7 +53,7 @@ export default function RelatedPosts({
               dateTime={post.date}
               className="text-xs text-zinc-400 dark:text-zinc-500"
             >
-              {new Date(post.date).toLocaleDateString("zh-CN", {
+              {new Date(post.date).toLocaleDateString(dateLocale, {
                 year: "numeric",
                 month: "short",
                 day: "numeric",

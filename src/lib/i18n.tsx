@@ -1,5 +1,14 @@
 "use client";
 
+/**
+ * 客户端国际化（i18n）
+ *
+ * 架构要点：
+ * - 仅客户端渲染，服务端默认输出中文（避免 SSR/CSR 水合不匹配）
+ * - 语言偏好持久化到 localStorage，切换时同步更新 <html lang="...">
+ * - 翻译字典以 key-value 平铺存储，用 t("section.key") 调用
+ * - I18nProvider 必须在布局顶层包裹，所有客户端组件通过 useI18n() 消费
+ */
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 type Locale = "zh" | "en";
@@ -17,11 +26,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.about": "关于",
     "nav.tags": "标签",
     "nav.search": "搜索",
+    "nav.projects": "项目",
+    "nav.now": "Now",
+    "nav.links": "链接",
+    "nav.uses": "Uses",
+    "nav.explore": "探索",
 
     // 首页
     "home.greeting": "欢迎来到露比的工作室",
     "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
     "home.latestPosts": "最新文章",
+    "home.empty": "暂时还没有文章，稍后再来看看吧。",
 
     // 热门文章
     "popular.title": "热门文章",
@@ -32,6 +47,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "post.backHome": "返回首页",
     "post.readingTime": "分钟阅读",
     "post.toc": "目录",
+
+    // 评论
+    "comments.title": "评论",
+    "comments.desc": "欢迎留下你的想法、问题或补充，评论通过 GitHub Discussions 提供支持。",
+    "comments.loading": "评论加载中...",
+    "comments.missingTitle": "评论暂时不可用",
+    "comments.missingDesc": "请先在环境变量中配置 Giscus 的 repoId 和 categoryId，然后重新部署。",
+    "comments.setupGuide": "前往 giscus.app 获取配置 →",
+    "comments.reload": "重新加载评论",
+    "comments.loadErrorDesc": "评论加载超时，请检查网络连接后重试。",
 
     // 标签页
     "tags.title": "标签",
@@ -49,6 +74,38 @@ const translations: Record<Locale, Record<string, string>> = {
     "about.bio": "这里是我记录技术学习、生活思考和阅读笔记的地方。写作帮助我整理思路，也希望能为你带来一些价值。",
     "about.contact": "联系方式",
     "about.contactDesc": "可以通过 GitHub 找到我，或者在文章下方留言讨论。",
+    "about.more": "更多页面",
+    "about.moreProjects": "正在打磨的项目、实验和作品。",
+    "about.moreNow": "最近在学习、创作和关注什么。",
+    "about.moreLinks": "收藏的站点和友情链接说明。",
+    "about.moreUses": "常用工具、软件和服务。",
+
+    // 内容页
+    "projects.title": "项目",
+    "projects.description": "这里整理我正在做、做过和持续维护的小项目。",
+    "projects.featured": "精选项目",
+    "projects.archive": "归档与实验",
+    "projects.empty": "项目正在整理中。",
+    "projects.featuredEmpty": "精选项目正在整理中。",
+    "projects.readPost": "相关文章",
+    "projects.status.featured": "精选",
+    "projects.status.building": "建设中",
+    "projects.status.archived": "已归档",
+    "projects.status.paused": "暂停",
+    "now.title": "Now",
+    "now.description": "最近在做什么。保持轻量、手写和及时更新。",
+    "now.updatedAt": "最后更新：{date}",
+    "now.empty": "最近状态还在整理中。",
+    "links.title": "链接",
+    "links.description": "一些值得收藏的站点，以及友情链接说明。",
+    "links.exchange": "链接交换",
+    "links.broken": "失效处理",
+    "links.empty": "链接列表正在整理中。",
+    "uses.title": "Uses",
+    "uses.description": "我当前使用和推荐的开发工具、软件、设备与服务。",
+    "uses.empty": "工具清单正在整理中。",
+    "uses.visit": "访问",
+    "uses.readPost": "相关文章",
 
     // 订阅
     "subscribe.title": "📬 订阅博客",
@@ -73,6 +130,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "search.placeholder": "搜索文章标题、摘要、标签...",
     "search.loading": "加载中...",
     "search.empty": "没有找到相关文章",
+    "search.error": "搜索索引加载失败，请稍后再试。",
+    "search.retry": "重试",
     "search.filters": "筛选",
     "search.filterTag": "按标签筛选",
     "search.filterSeries": "按系列筛选",
@@ -95,12 +154,29 @@ const translations: Record<Locale, Record<string, string>> = {
     "theme.ariaPrefix": "当前：",
     "theme.ariaSuffix": "，点击切换",
 
+    // 侧边栏统计
+    "sidebar.posts": "文章",
+    "sidebar.tags": "标签",
+
+    // 文章置顶
+    "post.pinned": "置顶",
+
+    // 浏览导航
+    "browse.title": "浏览",
+    "browse.allTags": "所有标签",
+    "browse.archive": "按时间归档",
+
+    // 归档页
+    "archive.title": "文章归档",
+    "archive.daySuffix": "日",
+
     // 相关文章
     "related.title": "相关文章",
 
     // 代码复制
     "copy.btn": "复制",
     "copy.ariaLabel": "复制代码",
+    "copy.copying": "复制中...",
     "copy.success": "已复制!",
     "copy.fail": "失败",
 
@@ -116,6 +192,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "notFound.desc": "你要找的页面不存在，可能已被移除或地址有误。",
     "notFound.backHome": "返回首页",
     "notFound.browseTags": "浏览标签",
+
+    // 离线页
+    "offline.badge": "Offline",
+    "offline.title": "现在处于离线状态",
+    "offline.desc": "网络连接不可用。你仍然可以打开之前访问过并已缓存的文章；如果这是第一次访问该页面，请恢复网络后重试。",
+    "offline.backHome": "返回首页",
+    "offline.reload": "重新加载",
+
+    // 跳过导航
+    "a11y.skipToContent": "跳到主要内容",
 
     // 文章导航
     "post.prev": "上一篇",
@@ -155,6 +241,19 @@ const translations: Record<Locale, Record<string, string>> = {
     "pagination.next": "下一页",
     "pagination.aria": "分页导航",
 
+    // 回到顶部
+    "backToTop.label": "回到顶部",
+
+    // 赞赏支持
+    "donate.title": "☕ 赞赏支持",
+    "donate.desc": "如果这篇文章对你有帮助，可以请作者喝杯咖啡~",
+    "donate.wechat": "微信",
+    "donate.alipay": "支付宝",
+    "donate.scanWechat": "请打开微信扫一扫",
+    "donate.scanAlipay": "请打开支付宝扫一扫",
+    "donate.qrPlaceholder": "收款码占位",
+    "donate.replaceHint": "将收款码图片放到 public/donate/ 目录即可替换",
+
     // 社交分享
     "share.title": "分享文章",
     "share.shareTo": "分享到",
@@ -171,11 +270,17 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.about": "About",
     "nav.tags": "Tags",
     "nav.search": "Search",
+    "nav.projects": "Projects",
+    "nav.now": "Now",
+    "nav.links": "Links",
+    "nav.uses": "Uses",
+    "nav.explore": "Explore",
 
     // Home
     "home.greeting": "Hello, welcome.",
     "home.tagline": "A place for notes on tech, thoughts, and life. Writing helps me think clearly — hope it inspires you too.",
     "home.latestPosts": "Latest Posts",
+    "home.empty": "No posts yet. Check back soon.",
 
     // Popular posts
     "popular.title": "Popular Posts",
@@ -186,6 +291,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "post.backHome": "Back to Home",
     "post.readingTime": "min read",
     "post.toc": "Contents",
+
+    // Comments
+    "comments.title": "Comments",
+    "comments.desc": "Share your thoughts, questions, or additions. Comments are powered by GitHub Discussions.",
+    "comments.loading": "Loading comments...",
+    "comments.missingTitle": "Comments temporarily unavailable",
+    "comments.missingDesc": "Set Giscus repoId and categoryId in your environment variables, then redeploy.",
+    "comments.setupGuide": "Get config at giscus.app →",
+    "comments.reload": "Reload comments",
+    "comments.loadErrorDesc": "Comments failed to load. Please check your connection and try again.",
 
     // Tags
     "tags.title": "Tags",
@@ -203,6 +318,38 @@ const translations: Record<Locale, Record<string, string>> = {
     "about.bio": "This is where I document my learnings in tech, reflections on life, and reading notes. Writing helps me organize my thoughts, and I hope it brings you some value too.",
     "about.contact": "Contact",
     "about.contactDesc": "You can find me on GitHub, or leave a comment below any article.",
+    "about.more": "More pages",
+    "about.moreProjects": "Projects, experiments, and ongoing work.",
+    "about.moreNow": "What I am learning, making, and paying attention to lately.",
+    "about.moreLinks": "Useful sites and blogroll notes.",
+    "about.moreUses": "Tools, software, and services I use.",
+
+    // Content pages
+    "projects.title": "Projects",
+    "projects.description": "Projects, experiments, and small systems I am building or maintaining.",
+    "projects.featured": "Featured",
+    "projects.archive": "Archive & experiments",
+    "projects.empty": "Projects are being organized.",
+    "projects.featuredEmpty": "Featured projects are being organized.",
+    "projects.readPost": "Related post",
+    "projects.status.featured": "Featured",
+    "projects.status.building": "Building",
+    "projects.status.archived": "Archived",
+    "projects.status.paused": "Paused",
+    "now.title": "Now",
+    "now.description": "What I am doing lately — lightweight, hand-written, and updated when it changes.",
+    "now.updatedAt": "Last updated: {date}",
+    "now.empty": "Recent status is being organized.",
+    "links.title": "Links",
+    "links.description": "Useful sites I want to keep around, plus blogroll notes.",
+    "links.exchange": "Link exchange",
+    "links.broken": "Broken links",
+    "links.empty": "Links are being organized.",
+    "uses.title": "Uses",
+    "uses.description": "Tools, software, devices, and services I currently use and recommend.",
+    "uses.empty": "The uses list is being organized.",
+    "uses.visit": "Visit",
+    "uses.readPost": "Related post",
 
     // Subscribe
     "subscribe.title": "📬 Subscribe",
@@ -227,6 +374,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "search.placeholder": "Search titles, summaries, tags...",
     "search.loading": "Loading...",
     "search.empty": "No articles found",
+    "search.error": "Failed to load the search index. Please try again.",
+    "search.retry": "Retry",
     "search.filters": "Filters",
     "search.filterTag": "Filter by tag",
     "search.filterSeries": "Filter by series",
@@ -249,12 +398,29 @@ const translations: Record<Locale, Record<string, string>> = {
     "theme.ariaPrefix": "Current: ",
     "theme.ariaSuffix": ", click to switch",
 
+    // Sidebar stats
+    "sidebar.posts": "posts",
+    "sidebar.tags": "tags",
+
+    // Post pinned
+    "post.pinned": "Pinned",
+
+    // Browse navigation
+    "browse.title": "Browse",
+    "browse.allTags": "All tags",
+    "browse.archive": "Archive by date",
+
+    // Archive page
+    "archive.title": "Archive",
+    "archive.daySuffix": "",
+
     // Related Posts
     "related.title": "Related Posts",
 
     // Code Copy
     "copy.btn": "Copy",
     "copy.ariaLabel": "Copy code",
+    "copy.copying": "Copying...",
     "copy.success": "Copied!",
     "copy.fail": "Failed",
 
@@ -270,6 +436,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "notFound.desc": "The page you're looking for doesn't exist — it may have been moved or the link is incorrect.",
     "notFound.backHome": "Back to Home",
     "notFound.browseTags": "Browse Tags",
+
+    // Offline
+    "offline.badge": "Offline",
+    "offline.title": "You are offline",
+    "offline.desc": "The network is unavailable. You can still open previously visited and cached pages. If this is your first visit, please reconnect and try again.",
+    "offline.backHome": "Back to Home",
+    "offline.reload": "Reload",
+
+    // Skip link
+    "a11y.skipToContent": "Skip to content",
 
     // Post nav
     "post.prev": "Previous",
@@ -308,6 +484,19 @@ const translations: Record<Locale, Record<string, string>> = {
     "pagination.prev": "Prev",
     "pagination.next": "Next",
     "pagination.aria": "Pagination",
+
+    // Back to top
+    "backToTop.label": "Back to top",
+
+    // Donate
+    "donate.title": "☕ Support",
+    "donate.desc": "If this article helped you, consider buying the author a coffee~",
+    "donate.wechat": "WeChat",
+    "donate.alipay": "Alipay",
+    "donate.scanWechat": "Open WeChat to scan",
+    "donate.scanAlipay": "Open Alipay to scan",
+    "donate.qrPlaceholder": "QR Code Placeholder",
+    "donate.replaceHint": "Drop QR images into public/donate/ to replace",
 
     // Share
     "share.title": "Share",

@@ -1,3 +1,14 @@
+/**
+ * Open Graph 图片生成 API（GET /api/og?slug=xxx）
+ *
+ * 使用 next/og 的 ImageResponse 动态生成 1200×630 的社交分享卡片：
+ * - 无 slug：返回站点默认封面（品牌名 + 描述）
+ * - 有 slug：渲染文章封面（标题 + 摘要 + 标签 + 日期）
+ *   · 有 cover 时以封面图为背景，加半透明渐变遮罩
+ *   · 无 cover 时使用渐变背景色
+ *
+ * runtime = "nodejs"：需要文件系统访问来读取文章内容。
+ */
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import { absoluteUrl, siteConfig } from "@/config/site";

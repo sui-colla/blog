@@ -1,3 +1,10 @@
+/**
+ * 文章详情页（/[slug]）
+ *
+ * - generateStaticParams: 构建时预生成所有已发布文章的静态 HTML（SSG）
+ * - generateMetadata: 为每篇文章生成独立的 SEO 元数据（Open Graph / Twitter Card）
+ * - PostContent 组件处理客户端交互（目录高亮、代码复制、灯箱等）
+ */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/posts";
@@ -5,6 +12,7 @@ import { absoluteUrl } from "@/config/site";
 import { buildArticleJsonLd, serializeJsonLd } from "@/lib/structured-data";
 import PostContent from "@/components/PostContent";
 
+// SSG：构建时遍历所有文章 slug 生成静态页面
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
