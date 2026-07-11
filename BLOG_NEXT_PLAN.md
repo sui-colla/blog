@@ -16,18 +16,7 @@
 目标：把现有评论入口从占位状态升级为可用的实际评论系统，让文章页面具备基础互动能力。
 
 - [x] 确定评论平台与账号配置（优先沿用 Giscus / GitHub Discussions）（2026-07-11：确认沿用 Giscus，repo 为 sui-colla/blog，组件完成主题同步、骨架屏、超时检测和重新加载按钮；验证：npm run check）
-- [ ] 补齐 `repoId`、`categoryId` 等必填配置（待手动操作）
-  1. 打开 GitHub 仓库 `sui-colla/blog` → Settings → Features → 勾选 **Discussions**
-  2. 访问 https://giscus.app，用 GitHub 登录，选择仓库 `sui-colla/blog`
-  3. 在 Page → Discussions Mapping 选 **pathname**
-  4. 在 Discussion Category 选或新建 **Announcements**
-  5. 复制页面底部生成的 `data-repo-id` 和 `data-category-id`
-  6. 填入 `.env.local`：
-     ```bash
-     NEXT_PUBLIC_GISCUS_REPO_ID=R_xxxxxxxxxxxxx
-     NEXT_PUBLIC_GISCUS_CATEGORY_ID=DIC_xxxxxxxxxxxxxxxxxxxx
-     ```
-  7. 重新 `npm run dev` 或部署后，打开任意文章页验证评论区正常显示
+- [x] 补齐 `repoId`、`categoryId` 等必填配置（2026-07-11：通过 GitHub API 获取 repoId `R_kgDOTG6SMw` 和 Announcements categoryId `DIC_kwDOTG6SM84DA-Jk`，写入 `.env.local`；验证：npm run check，构建日志显示 `Environments: .env.local`）
 - [x] 确认评论组件在文章页、移动端和深色模式下显示正常（2026-07-11：CSS 覆盖深色模式、响应式布局、打印隐藏；代码侧完成，部署后需复测）
 - [x] 处理未登录、无评论、加载失败等状态文案（2026-07-11：缺失配置显示 giscus.app 引导链接，加载超时显示重新加载按钮，i18n 中英文文案齐全；验证：npm run check）
 - [x] 验证评论组件不会拖慢首屏或破坏页面 CLS（2026-07-11：延迟挂载 + 骨架屏 min-height 24rem + iframe lazy loading，CLS 保护到位；验证：npm run check）
