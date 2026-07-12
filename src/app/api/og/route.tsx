@@ -31,7 +31,7 @@ export async function GET(request: Request) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            background: "linear-gradient(135deg, #fdf2f8, #fce7f3, #f9a8d4)",
+            background: "linear-gradient(135deg, #fefce8, #fef3c7, #fde68a)",
           }}
         >
           <div
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
           width: "100%",
           display: "flex",
           position: "relative",
-          background: hasCover ? "#000" : "linear-gradient(135deg, #fdf2f8, #fce7f3, #f9a8d4)",
+          background: hasCover ? "#000" : "linear-gradient(135deg, #fefce8, #fef3c7, #fde68a)",
         }}
       >
         {/* 背景封面图 */}
