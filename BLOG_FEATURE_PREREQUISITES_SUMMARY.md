@@ -6,7 +6,7 @@
 
 | 功能 | 需要先准备什么 | 缺失时的表现 |
 | --- | --- | --- |
-| 站点基础域名 / SEO | 配置 `NEXT_PUBLIC_SITE_URL` | 会回退到默认域名 `https://lunapath.dev`，正式上线前不建议长期使用默认值 |
+| 站点基础域名 / SEO | 配置 `NEXT_PUBLIC_SITE_URL` | 会回退到默认域名 `https://xiaojiccc.xyz`；生产环境仍建议显式设置该变量 |
 | 订阅表单 | `RESEND_API_KEY` + `RESEND_AUDIENCE_ID` | 订阅接口会返回服务不可用，无法写入 Audience |
 | 联系表单 | `RESEND_API_KEY` + `FORMS_FROM_EMAIL` + `CONTACT_TO_EMAIL` | 联系表单无法发送邮件 |
 | 评论系统 | `NEXT_PUBLIC_GISCUS_REPO_ID` + `NEXT_PUBLIC_GISCUS_CATEGORY_ID`，并且 GitHub 仓库已开启 Discussions、分类已创建 | 评论区会显示缺少配置的提示，不加载 Giscus |

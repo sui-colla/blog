@@ -5,7 +5,7 @@
  * - 服务端和客户端均可访问（NEXT_PUBLIC_ 前缀的环境变量用于客户端）
  * - 修改站点 URL、主题色、分析配置时只需改此文件
  */
-const defaultSiteUrl = "https://lunapath.dev";
+const defaultSiteUrl = "https://xiaojiccc.xyz";
 const defaultUmamiScriptUrl = "https://cloud.umami.is/script.js";
 
 function normalizeSiteUrl(url: string) {

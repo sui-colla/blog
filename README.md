@@ -55,10 +55,10 @@ npm run start          # 启动生产构建
 生产环境建议设置：
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_SITE_URL=https://xiaojiccc.xyz
 ```
 
-如果不设置，会回退到默认域名 `https://lunapath.dev`。这个地址会影响 metadata、canonical、RSS、sitemap、robots、分享链接和 OG 图片中的绝对 URL。
+如果不设置，会回退到默认域名 `https://xiaojiccc.xyz`。这个地址会影响 metadata、canonical、RSS、sitemap、robots、分享链接和 OG 图片中的绝对 URL。
 
 ## 访问统计与热门文章
 
@@ -193,7 +193,7 @@ RESEND_AUDIENCE_ID=aud_xxxxxxxxxxxxxxxxxxxxxxxx
 FORMS_FROM_EMAIL="LunaPath Blog <onboarding@resend.dev>"
 CONTACT_TO_EMAIL=you@example.com
 # 可选：限制表单提交来源，多个来源用英文逗号分隔
-FORM_ALLOWED_ORIGINS=https://your-domain.com
+FORM_ALLOWED_ORIGINS=https://xiaojiccc.xyz
 ```
 
 可以参考 `.env.example`。注意：Resend 密钥和邮箱配置不要使用 `NEXT_PUBLIC_` 前缀，避免暴露到浏览器端。
@@ -263,11 +263,77 @@ npm run start
 
 ## 部署
 
-推荐部署到支持 Next.js 的平台（如 Vercel）。部署前请确认：
+推荐部署到 [Vercel](https://vercel.com)（免费额度即可跑这个 Next.js 博客）。当前正式域名为 `xiaojiccc.xyz`。
 
-1. 设置 `NEXT_PUBLIC_SITE_URL` 为正式域名。
-2. 设置 Resend 相关环境变量：`RESEND_API_KEY`、`RESEND_AUDIENCE_ID`、`FORMS_FROM_EMAIL`、`CONTACT_TO_EMAIL`。
-3. 如需访问统计，设置 Umami 相关环境变量：`NEXT_PUBLIC_UMAMI_WEBSITE_ID`、`NEXT_PUBLIC_UMAMI_SCRIPT_URL`。
+### 1. 导入 GitHub 仓库
+
+1. 打开 [vercel.com](https://vercel.com)，用 GitHub 登录。
+2. **Add New… → Project**，选择 `sui-colla/blog`。
+3. Framework 识别为 Next.js 后直接 **Deploy**。
+4. 首次部署成功后会得到一个 `*.vercel.app` 临时域名，可先用来验证站点。
+
+建议把 **Production Branch** 设为 `main`：合并进 `main` 后自动生产部署。
+
+### 2. 配置生产环境变量
+
+项目 → **Settings → Environment Variables**，至少为 **Production** 添加：
+
+| 变量 | 示例 / 说明 | 是否必填 |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `https://xiaojiccc.xyz` | 建议必填 |
+| `FORM_ALLOWED_ORIGINS` | `https://xiaojiccc.xyz` | 建议 |
+| `NEXT_PUBLIC_GISCUS_REPO_ID` | 本地 `.env.local` 里已有值 | 评论需要 |
+| `NEXT_PUBLIC_GISCUS_CATEGORY_ID` | 本地 `.env.local` 里已有值 | 评论需要 |
+| `RESEND_API_KEY` | Resend 控制台密钥 | 订阅/联系表单 |
+| `RESEND_AUDIENCE_ID` | Resend Audience ID | 订阅 |
+| `FORMS_FROM_EMAIL` | 已验证发件地址 | 联系表单 |
+| `CONTACT_TO_EMAIL` | 你的收件邮箱 | 联系表单 |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | 后台账号 | `/admin` |
+| `NEXT_PUBLIC_UMAMI_WEBSITE_ID` 等 | Umami 配置 | 可选统计 |
+
+改完环境变量后需要 **Redeploy** 一次才会生效。完整模板见 [`.env.example`](.env.example)。
+
+### 3. 绑定自定义域名
+
+项目 → **Settings → Domains**：
+
+1. 添加 `xiaojiccc.xyz`。
+2. （可选）添加 `www.xiaojiccc.xyz`，并重定向到根域名。
+3. 按页面提示配置 DNS（以 Vercel 显示为准）。
+
+### 4. 阿里云 DNS 解析（域名在阿里云购买时）
+
+登录 [阿里云域名控制台](https://dc.console.aliyun.com/) → 找到 `xiaojiccc.xyz` → **解析设置** → **添加记录**：
+
+| 记录类型 | 主机记录 | 记录值 | TTL | 用途 |
+| --- | --- | --- | --- | --- |
+| **A** | `@` | `76.76.21.21` | 10 分钟 | 根域名 `xiaojiccc.xyz` |
+| **CNAME** | `www` | `cname.vercel-dns.com` | 10 分钟 | `www.xiaojiccc.xyz` |
+
+操作注意：
+
+1. 主机记录只填 `@` 或 `www`，不要填完整域名。
+2. 若已有冲突的 A / CNAME / URL 转发 / 网站建设解析，先暂停或删除。
+3. 以 Vercel Domains 页当前提示为准；若显示不同目标值，优先用页面上的。
+4. 解析生效通常几分钟到几小时；生效后 Vercel 会自动签发 HTTPS。
+5. 阿里云「域名实名」未完成时，解析可能受限，需先完成实名。
+
+验证：
+
+```bash
+# Windows 可用 nslookup；Git Bash 也可用 dig（若已安装）
+nslookup xiaojiccc.xyz
+nslookup www.xiaojiccc.xyz
+```
+
+浏览器打开 `https://xiaojiccc.xyz`，确认证书有效、首页可访问。
+
+### 5. 上线检查清单
+
+1. 设置 `NEXT_PUBLIC_SITE_URL=https://xiaojiccc.xyz`。
+2. 设置 Resend：`RESEND_API_KEY`、`RESEND_AUDIENCE_ID`、`FORMS_FROM_EMAIL`、`CONTACT_TO_EMAIL`。
+3. 如需访问统计，设置 Umami：`NEXT_PUBLIC_UMAMI_WEBSITE_ID`、`NEXT_PUBLIC_UMAMI_SCRIPT_URL`。
 4. 在 Resend 中验证发件域名或使用已验证的发件地址。
 5. 运行 `npm run check` 通过完整检查。
-6. 上线后测试订阅表单、联系表单和 Umami 统计脚本。
+6. 上线后测试：首页 HTTPS、`/sitemap.xml`、`/feed.xml`、评论、订阅、联系表单、`/admin`。
+7. （可选）GitHub 仓库 **About → Website** 填 `https://xiaojiccc.xyz`。
