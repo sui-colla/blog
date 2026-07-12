@@ -97,6 +97,40 @@ export async function addSubscriber(
   }
 }
 
+export async function sendSubscriptionConfirmation(email: string): Promise<void> {
+  const from = getRequiredEnv("FORMS_FROM_EMAIL");
+  if (!from || !getRequiredEnv("RESEND_API_KEY")) {
+    console.error("Subscription confirmation email is not configured");
+    return;
+  }
+
+  try {
+    const response = await fetchResend("/emails", {
+      method: "POST",
+      body: JSON.stringify({
+        from,
+        to: [email],
+        subject: "订阅成功 - LunaPath Blog",
+        text: [
+          "感谢订阅 LunaPath Blog。",
+          "",
+          "有新文章发布时，我们会通过此邮箱通知你。",
+          "",
+          "https://xiaojiccc.xyz",
+        ].join("\n"),
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to send subscription confirmation", {
+        status: response.status,
+      });
+    }
+  } catch {
+    console.error("Failed to send subscription confirmation");
+  }
+}
+
 function buildContactText({ name, email, message }: ContactInput): string {
   return [
     "New message from LunaPath Blog contact form.",
