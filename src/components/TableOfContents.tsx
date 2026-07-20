@@ -128,8 +128,8 @@ export default function TableOfContents({ headings, showTitle = true }: Props) {
                   ${indent}
                   ${
                     isActive
-                      ? "border-orange-500 text-orange-600 font-medium dark:text-orange-400"
-                      : "border-transparent text-zinc-500 hover:text-orange-600 dark:text-zinc-400 dark:hover:text-orange-400"
+                      ? "border-teal-700 text-teal-800 font-medium dark:text-teal-300"
+                      : "border-transparent text-zinc-500 hover:text-teal-800 dark:text-zinc-400 dark:hover:text-teal-300"
                   }
                 `}
               >

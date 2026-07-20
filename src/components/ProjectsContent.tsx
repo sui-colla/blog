@@ -19,7 +19,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
   const { t } = useI18n();
 
   return (
-    <article className="rounded-2xl border border-orange-100 bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-orange-900/60">
+    <article className="rounded-md border border-teal-100 bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-teal-900/60">
       {project.cover && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -33,7 +33,7 @@ function ProjectCard({ project }: { project: ProjectItem }) {
         <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
           {project.name}
         </h2>
-        <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-600 dark:bg-orange-900/20 dark:text-orange-300">
+        <span className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-600 dark:bg-teal-900/20 dark:text-teal-300">
           <span aria-hidden="true">{statusIcon[project.status]}</span>{" "}
           {t(`projects.status.${project.status}`)}
         </span>
@@ -53,17 +53,17 @@ function ProjectCard({ project }: { project: ProjectItem }) {
       </div>
       <div className="mt-5 flex flex-wrap gap-3 text-sm font-medium">
         {project.githubUrl && (
-          <a className="text-orange-600 hover:text-orange-700 dark:text-orange-400" href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+          <a className="text-teal-600 hover:text-teal-700 dark:text-teal-400" href={project.githubUrl} target="_blank" rel="noopener noreferrer">
             GitHub ↗
           </a>
         )}
         {project.demoUrl && (
-          <a className="text-orange-600 hover:text-orange-700 dark:text-orange-400" href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+          <a className="text-teal-600 hover:text-teal-700 dark:text-teal-400" href={project.demoUrl} target="_blank" rel="noopener noreferrer">
             Demo ↗
           </a>
         )}
         {project.postUrl && (
-          <Link className="text-orange-600 hover:text-orange-700 dark:text-orange-400" href={project.postUrl}>
+          <Link className="text-teal-600 hover:text-teal-700 dark:text-teal-400" href={project.postUrl}>
             {t("projects.readPost")} →
           </Link>
         )}
@@ -79,18 +79,18 @@ export default function ProjectsContent({ projects }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-orange-500">
+      <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-teal-500">
         &larr; {t("post.backHome")}
       </Link>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+        <span className="text-zinc-950 dark:text-zinc-50">
           {t("projects.title")}
         </span>
       </h1>
       <p className="mt-3 text-zinc-500 dark:text-zinc-400">{t("projects.description")}</p>
 
       {projects.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-orange-200 bg-orange-50/60 p-8 text-center text-sm text-zinc-500 dark:border-orange-900/50 dark:bg-orange-950/20 dark:text-zinc-400">
+        <div className="mt-10 rounded-md border border-dashed border-teal-200 bg-teal-50/60 p-8 text-center text-sm text-zinc-500 dark:border-teal-900/50 dark:bg-teal-950/20 dark:text-zinc-400">
           {t("projects.empty")}
         </div>
       ) : (

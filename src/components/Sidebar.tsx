@@ -10,6 +10,7 @@
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Archive, FolderKanban, Hash, Home, Link2, UserRound, Wrench } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/posts";
 
@@ -29,15 +30,15 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
   const pathname = usePathname();
 
   const navItems = [
-    { href: "/", label: t("nav.home"), icon: "🏠" },
-    { href: "/about", label: t("nav.about"), icon: "👤" },
+    { href: "/", label: t("nav.home"), icon: Home },
+    { href: "/about", label: t("nav.about"), icon: UserRound },
   ];
 
   const exploreItems = [
-    { href: "/projects", label: t("nav.projects"), icon: "✨" },
-    { href: "/now", label: t("nav.now"), icon: "🌿" },
-    { href: "/links", label: t("nav.links"), icon: "🔗" },
-    { href: "/uses", label: t("nav.uses"), icon: "🧰" },
+    { href: "/projects", label: t("nav.projects"), icon: FolderKanban },
+    { href: "/now", label: t("nav.now"), icon: Hash },
+    { href: "/links", label: t("nav.links"), icon: Link2 },
+    { href: "/uses", label: t("nav.uses"), icon: Wrench },
   ];
 
   return (
@@ -53,7 +54,7 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
                 pathname === item.href ? "sidebar-link--active" : ""
               }`}
             >
-              <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>
+              <item.icon className="sidebar-link-icon" size={15} aria-hidden="true" />
               {item.label}
             </Link>
           </div>
@@ -74,7 +75,7 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
                   pathname === item.href ? "sidebar-link--active" : ""
                 }`}
               >
-                <span className="sidebar-link-icon" aria-hidden="true">{item.icon}</span>
+                <item.icon className="sidebar-link-icon" size={15} aria-hidden="true" />
                 {item.label}
               </Link>
             </div>
@@ -137,12 +138,12 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
         <h3 className="sidebar-section-title">{t("browse.title")}</h3>
         <nav className="sidebar-nav" aria-label={t("browse.title")}>
           <Link href="/tags" className="sidebar-link">
-            <span className="sidebar-link-icon" aria-hidden="true">🏷️</span>
+            <Hash className="sidebar-link-icon" size={15} aria-hidden="true" />
             {t("browse.allTags")}
           </Link>
           <div className="sidebar-nav-divider" />
           <Link href="/archive" className="sidebar-link">
-            <span className="sidebar-link-icon" aria-hidden="true">📚</span>
+            <Archive className="sidebar-link-icon" size={15} aria-hidden="true" />
             {t("browse.archive")}
           </Link>
         </nav>

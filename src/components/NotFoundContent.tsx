@@ -9,7 +9,7 @@ export default function NotFoundContent() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-24 sm:py-32 text-center">
       <h1 className="text-8xl font-extrabold tracking-tight">
-        <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+        <span className="text-zinc-950 dark:text-zinc-50">
           404
         </span>
       </h1>
@@ -22,13 +22,13 @@ export default function NotFoundContent() {
       <div className="mt-8 flex items-center justify-center gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 transition-colors"
         >
           {t("notFound.backHome")}
         </Link>
         <Link
           href="/tags"
-          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 dark:border-zinc-600 px-5 py-2.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:border-orange-500 hover:text-orange-500 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 dark:border-zinc-600 px-5 py-2.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:border-teal-500 hover:text-teal-500 transition-colors"
         >
           {t("notFound.browseTags")}
         </Link>

@@ -17,13 +17,13 @@ export default function TagDetailContent({ tag, posts }: Props) {
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <Link
         href="/tags"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
+        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
       >
         &larr; {t("tags.allTags")}
       </Link>
 
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+        <span className="text-zinc-950 dark:text-zinc-50">
           {tag}
         </span>
       </h1>
@@ -36,7 +36,7 @@ export default function TagDetailContent({ tag, posts }: Props) {
           <article key={post.slug}>
             <Link
               href={`/posts/${post.slug}`}
-              className="group block rounded-xl p-5 -mx-5 hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors"
+              className="group block rounded-xl p-5 -mx-5 hover:bg-teal-50/60 dark:hover:bg-zinc-900 transition-colors"
             >
               <time
                 dateTime={post.date}
@@ -48,7 +48,7 @@ export default function TagDetailContent({ tag, posts }: Props) {
                   day: "numeric",
                 })}
               </time>
-              <h2 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
+              <h2 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-teal-600 dark:text-zinc-50 dark:group-hover:text-teal-400 transition-colors">
                 {post.title}
               </h2>
               <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -61,8 +61,8 @@ export default function TagDetailContent({ tag, posts }: Props) {
                       key={t}
                       className={`inline-block rounded-full px-3 py-0.5 text-xs font-medium ${
                         t === tag
-                          ? "bg-orange-500 text-white"
-                          : "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"
+                          ? "bg-teal-500 text-white"
+                          : "bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400"
                       }`}
                     >
                       {t}

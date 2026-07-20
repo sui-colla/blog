@@ -13,6 +13,7 @@
  */
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Search as SearchIcon } from "lucide-react";
 import type Fuse from "fuse.js";
 import type { FuseResultMatch } from "fuse.js";
 import { useI18n } from "@/lib/i18n";
@@ -313,20 +314,7 @@ export default function Search() {
         aria-haspopup="dialog"
         aria-controls={open ? "search-dialog" : undefined}
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+        <SearchIcon size={16} aria-hidden="true" />
         <span className="hidden sm:inline">{t("search.label")}</span>
         <kbd className="search-kbd hidden sm:inline">⌘K</kbd>
       </button>
@@ -348,21 +336,7 @@ export default function Search() {
             onKeyDown={handleDialogKeyDown}
           >
             <div className="search-input-wrapper">
-              <svg
-                className="search-input-icon"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+              <SearchIcon className="search-input-icon" size={18} aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="search"

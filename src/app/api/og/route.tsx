@@ -31,16 +31,14 @@ export async function GET(request: Request) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            background: "linear-gradient(135deg, #fefce8, #fef3c7, #fde68a)",
+            background: "#fafafa",
           }}
         >
           <div
             style={{
               fontSize: 64,
               fontWeight: 800,
-              background: "linear-gradient(135deg, #f97316, #ea580c)",
-              backgroundClip: "text",
-              color: "transparent",
+              color: "#0f766e",
             }}
           >
             {siteConfig.name}
@@ -80,7 +78,7 @@ export async function GET(request: Request) {
           width: "100%",
           display: "flex",
           position: "relative",
-          background: hasCover ? "#000" : "linear-gradient(135deg, #fefce8, #fef3c7, #fde68a)",
+      background: hasCover ? "#000" : "#fafafa",
         }}
       >
         {/* 背景封面图 */}
@@ -105,7 +103,7 @@ export async function GET(request: Request) {
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(135deg, rgba(249,115,22,0.85), rgba(234,88,12,0.7))",
+            background: "linear-gradient(135deg, rgba(15,118,110,0.88), rgba(9,24,25,0.8))",
             }}
           />
         )}

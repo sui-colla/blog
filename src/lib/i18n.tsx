@@ -31,6 +31,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.links": "链接",
     "nav.uses": "Uses",
     "nav.explore": "探索",
+    "nav.openMenu": "打开导航菜单",
+    "nav.closeMenu": "关闭导航菜单",
 
     // 首页
     "home.greeting": "欢迎来到露比的工作室",
@@ -275,6 +277,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "nav.links": "Links",
     "nav.uses": "Uses",
     "nav.explore": "Explore",
+    "nav.openMenu": "Open navigation menu",
+    "nav.closeMenu": "Close navigation menu",
 
     // Home
     "home.greeting": "Hello, welcome.",

@@ -86,12 +86,12 @@ export default function AboutContent() {
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
+        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
       >
         &larr; {t("post.backHome")}
       </Link>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+        <span className="text-zinc-950 dark:text-zinc-50">
           {t("about.title")}
         </span>
       </h1>
@@ -114,7 +114,7 @@ export default function AboutContent() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-2xl border border-orange-100 bg-white/80 p-4 text-sm transition hover:border-orange-200 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-orange-900/60"
+              className="rounded-md border border-teal-100 bg-white/80 p-4 text-sm transition hover:border-teal-200 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-teal-900/60"
             >
               <span className="text-xl" aria-hidden="true">{item.icon}</span>
               <span className="mt-2 block font-semibold text-zinc-900 dark:text-zinc-50">{item.title}</span>

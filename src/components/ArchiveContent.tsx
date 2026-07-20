@@ -21,13 +21,13 @@ export default function ArchiveContent({ groups, sortedKeys }: Props) {
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
+        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
       >
         &larr; {t("post.backHome")}
       </Link>
 
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl mb-10">
-        <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
+        <span className="text-zinc-950 dark:text-zinc-50">
           {t("archive.title")}
         </span>
       </h1>

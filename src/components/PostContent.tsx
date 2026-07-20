@@ -48,7 +48,7 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
       <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
         <Link
           href="/"
-          className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-orange-500 transition-colors mb-8"
+          className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-700 transition-colors mb-8"
         >
           &larr; {t("post.backHome")}
         </Link>
@@ -70,10 +70,8 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
                 <span>·</span>
                 <span>{post.wordCount.toLocaleString()} {t("post.wordCount")}</span>
               </div>
-              <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                <span className="bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-transparent">
-                  {post.title}
-                </span>
+              <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-950 sm:text-5xl dark:text-zinc-50">
+                {post.title}
               </h1>
               {post.tags && post.tags.length > 0 && (
                 <div className="mt-4 flex gap-2">
@@ -81,7 +79,7 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
                     <Link
                       key={tag}
                       href={`/tags/${encodeURIComponent(tag)}`}
-                      className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
+                      className="tag-link"
                     >
                       {tag}
                     </Link>
@@ -101,8 +99,8 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
 
             {/* 移动端折叠目录 */}
             {hasToc && (
-              <details className="toc-details lg:hidden mb-8 rounded-lg border border-orange-200 dark:border-zinc-700 bg-orange-50/50 dark:bg-zinc-900/50">
-                <summary className="px-4 py-2.5 text-sm font-medium text-orange-600 dark:text-orange-400 cursor-pointer select-none">
+              <details className="toc-details lg:hidden mb-8 rounded-md border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="px-4 py-2.5 text-sm font-medium text-teal-800 dark:text-teal-300 cursor-pointer select-none">
                   {t("post.toc")}
                 </summary>
                 <div className="px-4 pb-3">

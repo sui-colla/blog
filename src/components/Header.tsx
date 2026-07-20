@@ -8,6 +8,8 @@
  * - 集成 Search（⌘K）、ThemeToggle、LanguageToggle
  */
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import Search from "@/components/Search";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -16,39 +18,73 @@ import { useI18n } from "@/lib/i18n";
 
 export default function Header() {
   const { t } = useI18n();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [menuOpen]);
+
+  const navItems = [
+    { href: "/", label: t("nav.home") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/projects", label: t("nav.projects") },
+    { href: "/tags", label: t("nav.tags") },
+    { href: "/archive", label: t("nav.archive") },
+  ];
 
   return (
-    <header className="sticky top-0 z-10 border-b border-zinc-200 bg-stone-50/85 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/80">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6" aria-label={t("nav.explore")}>
+    <header className="site-header">
+      <nav className="site-header__inner" aria-label={t("nav.explore")}>
         <Link
           href="/"
-          className="shrink-0 text-lg font-bold tracking-tight text-zinc-900 hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300 transition-colors"
+          className="site-header__brand"
         >
           {siteConfig.name}
         </Link>
-        <div className="flex min-w-0 items-center gap-2 text-sm font-medium text-zinc-500 sm:gap-3 md:gap-5">
-          <div className="hidden items-center gap-5 md:flex">
-            <Link href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-              {t("nav.home")}
+        <div className="site-header__desktop-nav">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className="site-header__link">
+              {item.label}
             </Link>
-            <Link href="/about" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-              {t("nav.about")}
-            </Link>
-            <Link href="/projects" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-              {t("nav.projects")}
-            </Link>
-            <Link href="/tags" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-              {t("nav.tags")}
-            </Link>
-            <Link href="/archive" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-              {t("nav.archive")}
-            </Link>
-          </div>
+          ))}
+        </div>
+        <div className="site-header__actions">
           <Search />
           <ThemeToggle />
           <LanguageToggle />
+          <button
+            type="button"
+            className="icon-button site-header__menu-button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? t("nav.closeMenu") : t("nav.openMenu")}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+          >
+            {menuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+          </button>
         </div>
       </nav>
+      {menuOpen && (
+        <div id="mobile-navigation" className="mobile-navigation">
+          <div className="mobile-navigation__inner">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="mobile-navigation__link"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

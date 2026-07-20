@@ -28,7 +28,7 @@ function StatusPill({ ready }: { ready: boolean }) {
       className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
         ready
           ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-          : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+          : "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300"
       }`}
     >
       {ready ? "Ready" : "Needs setup"}
@@ -38,7 +38,7 @@ function StatusPill({ ready }: { ready: boolean }) {
 
 function StatCard({ label, value, hint }: { label: string; value: number | string; hint?: string }) {
   return (
-    <div className="rounded-3xl border border-orange-100/80 bg-white/80 p-5 shadow-sm shadow-orange-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
+    <div className="rounded-lg border border-teal-100/80 bg-white/80 p-5 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
       <p className="text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
       <p className="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-50">{value}</p>
       {hint ? <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">{hint}</p> : null}
@@ -50,9 +50,9 @@ function StatusList({ items }: { items: AdminStatusItem[] }) {
   return (
     <ul className="mt-4 space-y-2">
       {items.map((item) => (
-        <li key={item.label} className="flex items-start justify-between gap-4 rounded-2xl bg-orange-50/70 px-4 py-3 text-sm dark:bg-zinc-950/70">
+        <li key={item.label} className="flex items-start justify-between gap-4 rounded-md bg-teal-50/70 px-4 py-3 text-sm dark:bg-zinc-950/70">
           <span className="font-medium text-zinc-700 dark:text-zinc-200">{item.label}</span>
-          <span className={item.configured ? "text-emerald-700 dark:text-emerald-300" : "text-amber-700 dark:text-amber-300"}>
+          <span className={item.configured ? "text-emerald-700 dark:text-emerald-300" : "text-teal-700 dark:text-teal-300"}>
             {item.detail}
           </span>
         </li>
@@ -73,7 +73,7 @@ function ServiceCard({
   links: { label: string; href: string }[];
 }) {
   return (
-    <section className="rounded-3xl border border-orange-100/80 bg-white/80 p-6 shadow-sm shadow-orange-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
+    <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{title}</h2>
         <StatusPill ready={ready} />
@@ -86,7 +86,7 @@ function ServiceCard({
             href={link.href}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full border border-orange-200 px-3 py-1.5 text-sm font-medium text-orange-700 transition hover:bg-orange-50 dark:border-orange-900/70 dark:text-orange-300 dark:hover:bg-orange-950/40"
+            className="rounded-full border border-teal-200 px-3 py-1.5 text-sm font-medium text-teal-700 transition hover:bg-teal-50 dark:border-teal-900/70 dark:text-teal-300 dark:hover:bg-teal-950/40"
           >
             {link.label}
           </a>
@@ -102,8 +102,8 @@ export default function AdminPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
       <div className="mb-10">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-orange-500">Private dashboard</p>
-        <h1 className="mt-3 bg-gradient-to-r from-orange-500 to-amber-600 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
+        <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-500">Private dashboard</p>
+        <h1 className="mt-3 text-4xl font-bold text-zinc-950 dark:text-zinc-50 sm:text-5xl">
           运营管理面板
         </h1>
         <p className="mt-4 max-w-2xl text-zinc-600 dark:text-zinc-400">
@@ -129,13 +129,13 @@ export default function AdminPage() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <section className="rounded-3xl border border-orange-100/80 bg-white/80 p-6 shadow-sm shadow-orange-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
+        <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">最近文章</h2>
           <div className="mt-4 space-y-3">
             {data.content.recentPosts.map((post) => (
-              <div key={post.slug} className="flex items-center justify-between gap-4 rounded-2xl bg-orange-50/70 px-4 py-3 dark:bg-zinc-950/70">
+              <div key={post.slug} className="flex items-center justify-between gap-4 rounded-md bg-teal-50/70 px-4 py-3 dark:bg-zinc-950/70">
                 <div>
-                  <Link href={`/posts/${post.slug}`} className="font-medium text-zinc-800 hover:text-orange-600 dark:text-zinc-100 dark:hover:text-orange-300">
+                  <Link href={`/posts/${post.slug}`} className="font-medium text-zinc-800 hover:text-teal-600 dark:text-zinc-100 dark:hover:text-teal-300">
                     {post.title}
                   </Link>
                   <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{post.date}</p>
@@ -148,7 +148,7 @@ export default function AdminPage() {
           </div>
         </section>
 
-        <section className="rounded-3xl border border-orange-100/80 bg-white/80 p-6 shadow-sm shadow-orange-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
+        <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">部署与检查</h2>
           <dl className="mt-4 space-y-3 text-sm">
             <div>
@@ -164,7 +164,7 @@ export default function AdminPage() {
               <dd className="mt-1 font-medium text-zinc-800 dark:text-zinc-100">{data.deploy.commitRef} · {data.deploy.commitSha}</dd>
             </div>
           </dl>
-          <div className="mt-5 rounded-2xl bg-zinc-950 px-4 py-3 font-mono text-xs text-orange-100">
+          <div className="mt-5 rounded-md bg-zinc-950 px-4 py-3 font-mono text-xs text-teal-100">
             npm run check:content
           </div>
           <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">

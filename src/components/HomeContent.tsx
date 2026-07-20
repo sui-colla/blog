@@ -66,10 +66,10 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
               {t("home.empty")}
             </p>
           ) : (
-          <div className="flex flex-col gap-8">
+          <div className="home-post-list">
             {pagePosts.map((post) => (
-              <article key={post.slug} className="group border-b border-zinc-200 transition-colors last:border-b-0 hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700">
-                <div className="py-5">
+              <article key={post.slug} className="home-post">
+                <div className="home-post__body">
                   <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                     <time dateTime={post.date}>
                       {new Date(post.date).toLocaleDateString(dateLocale, {
@@ -83,27 +83,27 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
                       {post.readingTime} {t("post.readingTime")}
                     </span>
                   </div>
-                  <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-zinc-500 dark:text-zinc-50 dark:group-hover:text-zinc-300 transition-colors">
+                  <h3 className="home-post__title">
                     {post.pinned && (
                       <span className="mr-2 inline-block rounded-sm bg-zinc-100 px-2 py-0.5 align-middle text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                         <span aria-hidden="true">📌 </span>
                         {t("post.pinned")}
                       </span>
                     )}
-                    <Link href={`/posts/${post.slug}`} className="hover:text-zinc-500 dark:hover:text-zinc-300">
+                    <Link href={`/posts/${post.slug}`}>
                       {post.title}
                     </Link>
                   </h3>
-                  <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  <p className="home-post__summary">
                     {post.summary}
                   </p>
                   {post.tags && post.tags.length > 0 && (
-                    <div className="mt-3 flex gap-2">
+                    <div className="home-post__tags">
                       {post.tags.map((tag) => (
                         <TagLink
                           key={tag}
                           tag={tag}
-                          className="inline-block rounded-sm bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+                          className="tag-link"
                         />
                       ))}
                     </div>
@@ -149,7 +149,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
         </section>
 
         {/* 移动端热门文章（桌面端由 Sidebar 显示） */}
-        <section className="lg:hidden mt-12">
+        <section className="mobile-discover lg:hidden mt-12">
           <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
             {t("popular.title")}
           </h2>
@@ -181,7 +181,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
         </section>
 
         {/* 移动端标签云（桌面端由 Sidebar 显示） */}
-        <section className="lg:hidden mt-12">
+        <section className="mobile-discover lg:hidden mt-10">
           <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
             {t("nav.tags")}
           </h2>
