@@ -19,7 +19,7 @@ export const siteConfig = {
   url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl),
   locale: "zh_CN",
   language: "zh-CN",
-  themeColor: "#f97316",
+  themeColor: "#52525b",
   author: {
     name: "LunaPath",
     url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl),

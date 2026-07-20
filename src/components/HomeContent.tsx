@@ -48,10 +48,8 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
       <div className="home-main">
         {/* 顶部 Banner */}
         <section className="mb-12">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-            <span className="bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 bg-clip-text text-transparent">
-              {t("home.greeting")}
-            </span>
+          <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl dark:text-zinc-50">
+            {t("home.greeting")}
           </h1>
           <p className="mt-4 text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl">
             {t("home.tagline")}
@@ -60,18 +58,18 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
 
         {/* 文章列表 */}
         <section>
-          <h2 className="mb-6 inline-block text-sm font-semibold uppercase tracking-widest text-orange-500 border-b-2 border-orange-300 pb-1">
+          <h2 className="mb-6 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
             {t("home.latestPosts")}
           </h2>
           {pagePosts.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-orange-200 bg-orange-50/60 p-8 text-center text-sm text-zinc-500 dark:border-orange-900/50 dark:bg-orange-950/20 dark:text-zinc-400" role="status">
+            <p className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-400" role="status">
               {t("home.empty")}
             </p>
           ) : (
           <div className="flex flex-col gap-8">
             {pagePosts.map((post) => (
-              <article key={post.slug} className="group rounded-xl overflow-hidden hover:bg-orange-50/60 dark:hover:bg-zinc-900 transition-colors">
-                <div className="p-5">
+              <article key={post.slug} className="group border-b border-zinc-200 transition-colors last:border-b-0 hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700">
+                <div className="py-5">
                   <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                     <time dateTime={post.date}>
                       {new Date(post.date).toLocaleDateString(dateLocale, {
@@ -85,14 +83,14 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
                       {post.readingTime} {t("post.readingTime")}
                     </span>
                   </div>
-                  <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-orange-600 dark:text-zinc-50 dark:group-hover:text-orange-400 transition-colors">
+                  <h3 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-zinc-500 dark:text-zinc-50 dark:group-hover:text-zinc-300 transition-colors">
                     {post.pinned && (
-                      <span className="inline-block mr-2 text-xs font-medium text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded-full align-middle">
+                      <span className="mr-2 inline-block rounded-sm bg-zinc-100 px-2 py-0.5 align-middle text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                         <span aria-hidden="true">📌 </span>
                         {t("post.pinned")}
                       </span>
                     )}
-                    <Link href={`/posts/${post.slug}`} className="hover:text-orange-600 dark:hover:text-orange-400">
+                    <Link href={`/posts/${post.slug}`} className="hover:text-zinc-500 dark:hover:text-zinc-300">
                       {post.title}
                     </Link>
                   </h3>
@@ -105,7 +103,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
                         <TagLink
                           key={tag}
                           tag={tag}
-                          className="inline-block rounded-full bg-orange-100 px-3 py-0.5 text-xs font-medium text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:hover:bg-orange-900/50 transition-colors"
+                          className="inline-block rounded-sm bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition-colors"
                         />
                       ))}
                     </div>
@@ -152,7 +150,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
 
         {/* 移动端热门文章（桌面端由 Sidebar 显示） */}
         <section className="lg:hidden mt-12">
-          <h2 className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-orange-500 border-b-2 border-orange-300 pb-1">
+          <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
             {t("popular.title")}
           </h2>
           {popularPosts.length > 0 ? (
@@ -184,7 +182,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
 
         {/* 移动端标签云（桌面端由 Sidebar 显示） */}
         <section className="lg:hidden mt-12">
-          <h2 className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-orange-500 border-b-2 border-orange-300 pb-1">
+          <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
             {t("nav.tags")}
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -192,10 +190,10 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
               <Link
                 key={tag}
                 href={`/tags/${encodeURIComponent(tag)}`}
-                className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-medium text-orange-600 hover:bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400 dark:hover:bg-orange-900/40 transition-colors"
+                className="inline-flex items-center gap-1 rounded-sm bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition-colors"
               >
                 {tag}
-                <span className="text-xs text-orange-400 dark:text-orange-500">
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">
                   {count}
                 </span>
               </Link>

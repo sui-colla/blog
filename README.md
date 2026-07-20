@@ -76,6 +76,8 @@ NEXT_PUBLIC_UMAMI_SCRIPT_URL=https://cloud.umami.is/script.js
 
 ## 新增文章
 
+日常创作、预览、发布、定时发布和回滚请先阅读 [`CONTENT_PUBLISHING.md`](CONTENT_PUBLISHING.md)。
+
 在 `content/posts` 下新增一个 `.md` 文件，文件名就是文章 slug，例如：
 
 ```text

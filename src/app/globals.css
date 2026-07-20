@@ -3,8 +3,8 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-accent: #f97316;
-  --color-accent-foreground: #fff7ed;
+  --color-accent: #52525b;
+  --color-accent-foreground: #fafaf9;
 }
 
 body {
@@ -429,9 +429,8 @@ body {
 }
 
 body {
-  background: linear-gradient(135deg, #fefce8, #fef3c7, #fde68a, #fff7ed, #fef9c3);
-  background-size: 400% 400%;
-  animation: gradientFlow 20s ease infinite;
+  background: #fafaf9;
+  color: #27272a;
 }
 
 /* 暗色模式：深色渐变 */
