@@ -39,6 +39,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
     "home.latestPosts": "最新文章",
     "home.empty": "暂时还没有文章，稍后再来看看吧。",
+    "home.startHere": "从这里开始",
+    "home.readPost": "阅读全文",
 
     // 热门文章
     "popular.title": "热门文章",
@@ -285,6 +287,8 @@ const translations: Record<Locale, Record<string, string>> = {
     "home.tagline": "A place for notes on tech, thoughts, and life. Writing helps me think clearly — hope it inspires you too.",
     "home.latestPosts": "Latest Posts",
     "home.empty": "No posts yet. Check back soon.",
+    "home.startHere": "Start here",
+    "home.readPost": "Read article",
 
     // Popular posts
     "popular.title": "Popular Posts",

@@ -27,6 +27,8 @@ interface Props {
 }
 
 const POSTS_PER_PAGE = 5;
+const DISCOVER_TAG_LIMIT = 6;
+const DISCOVER_POPULAR_LIMIT = 4;
 
 export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Props) {
   const { t, locale } = useI18n();
@@ -36,6 +38,14 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
   const currentPage = Math.max(1, Math.min(page, totalPages));
   const startIdx = (currentPage - 1) * POSTS_PER_PAGE;
   const pagePosts = posts.slice(startIdx, startIdx + POSTS_PER_PAGE);
+  const starterPosts = Array.from(
+    new Map(
+      [...posts.filter((post) => post.pinned), ...popularPosts, ...posts].map((post) => [
+        post.slug,
+        post,
+      ])
+    ).values()
+  ).slice(0, 3);
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
 
@@ -54,11 +64,26 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
           <p className="mt-4 text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-xl">
             {t("home.tagline")}
           </p>
+          {starterPosts.length > 0 && (
+            <div className="home-start-here" aria-labelledby="start-here-title">
+              <h2 id="start-here-title" className="home-section-label">
+                {t("home.startHere")}
+              </h2>
+              <div className="home-start-here__list">
+                {starterPosts.map((post) => (
+                  <Link key={post.slug} href={`/posts/${post.slug}`} className="home-start-here__link">
+                    <span>{post.title}</span>
+                    <span aria-hidden="true">&rarr;</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* 文章列表 */}
         <section>
-          <h2 className="mb-6 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
+          <h2 className="home-section-label mb-5">
             {t("home.latestPosts")}
           </h2>
           {pagePosts.length === 0 ? (
@@ -108,6 +133,9 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
                       ))}
                     </div>
                   )}
+                  <Link href={`/posts/${post.slug}`} className="home-post__read-more">
+                    {t("home.readPost")} <span aria-hidden="true">&rarr;</span>
+                  </Link>
                 </div>
               </article>
             ))}
@@ -148,14 +176,41 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
           )}
         </section>
 
-        {/* 移动端热门文章（桌面端由 Sidebar 显示） */}
-        <section className="mobile-discover lg:hidden mt-12">
-          <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
+        <section className="home-discover-section">
+          <div className="home-discover-section__heading">
+            <h2 className="home-section-label">
+              {t("nav.tags")}
+            </h2>
+            <Link href="/tags" className="home-discover-section__link">
+              {t("browse.allTags")} <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
+          <div className="home-topic-list">
+            {tags.slice(0, DISCOVER_TAG_LIMIT).map(({ tag, count }) => (
+              <Link
+                key={tag}
+                href={`/tags/${encodeURIComponent(tag)}`}
+                className="home-topic-link"
+              >
+                {tag}
+                <span>{count}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="home-discover-section">
+          <div className="home-discover-section__heading">
+            <h2 className="home-section-label">
             {t("popular.title")}
-          </h2>
+            </h2>
+            <Link href="/archive" className="home-discover-section__link">
+              {t("browse.archive")} <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
           {popularPosts.length > 0 ? (
             <div className="mobile-popular-list">
-              {popularPosts.map((post, index) => (
+              {popularPosts.slice(0, DISCOVER_POPULAR_LIMIT).map((post, index) => (
                 <Link
                   key={post.slug}
                   href={`/posts/${post.slug}`}
@@ -178,27 +233,6 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
               {t("popular.empty")}
             </p>
           )}
-        </section>
-
-        {/* 移动端标签云（桌面端由 Sidebar 显示） */}
-        <section className="mobile-discover lg:hidden mt-10">
-          <h2 className="mb-4 inline-block border-b-2 border-zinc-300 pb-1 text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:border-zinc-700 dark:text-zinc-300">
-            {t("nav.tags")}
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {tags.map(({ tag, count }) => (
-              <Link
-                key={tag}
-                href={`/tags/${encodeURIComponent(tag)}`}
-                className="inline-flex items-center gap-1 rounded-sm bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition-colors"
-              >
-                {tag}
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                  {count}
-                </span>
-              </Link>
-            ))}
-          </div>
         </section>
 
         {/* 订阅组件 */}

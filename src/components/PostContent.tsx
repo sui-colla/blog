@@ -53,9 +53,9 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
           &larr; {t("post.backHome")}
         </Link>
 
-        <div className="lg:flex lg:gap-10">
+        <div className="lg:grid lg:grid-cols-[minmax(0,720px)_14rem] lg:justify-between lg:gap-12">
           {/* 主内容区 */}
-          <article className="min-w-0 flex-1">
+          <article className="min-w-0">
             <header className="mb-10">
               <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
                 <time dateTime={post.date}>
@@ -146,9 +146,9 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
 
           {/* 桌面端粘性侧边栏目录 */}
           {hasToc && (
-            <aside className="hidden lg:block w-56 shrink-0">
+            <aside className="hidden lg:block w-56">
               <div className="sticky top-24">
-                <TableOfContents headings={post.headings} />
+                <TableOfContents headings={post.headings} levels={[2]} />
               </div>
             </aside>
           )}
