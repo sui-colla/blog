@@ -10,7 +10,7 @@
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Archive, FolderKanban, Hash, Home, Link2, UserRound, Wrench } from "lucide-react";
+import { Home, UserRound } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/posts";
 
@@ -32,13 +32,6 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
   const navItems = [
     { href: "/", label: t("nav.home"), icon: Home },
     { href: "/about", label: t("nav.about"), icon: UserRound },
-  ];
-
-  const exploreItems = [
-    { href: "/projects", label: t("nav.projects"), icon: FolderKanban },
-    { href: "/now", label: t("nav.now"), icon: Hash },
-    { href: "/links", label: t("nav.links"), icon: Link2 },
-    { href: "/uses", label: t("nav.uses"), icon: Wrench },
   ];
 
   return (
@@ -63,35 +56,12 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
 
       <div className="sidebar-divider" />
 
-      <div className="sidebar-section">
-        <h3 className="sidebar-section-title">{t("nav.explore")}</h3>
-        <nav className="sidebar-nav" aria-label={t("nav.explore")}>
-          {exploreItems.map((item, index) => (
-            <div key={item.href}>
-              {index > 0 && <div className="sidebar-nav-divider" />}
-              <Link
-                href={item.href}
-                className={`sidebar-link ${
-                  pathname === item.href ? "sidebar-link--active" : ""
-                }`}
-              >
-                <item.icon className="sidebar-link-icon" size={15} aria-hidden="true" />
-                {item.label}
-              </Link>
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      {/* 分割线 */}
-      <div className="sidebar-divider" />
-
       {/* 热门文章 */}
       <div className="sidebar-section">
         <h3 className="sidebar-section-title">{t("popular.title")}</h3>
         {popularPosts.length > 0 ? (
           <ol className="sidebar-popular-list">
-            {popularPosts.map((post, index) => (
+          {popularPosts.slice(0, 4).map((post, index) => (
               <li key={post.slug}>
                 <Link href={`/posts/${post.slug}`} className="sidebar-popular-link">
                   <span className="sidebar-popular-rank">
@@ -110,43 +80,6 @@ export default function Sidebar({ tags, postCount, popularPosts }: Props) {
         ) : (
           <p className="sidebar-empty">{t("popular.empty")}</p>
         )}
-      </div>
-
-      {/* 分割线 */}
-      <div className="sidebar-divider" />
-
-      {/* 标签列表 */}
-      <div className="sidebar-section">
-        <h3 className="sidebar-section-title">{t("nav.tags")}</h3>
-        <div className="sidebar-tags">
-          {tags.map(({ tag, count }) => (
-            <Link
-              key={tag}
-              href={`/tags/${encodeURIComponent(tag)}`}
-              className="sidebar-tag"
-            >
-              {tag}
-              <span className="sidebar-tag-count">{count}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* 浏览导航 */}
-      <div className="sidebar-divider" />
-      <div className="sidebar-section">
-        <h3 className="sidebar-section-title">{t("browse.title")}</h3>
-        <nav className="sidebar-nav" aria-label={t("browse.title")}>
-          <Link href="/tags" className="sidebar-link">
-            <Hash className="sidebar-link-icon" size={15} aria-hidden="true" />
-            {t("browse.allTags")}
-          </Link>
-          <div className="sidebar-nav-divider" />
-          <Link href="/archive" className="sidebar-link">
-            <Archive className="sidebar-link-icon" size={15} aria-hidden="true" />
-            {t("browse.archive")}
-          </Link>
-        </nav>
       </div>
 
       {/* 统计信息 */}
