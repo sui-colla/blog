@@ -10,7 +10,7 @@
  * - I18nProvider 包裹 Header/main/Footer，使所有子组件可用 useI18n()
  * - Analytics 和 ServiceWorkerRegister 放在 body 末尾，不影响首屏渲染
  */
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -42,7 +42,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
     types: {
-      "application/rss+xml": siteConfig.rss.path,
+      "application/rss+xml": [
+        { url: siteConfig.rss.path, title: siteConfig.rss.title },
+      ],
     },
   },
   icons: {
@@ -65,6 +67,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: siteConfig.themeColor,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,10 +85,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="alternate" type="application/rss+xml" title={siteConfig.rss.title} href={siteConfig.rss.path} />
-        <meta name="theme-color" content={siteConfig.themeColor} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
