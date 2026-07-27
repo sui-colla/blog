@@ -20,6 +20,19 @@
   --color-accent-foreground: #fafaf9;
 }
 
+/* 原生表单控件 / 滚动条跟随主题（与 data-theme 双条件一致） */
+:root {
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 body {
   font-family: var(--font-sans);
 }
