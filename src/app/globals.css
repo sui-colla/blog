@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* dark: variant 与手写暗色 CSS 使用同一套双条件：
+   系统暗色且未手动切 light，或手动切 dark（data-theme 由 layout 内联脚本设置） */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) & {
+      @slot;
+    }
+  }
+  [data-theme="dark"] & {
+    @slot;
+  }
+}
+
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
