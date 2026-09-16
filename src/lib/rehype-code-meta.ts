@@ -76,13 +76,16 @@ function enhanceCodeFigure(figure: Element) {
   const language = getStringProperty(pre, "data-language") || getStringProperty(titleNode, "data-language");
 
   const headerChildren: ElementContent[] = [];
+  // 左侧标题位在没有真实标题（```lang title="..."）时回落到语言名。
+  // 语言徽标因此只在「有标题」时才补一个，否则同一个语言名会在标题栏里
+  // 出现两次——左边 "bash"、右边 "BASH"。
   headerChildren.push(createSpan("code-block-title", title || language || "code"));
   headerChildren.push({
     type: "element",
     tagName: "div",
     properties: { className: ["code-block-meta"] },
     children: [
-      ...(language ? [createSpan("code-block-language", language)] : []),
+      ...(title && language ? [createSpan("code-block-language", language)] : []),
       createActions(),
     ],
   } as Element);

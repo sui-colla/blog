@@ -22,13 +22,13 @@ export default function NotFoundContent() {
       <div className="mt-8 flex items-center justify-center gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-lg bg-teal-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-600 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-teal-800 transition-colors"
         >
           {t("notFound.backHome")}
         </Link>
         <Link
           href="/tags"
-          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 dark:border-zinc-600 px-5 py-2.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:border-teal-500 hover:text-teal-500 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 dark:border-zinc-600 px-5 py-2.5 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:border-teal-700 hover:text-teal-700 transition-colors"
         >
           {t("notFound.browseTags")}
         </Link>

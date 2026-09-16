@@ -51,7 +51,7 @@ export default function RelatedPosts({
           >
             <time
               dateTime={post.date}
-              className="text-xs text-zinc-400 dark:text-zinc-500"
+              className="text-xs text-zinc-500 dark:text-zinc-400"
             >
               {new Date(post.date).toLocaleDateString(dateLocale, {
                 year: "numeric",

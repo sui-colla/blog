@@ -8,7 +8,7 @@ export default function OfflineContent() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-3xl flex-col justify-center px-6 py-16 text-center sm:py-24">
-      <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-500">
+      <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-700 dark:text-teal-400">
         {t("offline.badge")}
       </p>
       <h1 className="mt-4 text-4xl font-bold text-zinc-950 dark:text-zinc-50 sm:text-5xl">
@@ -20,7 +20,7 @@ export default function OfflineContent() {
       <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
         <Link
           href="/"
-          className="rounded-full bg-teal-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition hover:bg-teal-600"
+          className="rounded-full bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-700/25 transition hover:bg-teal-800"
         >
           {t("offline.backHome")}
         </Link>

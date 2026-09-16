@@ -336,7 +336,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     .use(remarkRehype)
     .use(rehypePrettyCode, {
       theme: "one-dark-pro",
-      keepBackground: true,
+      // 关掉 shiki 自带背景，改由 CSS 指定更深的底色。
+      // one-dark-pro 的 #e06c75（4.38:1）和 #7f848e（3.73:1）在它自己的
+      // #282c34 上都不满足 WCAG 4.5:1；底色压到 #161b24 后两者分别升到
+      // 5.40:1 和 4.60:1，配色本身一个字节都不用改。
+      keepBackground: false,
     })
     .use(rehypeFiguresPlugin)
     .use(rehypeCodeMetaPlugin)

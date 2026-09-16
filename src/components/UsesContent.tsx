@@ -14,7 +14,7 @@ export default function UsesContent({ categories }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-teal-500">
+      <Link href="/" className="page-back">
         &larr; {t("post.backHome")}
       </Link>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -40,12 +40,12 @@ export default function UsesContent({ categories }: Props) {
                     <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{item.description}</p>
                     <div className="mt-4 flex flex-wrap gap-3 text-sm font-medium">
                       {item.url && (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:text-teal-700 dark:text-teal-400">
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-teal-700 hover:text-teal-800 dark:text-teal-400">
                           {t("uses.visit")} ↗
                         </a>
                       )}
                       {item.postUrl && (
-                        <Link href={item.postUrl} className="text-teal-600 hover:text-teal-700 dark:text-teal-400">
+                        <Link href={item.postUrl} className="text-teal-700 hover:text-teal-800 dark:text-teal-400">
                           {t("uses.readPost")} →
                         </Link>
                       )}

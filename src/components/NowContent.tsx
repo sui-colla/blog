@@ -18,7 +18,7 @@ export default function NowContent({ data }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-teal-500">
+      <Link href="/" className="page-back">
         &larr; {t("post.backHome")}
       </Link>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -27,7 +27,7 @@ export default function NowContent({ data }: Props) {
         </span>
       </h1>
       <p className="mt-3 text-zinc-500 dark:text-zinc-400">{t("now.description")}</p>
-      <p className="mt-4 inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-600 dark:bg-teal-900/20 dark:text-teal-300">
+      <p className="mt-4 inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700 dark:bg-teal-900/20 dark:text-teal-300">
         {t("now.updatedAt").replace("{date}", updated)}
       </p>
 
