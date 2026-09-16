@@ -11,7 +11,7 @@ export default function TagsContent({ tags }: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
         <span className="text-zinc-950 dark:text-zinc-50">
           {t("tags.title")}

@@ -83,7 +83,7 @@ export default function AboutContent() {
   const statusMessage = status === "success" ? t("contact.success") : hasError ? errorMsg : "";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link
         href="/"
         className="page-back"

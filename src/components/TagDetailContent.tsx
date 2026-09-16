@@ -14,7 +14,7 @@ export default function TagDetailContent({ tag, posts }: Props) {
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link
         href="/tags"
         className="page-back"

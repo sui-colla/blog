@@ -16,7 +16,7 @@ export default function LinksContent({ data }: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link href="/" className="page-back">
         &larr; {t("post.backHome")}
       </Link>

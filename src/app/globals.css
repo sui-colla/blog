@@ -2023,8 +2023,11 @@ body {
 }
 
 .archive-year {
-  font-size: 2rem;
-  font-weight: 800;
+  /* 原为 2rem / 800，与页面标题（36px）几乎等大且是强调色，
+     视觉上抢掉了「文章归档」的标题层级；降一级作为年份分隔使用。
+     层级现在是 页面标题 36px > 年份 24px > 月份 14px */
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--site-accent);
   margin-bottom: 1rem;
   margin-top: 2rem;
@@ -3611,6 +3614,22 @@ body,
   padding: 3.5rem 1.5rem 5rem;
 }
 
+/* 内容页统一容器（关于 / 项目 / 归档 / 标签 / 链接 / Now / Uses / 标签详情）。
+   这些页此前是居中 max-w-3xl（768px），内容左边界落在 280px，
+   而页头品牌、首页侧栏、文章页正文都在 64px —— 从首页或文章页点进来时
+   内容会整体横向跳动 216px、纵向多出 40px。
+   这里把外层换成 1200px 栅格并统一上下留白，内层锁 700px，
+   与首页主栏、文章页阅读栏保持同一宽度，即「全站正文同一个阅读尺度」。
+   （404 与离线页是整屏居中的提示页，刻意不套用此容器。） */
+.page-layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 5rem;
+}
+.page-layout > * {
+  max-width: 700px;
+}
+
 /* 各内容页 / 文章页共用的「返回首页」链接 */
 .page-back {
   display: inline-flex;
@@ -3713,7 +3732,8 @@ body,
 }
 
 @media (max-width: 1023px) {
-  .article-layout { padding: 2.5rem 1.25rem 4rem; }
+  .article-layout,
+  .page-layout { padding: 2.5rem 1.25rem 4rem; }
 }
 
 .pagination-btn { border-color: var(--site-border); border-radius: 0.375rem; color: var(--site-accent-strong); }

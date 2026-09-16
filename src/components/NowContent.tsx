@@ -17,7 +17,7 @@ export default function NowContent({ data }: Props) {
   }).format(new Date(data.updatedAt));
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link href="/" className="page-back">
         &larr; {t("post.backHome")}
       </Link>
