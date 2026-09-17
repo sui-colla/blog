@@ -895,7 +895,11 @@ body {
 
 /* 键盘快捷键标签 */
 .search-kbd {
-  display: inline-block;
+  /* 显隐在这里自己控制，不要靠标记里的 Tailwind `hidden sm:inline`：
+     .search-kbd 是未分层样式，优先级高于 @layer utilities 里的 .hidden，
+     那一行 display 会被本规则直接压掉 —— 结果就是 ⌘K 徽标在手机上一直显示，
+     既没意义（手机没有物理键盘）又白占宽度。 */
+  display: none;
   padding: 0.0625rem 0.375rem;
   border: 1px solid var(--color-zinc-300);
   border-radius: 0.25rem;
@@ -904,6 +908,13 @@ body {
   font-size: 0.6875rem;
   font-family: var(--font-mono);
   line-height: 1.4;
+}
+
+/* 有物理键盘的宽度才显示快捷键提示 */
+@media (min-width: 640px) {
+  .search-kbd {
+    display: inline-block;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -2087,6 +2098,9 @@ body {
 
 .archive-post-item {
   display: flex;
+  /* 允许换行：200% 文字放大时「日期 + 标题 + 标签」一行放不下，
+     标签组是 flex-shrink: 0 不会自己收缩，不换行就会把整页撑出横向滚动 */
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 0.75rem;
   padding: 0.375rem 0;
@@ -3345,6 +3359,11 @@ body,
   font-size: 1rem;
   font-weight: 750;
   text-decoration: none;
+  /* 允许被压缩：200% 文字放大时优先保住右侧的功能按钮 */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .site-header__desktop-nav {
@@ -3372,12 +3391,17 @@ body,
   align-items: center;
   gap: 0.25rem;
   margin-left: auto;
+  /* 按钮自身有固定宽度，不许被压扁；空间不足时由品牌名让位 */
+  flex-shrink: 0;
 }
 
 .icon-button {
   display: inline-flex;
-  width: 2.25rem;
-  height: 2.25rem;
+  /* rem 会随用户字号缩放（这是想要的），但必须封顶：
+     200% 字号下 2.25rem 会变成 72px，手机头部 4 个按钮直接撑破 390px 视口，
+     造成整页横向滚动。44px 同时也是 WCAG 2.5.5 的最小点按目标。 */
+  width: min(2.25rem, 44px);
+  height: min(2.25rem, 44px);
   align-items: center;
   justify-content: center;
   border: 0;
@@ -3632,6 +3656,20 @@ body,
 }
 .page-layout > * {
   max-width: 700px;
+}
+
+/* 栅格子项默认 min-width: auto，遇到长英文串或 200% 文字放大时不肯收缩，
+   会把整个容器撑破并让页面出现横向滚动。允许收缩，交给文字自己换行。 */
+.page-layout .grid > * {
+  min-width: 0;
+}
+
+/* 404 页的大号数字。原本是 Tailwind 的 text-8xl（6rem），
+   200% 文字放大时变成 192px，「404」宽达 376px，在 390px 手机上直接溢出。
+   用 vw 封顶，让它随视口收缩。 */
+.not-found-code {
+  font-size: min(6rem, 22vw);
+  line-height: 1.1;
 }
 
 /* 各内容页 / 文章页共用的「返回首页」链接 */

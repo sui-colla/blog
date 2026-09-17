@@ -8,7 +8,7 @@ export default function NotFoundContent() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-24 sm:py-32 text-center">
-      <h1 className="text-8xl font-extrabold tracking-tight">
+      <h1 className="not-found-code font-extrabold tracking-tight">
         <span className="text-zinc-950 dark:text-zinc-50">
           404
         </span>
