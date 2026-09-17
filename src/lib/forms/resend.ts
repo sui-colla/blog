@@ -20,6 +20,23 @@ type ProviderResult<TCode extends string> =
 const RESEND_API_BASE = "https://api.resend.com";
 const RESEND_TIMEOUT_MS = 8000;
 
+/**
+ * 本地开发安全开关（FORM_DRY_RUN=true）。
+ *
+ * 这个项目的 .env.local 里配的是**真实的** Resend 凭据，所以只要在本地对
+ * /api/subscribe 或 /api/contact 发一次「能通过校验」的请求，就会真的
+ * 往生产 audience 里加联系人、真的往主人邮箱发信。
+ * 打开这个开关后所有服务商调用都会被跳过，只走校验并返回成功，方便调 UI。
+ * 默认关闭，线上行为完全不变。
+ */
+function isDryRun(): boolean {
+  return process.env.FORM_DRY_RUN?.trim().toLowerCase() === "true";
+}
+
+function dryRunLog(action: string, detail: string): void {
+  console.warn(`[FORM_DRY_RUN] 已跳过真实调用：${action} — ${detail}`);
+}
+
 function getRequiredEnv(name: string): string | null {
   const value = process.env[name];
   return value?.trim() ? value.trim() : null;
@@ -68,6 +85,11 @@ function isDuplicateContact(response: Response, body: unknown): boolean {
 export async function addSubscriber(
   email: string
 ): Promise<ProviderResult<SubscribeSuccessCode>> {
+  if (isDryRun()) {
+    dryRunLog("addSubscriber", email);
+    return { ok: true, code: "subscribed" };
+  }
+
   const audienceId = getRequiredEnv("RESEND_AUDIENCE_ID");
   if (!getRequiredEnv("RESEND_API_KEY") || !audienceId) {
     return { ok: false, error: "service_unavailable", status: 503 };
@@ -98,6 +120,11 @@ export async function addSubscriber(
 }
 
 export async function sendSubscriptionConfirmation(email: string): Promise<void> {
+  if (isDryRun()) {
+    dryRunLog("sendSubscriptionConfirmation", email);
+    return;
+  }
+
   const from = getRequiredEnv("FORMS_FROM_EMAIL");
   if (!from || !getRequiredEnv("RESEND_API_KEY")) {
     console.error("Subscription confirmation email is not configured");
@@ -151,6 +178,11 @@ function buildSubject(name: string): string {
 export async function sendContactMessage(
   input: ContactInput
 ): Promise<ProviderResult<ContactSuccessCode>> {
+  if (isDryRun()) {
+    dryRunLog("sendContactMessage", `to=${getRequiredEnv("CONTACT_TO_EMAIL") ?? "(未配置)"}`);
+    return { ok: true, code: "sent" };
+  }
+
   const from = getRequiredEnv("FORMS_FROM_EMAIL");
   const to = getRequiredEnv("CONTACT_TO_EMAIL");
 

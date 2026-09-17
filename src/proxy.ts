@@ -47,11 +47,25 @@ function parseBasicAuth(header: string | null): { username: string; password: st
   }
 }
 
+/**
+ * .env.example 里的示例密码。
+ *
+ * 这套后台是用 Basic Auth 保护的，如果线上照抄了示例值，等于用一份公开在
+ * 仓库里的密码守着后台 —— 比不配还危险（不配至少会 404 隐藏掉）。
+ * 所以把这些值一并当作「未配置」，走 unavailable() 失败关闭。
+ */
+const PLACEHOLDER_PASSWORDS = new Set(["change-this-password", "password", "admin"]);
+
+function isConfigured(username: string | undefined, password: string | undefined): boolean {
+  if (!username || !password) return false;
+  return !PLACEHOLDER_PASSWORDS.has(password.trim().toLowerCase());
+}
+
 export function proxy(request: NextRequest) {
   const expectedUsername = process.env.ADMIN_USERNAME?.trim();
   const expectedPassword = process.env.ADMIN_PASSWORD?.trim();
 
-  if (!expectedUsername || !expectedPassword) {
+  if (!isConfigured(expectedUsername, expectedPassword)) {
     return unavailable();
   }
 
