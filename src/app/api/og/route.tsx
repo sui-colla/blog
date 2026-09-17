@@ -78,7 +78,13 @@ export async function GET(request: Request) {
           width: "100%",
           display: "flex",
           position: "relative",
-      background: hasCover ? "#000" : "#fafafa",
+          // 无封面时这里原本是 #fafafa（近白），但下面所有文字都是白色
+          // （#fff / rgba(255,255,255,.85)…），于是整张卡片渲染出来几乎空白 ——
+          // 而目前所有文章都没有 cover 字段，等于每篇分享出去都是白图。
+          // 改用与封面遮罩同色系的深色渐变，保证白字始终可读。
+          background: hasCover
+            ? "#000"
+            : "linear-gradient(135deg, #0b5f59 0%, #0a3d3a 55%, #0b1f22 100%)",
         }}
       >
         {/* 背景封面图 */}
@@ -130,7 +136,9 @@ export async function GET(request: Request) {
                     display: "flex",
                     fontSize: 18,
                     fontWeight: 600,
-                    color: "rgba(255,255,255,0.9)",
+                    // 用纯白而不是 0.9 透明：标签位于卡片左上角，
+                    // 那里正是渐变最亮的一端，半透明白只有 4.1:1
+                    color: "#fff",
                     background: "rgba(255,255,255,0.2)",
                     padding: "6px 20px",
                     borderRadius: 9999,
