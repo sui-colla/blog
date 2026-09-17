@@ -12,17 +12,32 @@ function normalizeSiteUrl(url: string) {
   return url.replace(/\/+$/, "");
 }
 
+/**
+ * 解析站点 URL。
+ *
+ * 注意不能直接写 `process.env.X ?? defaultSiteUrl`：`??` 只在 null/undefined 时兜底，
+ * 而「环境变量建出来了但值留空」是常见误配 —— 此时拿到的是空字符串，会绕过兜底，
+ * 于是 canonical / OG 图 / RSS / sitemap 里的域名全部变成相对路径（metadataBase
+ * 还会直接抛 Invalid URL）。所以这里把空串和纯空白一并当作未配置处理。
+ */
+function resolveSiteUrl(raw: string | undefined): string {
+  const trimmed = raw?.trim();
+  return normalizeSiteUrl(trimmed ? trimmed : defaultSiteUrl);
+}
+
+const siteUrl = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+
 export const siteConfig = {
   name: "LunaPath",
   description: "LunaPath 的博客，记录思考和分享知识的地方",
   englishDescription: "LunaPath's blog — notes on tech, thoughts, and life",
-  url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl),
+  url: siteUrl,
   locale: "zh_CN",
   language: "zh-CN",
   themeColor: "#52525b",
   author: {
     name: "LunaPath",
-    url: normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? defaultSiteUrl),
+    url: siteUrl,
   },
   rss: {
     path: "/feed.xml",

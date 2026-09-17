@@ -102,7 +102,7 @@ export default function AdminPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
       <div className="mb-10">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-500">Private dashboard</p>
+        <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-700 dark:text-teal-400">Private dashboard</p>
         <h1 className="mt-3 text-4xl font-bold text-zinc-950 dark:text-zinc-50 sm:text-5xl">
           运营管理面板
         </h1>
@@ -135,7 +135,7 @@ export default function AdminPage() {
             {data.content.recentPosts.map((post) => (
               <div key={post.slug} className="flex items-center justify-between gap-4 rounded-md bg-teal-50/70 px-4 py-3 dark:bg-zinc-950/70">
                 <div>
-                  <Link href={`/posts/${post.slug}`} className="font-medium text-zinc-800 hover:text-teal-600 dark:text-zinc-100 dark:hover:text-teal-300">
+                  <Link href={`/posts/${post.slug}`} className="font-medium text-zinc-800 hover:text-teal-700 dark:text-zinc-100 dark:hover:text-teal-300">
                     {post.title}
                   </Link>
                   <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{post.date}</p>

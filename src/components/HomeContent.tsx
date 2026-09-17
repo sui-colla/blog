@@ -95,7 +95,7 @@ export default function HomeContent({ posts, tags, popularPosts, page = 1 }: Pro
             {pagePosts.map((post) => (
               <article key={post.slug} className="home-post">
                 <div className="home-post__body">
-                  <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+                  <div className="flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
                     <time dateTime={post.date}>
                       {new Date(post.date).toLocaleDateString(dateLocale, {
                         year: "numeric",

@@ -16,8 +16,8 @@ export default function LinksContent({ data }: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
-      <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 transition-colors hover:text-teal-500">
+    <div className="page-layout">
+      <Link href="/" className="page-back">
         &larr; {t("post.backHome")}
       </Link>
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -57,12 +57,12 @@ export default function LinksContent({ data }: Props) {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={link.avatar} alt={`${link.name} avatar`} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
                 ) : (
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-600 dark:bg-teal-900/30 dark:text-teal-300">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
                     {getInitial(link.name)}
                   </span>
                 )}
                 <div className="min-w-0">
-                  <h2 className="font-bold text-zinc-900 transition group-hover:text-teal-600 dark:text-zinc-50 dark:group-hover:text-teal-300">
+                  <h2 className="font-bold text-zinc-900 transition group-hover:text-teal-700 dark:text-zinc-50 dark:group-hover:text-teal-300">
                     {link.name} ↗
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{link.description}</p>

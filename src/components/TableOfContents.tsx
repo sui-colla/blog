@@ -112,7 +112,7 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
   return (
     <nav aria-label={t("toc.ariaLabel")} className="toc-nav">
       {showTitle && (
-        <h4 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-3 tracking-wide">
+        <h4 className="toc-title">
           {t("toc.title")}
         </h4>
       )}
@@ -129,16 +129,7 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
                 href={`#${h.id}`}
                 title={h.text}
                 onClick={(e) => handleClick(e, h.id)}
-                className={`
-                  toc-link block py-1.5 -ml-px border-l-2 text-sm leading-snug
-                  truncate transition-colors
-                  ${indent}
-                  ${
-                    isActive
-                      ? "border-teal-700 text-teal-800 font-medium dark:text-teal-300"
-                      : "border-transparent text-zinc-500 hover:text-teal-800 dark:text-zinc-400 dark:hover:text-teal-300"
-                  }
-                `}
+                className={`toc-link ${indent} ${isActive ? "toc-link--active" : ""}`}
               >
                 {h.text}
               </a>

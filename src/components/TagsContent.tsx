@@ -11,7 +11,7 @@ export default function TagsContent({ tags }: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
         <span className="text-zinc-950 dark:text-zinc-50">
           {t("tags.title")}
@@ -26,10 +26,10 @@ export default function TagsContent({ tags }: Props) {
           <Link
             key={tag}
             href={`/tags/${encodeURIComponent(tag)}`}
-            className="group inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-4 py-2 text-sm font-medium text-teal-600 transition-colors hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/40"
+            className="group inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-4 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/40"
           >
             {tag}
-            <span className="text-xs text-teal-400 dark:text-teal-500">
+            <span className="text-xs text-teal-700 dark:text-teal-400">
               {count}
             </span>
           </Link>

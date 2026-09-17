@@ -18,10 +18,10 @@ export default function ArchiveContent({ groups, sortedKeys }: Props) {
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
+        className="page-back"
       >
         &larr; {t("post.backHome")}
       </Link>

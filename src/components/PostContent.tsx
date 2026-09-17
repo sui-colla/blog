@@ -45,19 +45,16 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
       <ReadingProgress />
       <BackToTop />
 
-      <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-700 transition-colors mb-8"
-        >
+      <div className="article-layout">
+        <Link href="/" className="page-back">
           &larr; {t("post.backHome")}
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[minmax(0,720px)_14rem] lg:justify-between lg:gap-12">
+        <div className="article-grid">
           {/* 主内容区 */}
-          <article className="min-w-0">
-            <header className="mb-10">
-              <div className="flex items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+          <article className="article-main">
+            <header className="article-header">
+              <div className="article-meta">
                 <time dateTime={post.date}>
                   {new Date(post.date).toLocaleDateString(dateLocale, {
                     year: "numeric",
@@ -65,16 +62,16 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
                     day: "numeric",
                   })}
                 </time>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <span>{post.readingTime} {t("post.readingTime")}</span>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <span>{post.wordCount.toLocaleString()} {t("post.wordCount")}</span>
               </div>
-              <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-950 sm:text-5xl dark:text-zinc-50">
+              <h1 className="article-title">
                 {post.title}
               </h1>
               {post.tags && post.tags.length > 0 && (
-                <div className="mt-4 flex gap-2">
+                <div className="article-tags">
                   {post.tags.map((tag) => (
                     <Link
                       key={tag}
@@ -99,11 +96,11 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
 
             {/* 移动端折叠目录 */}
             {hasToc && (
-              <details className="toc-details lg:hidden mb-8 rounded-md border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="px-4 py-2.5 text-sm font-medium text-teal-800 dark:text-teal-300 cursor-pointer select-none">
+              <details className="toc-details article-toc-mobile">
+                <summary>
                   {t("post.toc")}
                 </summary>
-                <div className="px-4 pb-3">
+                <div>
                   <TableOfContents headings={post.headings} showTitle={false} />
                 </div>
               </details>
@@ -146,8 +143,8 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
 
           {/* 桌面端粘性侧边栏目录 */}
           {hasToc && (
-            <aside className="hidden lg:block w-56">
-              <div className="sticky top-24">
+            <aside className="article-aside">
+              <div className="article-aside__inner">
                 <TableOfContents headings={post.headings} levels={[2]} />
               </div>
             </aside>

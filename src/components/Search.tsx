@@ -316,7 +316,8 @@ export default function Search() {
       >
         <SearchIcon size={16} aria-hidden="true" />
         <span className="hidden sm:inline">{t("search.label")}</span>
-        <kbd className="search-kbd hidden sm:inline">⌘K</kbd>
+        {/* 显隐由 .search-kbd 自己控制（未分层样式会压过 Tailwind 的 hidden） */}
+        <kbd className="search-kbd">⌘K</kbd>
       </button>
 
       {open && (

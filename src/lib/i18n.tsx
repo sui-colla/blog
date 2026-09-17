@@ -519,6 +519,9 @@ const translations: Record<Locale, Record<string, string>> = {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
+/** 语言 → <html lang> 的值。服务端 layout 固定渲染 zh-CN，客户端负责纠正 */
+const LANG_ATTR: Record<Locale, string> = { zh: "zh-CN", en: "en" };
+
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("zh");
   const [mounted, setMounted] = useState(false);
@@ -533,10 +536,18 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  // 同步 <html lang>。必须放在 effect 里而不是只写在 setLocale 中：
+  // 语言偏好是持久化的，刷新后走的是上面「从 localStorage 恢复」这条路径，
+  // 不会经过 setLocale。少了这一条，英文界面会顶着 lang="zh-CN"，
+  // 读屏软件按中文发音，搜索引擎也会拿到错误的语言信号。
+  useEffect(() => {
+    if (!mounted) return;
+    document.documentElement.lang = LANG_ATTR[locale];
+  }, [locale, mounted]);
+
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem("locale", newLocale);
-    document.documentElement.lang = newLocale === "zh" ? "zh-CN" : "en";
   }, []);
 
   const t = useCallback(

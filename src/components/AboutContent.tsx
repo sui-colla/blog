@@ -83,10 +83,10 @@ export default function AboutContent() {
   const statusMessage = status === "success" ? t("contact.success") : hasError ? errorMsg : "";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
+        className="page-back"
       >
         &larr; {t("post.backHome")}
       </Link>

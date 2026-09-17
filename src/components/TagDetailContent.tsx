@@ -14,10 +14,10 @@ export default function TagDetailContent({ tag, posts }: Props) {
   const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+    <div className="page-layout">
       <Link
         href="/tags"
-        className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-teal-500 transition-colors mb-8"
+        className="page-back"
       >
         &larr; {t("tags.allTags")}
       </Link>
@@ -40,7 +40,7 @@ export default function TagDetailContent({ tag, posts }: Props) {
             >
               <time
                 dateTime={post.date}
-                className="text-sm text-zinc-400 dark:text-zinc-500"
+                className="text-sm text-zinc-500 dark:text-zinc-400"
               >
                 {new Date(post.date).toLocaleDateString(dateLocale, {
                   year: "numeric",
@@ -48,7 +48,7 @@ export default function TagDetailContent({ tag, posts }: Props) {
                   day: "numeric",
                 })}
               </time>
-              <h2 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-teal-600 dark:text-zinc-50 dark:group-hover:text-teal-400 transition-colors">
+              <h2 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-teal-700 dark:text-zinc-50 dark:group-hover:text-teal-400 transition-colors">
                 {post.title}
               </h2>
               <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
@@ -61,8 +61,8 @@ export default function TagDetailContent({ tag, posts }: Props) {
                       key={t}
                       className={`inline-block rounded-full px-3 py-0.5 text-xs font-medium ${
                         t === tag
-                          ? "bg-teal-500 text-white"
-                          : "bg-teal-100 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400"
+                          ? "bg-teal-700 text-white"
+                          : "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
                       }`}
                     >
                       {t}
