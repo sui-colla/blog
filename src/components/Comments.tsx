@@ -13,6 +13,14 @@
  * - 缺少配置时显示引导链接，指向 giscus.app 获取 repoId/categoryId
  *
  * 必需环境变量：NEXT_PUBLIC_GISCUS_REPO_ID、NEXT_PUBLIC_GISCUS_CATEGORY_ID
+ *
+ * ⚠️ 排查提示：如果配置齐全但评论区一直停在骨架屏、最后显示
+ * 「评论加载超时，请检查网络连接后重试」，**大概率不是网络问题**，
+ * 而是 giscus 的 GitHub App 没有安装到仓库上。此时 giscus.app 的
+ * /api/discussions 会返回 403：
+ *   {"error":"giscus is not installed on this repository"}
+ * iframe 因此始终不会创建。去 https://github.com/apps/giscus 安装并
+ * 勾选对应仓库即可。注意这句错误文案会把原因指向网络，容易误导。
  */
 import Giscus from "@giscus/react";
 import { useEffect, useState } from "react";
