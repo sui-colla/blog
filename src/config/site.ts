@@ -8,6 +8,9 @@
 const defaultSiteUrl = "https://xiaojiccc.xyz";
 const defaultUmamiScriptUrl = "https://cloud.umami.is/script.js";
 
+/** 本地开发地址。出现在 Vercel 构建里一定是误配。 */
+const localHostPattern = /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])(:\d+)?$/i;
+
 function normalizeSiteUrl(url: string) {
   return url.replace(/\/+$/, "");
 }
@@ -19,10 +22,23 @@ function normalizeSiteUrl(url: string) {
  * 而「环境变量建出来了但值留空」是常见误配 —— 此时拿到的是空字符串，会绕过兜底，
  * 于是 canonical / OG 图 / RSS / sitemap 里的域名全部变成相对路径（metadataBase
  * 还会直接抛 Invalid URL）。所以这里把空串和纯空白一并当作未配置处理。
+ *
+ * 还要挡掉第二种误配：把 NEXT_PUBLIC_SITE_URL 配成本地地址。
+ * 本地开发这样配是对的（见 .env.local），但它是**构建期内联**的 ——
+ * 只要 Vercel 构建时也读到了这个值，线上产物的 canonical / og:url / og:image
+ * 就会全部变成 http://localhost:3000。后果是搜索引擎把 localhost 当成正式地址，
+ * 社交平台也抓不到 og:image（分享卡片没有图）。
+ * 所以：在 Vercel 上（生产或 Preview）出现本地地址一律视为误配，回退到站点默认域名。
  */
 function resolveSiteUrl(raw: string | undefined): string {
   const trimmed = raw?.trim();
-  return normalizeSiteUrl(trimmed ? trimmed : defaultSiteUrl);
+  if (!trimmed) return normalizeSiteUrl(defaultSiteUrl);
+
+  if (process.env.VERCEL_ENV && localHostPattern.test(trimmed)) {
+    return normalizeSiteUrl(defaultSiteUrl);
+  }
+
+  return normalizeSiteUrl(trimmed);
 }
 
 const siteUrl = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   title: string;
@@ -54,7 +54,20 @@ export default function ShareButtons({ title, url }: Props) {
   const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
-  const encodedUrl = encodeURIComponent(url);
+  // 分享地址以「当前浏览器里的页面」为准。
+  // 传入的 url 来自构建期内联的 NEXT_PUBLIC_SITE_URL —— 万一那个值配错
+  // （例如线上误配成 http://localhost:3000），分享出去的链接别人根本打不开。
+  // 挂载后改用真实地址；SSR 与首帧仍用传入值，不会产生水合不一致。
+  const [shareUrl, setShareUrl] = useState(url);
+  useEffect(() => {
+    // 包在 requestAnimationFrame 里，与 I18nProvider 恢复语言偏好时同样的做法：
+    // 不在 effect 体内同步 setState（react-hooks/set-state-in-effect）。
+    requestAnimationFrame(() => {
+      setShareUrl(window.location.origin + window.location.pathname);
+    });
+  }, []);
+
+  const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 
   const shareLinks = [
@@ -77,13 +90,13 @@ export default function ShareButtons({ title, url }: Props) {
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // fallback
       const input = document.createElement("input");
-      input.value = url;
+      input.value = shareUrl;
       document.body.appendChild(input);
       input.select();
       document.execCommand("copy");
