@@ -76,9 +76,11 @@ export default function Comments() {
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    const mountedFrame = window.requestAnimationFrame(() => {
+    // setTimeout 而非 rAF：rAF 在页面不可见时不触发，
+    // 那样后台标签页里评论区会永远停在骨架屏。
+    const mountedTimer = window.setTimeout(() => {
       setMounted(true);
-    });
+    }, 0);
 
     const syncTheme = () => {
       setWidgetTheme(resolveWidgetTheme());
@@ -116,7 +118,7 @@ export default function Comments() {
     }, LOAD_ERROR_TIMEOUT);
 
     return () => {
-      window.cancelAnimationFrame(mountedFrame);
+      window.clearTimeout(mountedTimer);
       observer.disconnect();
       window.clearTimeout(readyTimer);
       window.clearTimeout(errorTimer);

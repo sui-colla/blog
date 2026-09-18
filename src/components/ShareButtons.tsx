@@ -60,11 +60,12 @@ export default function ShareButtons({ title, url }: Props) {
   // 挂载后改用真实地址；SSR 与首帧仍用传入值，不会产生水合不一致。
   const [shareUrl, setShareUrl] = useState(url);
   useEffect(() => {
-    // 包在 requestAnimationFrame 里，与 I18nProvider 恢复语言偏好时同样的做法：
-    // 不在 effect 体内同步 setState（react-hooks/set-state-in-effect）。
-    requestAnimationFrame(() => {
+    // 用 setTimeout 而非 rAF：rAF 在页面不可见时不会触发，
+    // 那样后台标签页里的分享链接会一直用构建期内联的旧值。
+    // 不在 effect 体内同步 setState 是为了满足 react-hooks/set-state-in-effect。
+    setTimeout(() => {
       setShareUrl(window.location.origin + window.location.pathname);
-    });
+    }, 0);
   }, []);
 
   const encodedUrl = encodeURIComponent(shareUrl);

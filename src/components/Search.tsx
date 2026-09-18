@@ -161,13 +161,14 @@ export default function Search() {
     const q = new URLSearchParams(window.location.search).get("q")?.trim();
     if (!q) return;
     initialQueryHandled.current = true;
-    // 包在 requestAnimationFrame 里，与 I18nProvider 恢复语言偏好时同样的做法：
-    // 不在 effect 体内同步 setState（react-hooks/set-state-in-effect）。
-    requestAnimationFrame(() => {
+    // 用 setTimeout 而非 rAF：rAF 在页面不可见时不会触发，
+    // 那样后台标签页打开 ?q= 链接就不会弹出搜索框。
+    // 不在 effect 体内同步 setState 是为了满足 react-hooks/set-state-in-effect。
+    setTimeout(() => {
       setQuery(q);
       setOpen(true);
       loadIndex();
-    });
+    }, 0);
   }, [loadIndex]);
 
   useEffect(() => {

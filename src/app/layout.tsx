@@ -8,6 +8,8 @@
  * - 主题（亮/暗）通过内联 <script> 在 HTML 渲染前读取 localStorage 并设置 data-theme，
  *   消除首次加载时的亮→暗闪烁（FOUC）
  * - I18nProvider 包裹 Header/main/Footer，使所有子组件可用 useI18n()
+ * - DocumentTitle 在 I18nProvider 内，客户端按语言纠正标签页标题
+ *   （服务端 metadata 固定中文，理由见该组件注释）
  * - Analytics 和 ServiceWorkerRegister 放在 body 末尾，不影响首屏渲染
  */
 import type { Metadata, Viewport } from "next";
@@ -16,6 +18,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import DocumentTitle from "@/components/DocumentTitle";
 import SkipToContent from "@/components/SkipToContent";
 import { I18nProvider } from "@/lib/i18n";
 import { siteConfig } from "@/config/site";
@@ -99,6 +102,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col text-zinc-800 dark:text-zinc-100 font-sans">
         <I18nProvider>
+          <DocumentTitle />
           <SkipToContent />
           <Header />
           <main id="main-content" className="main-content flex-1" tabIndex={-1}>

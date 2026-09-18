@@ -18,7 +18,7 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 import zh from "./zh";
 import en from "./en";
 
-type Locale = "zh" | "en";
+export type Locale = "zh" | "en";
 
 interface I18nContextValue {
   locale: Locale;
@@ -39,12 +39,18 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem("locale") as Locale | null;
-    requestAnimationFrame(() => {
+    // 这里刻意用 setTimeout 而不是 requestAnimationFrame：
+    // rAF 在页面不可见（后台标签页、未聚焦的窗口）时**完全不会触发**，
+    // 那样语言偏好永远恢复不了，整个界面会一直是服务端渲染的中文，
+    // 直到用户切回该标签页。setTimeout 在后台只是被节流，仍会执行。
+    // 用 setTimeout 而非同步 setState，是为了满足
+    // react-hooks/set-state-in-effect（effect 体内同步 setState 会引发级联渲染）。
+    setTimeout(() => {
       if (stored === "zh" || stored === "en") {
         setLocaleState(stored);
       }
       setMounted(true);
-    });
+    }, 0);
   }, []);
 
   // 同步 <html lang>。必须放在 effect 里而不是只写在 setLocale 中：
@@ -90,4 +96,15 @@ export function useI18n() {
   const ctx = useContext(I18nContext);
   if (!ctx) throw new Error("useI18n must be used within I18nProvider");
   return ctx;
+}
+
+/**
+ * 按指定语言取文案，不依赖 React 上下文。
+ *
+ * 给「需要显式指定语言」的场景用 —— 例如客户端纠正标签页标题时，
+ * 要同时算出中英两个版本，不能只用当前语言那一份。
+ */
+export function translate(key: string, locale: Locale): string {
+  const dict = translations[locale] ?? translations.zh;
+  return dict[key] ?? key;
 }
