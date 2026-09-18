@@ -31,6 +31,19 @@ const postFiles = fs.existsSync(postsDirectory)
   : [];
 const postSlugs = new Set(postFiles.map((filename) => filename.replace(/\.md$/, "")));
 
+// 收集所有已发布文章用到的标签，供 /tags/<tag> 链接校验。
+// 与 postSlugs 同样的思路：能静态确认的链接就不要只降级成警告 ——
+// 标签链接是自动生成的，写错标签名不会有任何构建期反馈。
+const postTags = new Set();
+for (const filename of postFiles) {
+  const { data } = matter(fs.readFileSync(path.join(postsDirectory, filename), "utf-8"));
+  if (data.draft === true) continue;
+  if (!Array.isArray(data.tags)) continue;
+  for (const tag of data.tags) {
+    if (typeof tag === "string" && tag.trim()) postTags.add(tag.trim());
+  }
+}
+
 const reports = [];
 
 function normalizePathForOutput(filePath) {
@@ -213,6 +226,18 @@ function checkSiteRoute(report, target, label) {
     }
     if (!postSlugs.has(slug)) {
       addError(report, `${label} 指向不存在的文章: ${target}`);
+    }
+    return;
+  }
+
+  if (cleanTarget.startsWith("/tags/")) {
+    const tag = cleanTarget.replace(/^\/tags\//, "").replace(/\/$/, "");
+    if (!tag || tag.includes("/")) {
+      addWarning(report, `${label} "${target}" 不是可静态校验的标签链接`);
+      return;
+    }
+    if (!postTags.has(tag)) {
+      addError(report, `${label} 指向不存在的标签: ${target}`);
     }
     return;
   }
