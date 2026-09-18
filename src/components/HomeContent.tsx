@@ -5,7 +5,8 @@
  *
  * 布局：左侧 Sidebar + 右侧文章列表。
  * 文章分页（POSTS_PER_PAGE=5）通过 URL ?page=N 控制。
- * 移动端将 Sidebar 中的热门文章和标签云单独展示在主内容区底部。
+ * 移动端在底部额外渲染热门文章与标签云（.mobile-popular-* / .home-topic-*），
+ * 这两块由本组件自己渲染，不从 Sidebar 复用。
  */
 import Link from "next/link";
 import Subscribe from "@/components/Subscribe";

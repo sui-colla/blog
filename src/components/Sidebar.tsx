@@ -3,10 +3,14 @@
 /**
  * 首页左侧边栏
  *
- * 包含导航链接（首页/关于）、探索区（项目/Now/链接/Uses）、热门文章排行、
- * 标签云、浏览导航（所有标签/按时间归档）和文章统计。
- * 桌面端固定在首页左侧，移动端内容折叠到 HomeContent 底部显示。
+ * 实际渲染三块：导航链接（首页 / 关于）、热门文章排行（取前 4 篇）、文章统计。
+ * 桌面端固定在首页左侧；移动端由 HomeContent 底部的 discover 区块
+ * 另外渲染热门文章与标签云，不复用本组件。
  * 通过 usePathname() 高亮当前所在页面的导航项。
+ *
+ * 注：globals.css 里仍保留着 .sidebar-tags / .sidebar-tag / .sidebar-tag-count
+ * 三段样式，但标签云实际由 HomeContent 用 .home-topic-list / .home-topic-link
+ * 实现，本组件只取 tags.length 做统计 —— 那三段是另一套没用上的写法。
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
