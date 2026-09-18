@@ -16,8 +16,8 @@ const personId = `${siteConfig.url}/#person`;
 const websiteId = `${siteConfig.url}/#website`;
 
 /**
- * 序列化 JSON-LD 数据：转义 `<` 为 `<`，
- * 防止 JSON 中的 `</script>` 提前截断 <script> 标签导致 XSS。
+ * 序列化 JSON-LD 数据：把 `<` 转成 Unicode 转义序列（反斜杠 + u003c），
+ * 防止 JSON 里的 `</script>` 提前截断 <script> 标签导致 XSS。
  */
 export function serializeJsonLd(data: unknown) {
   return JSON.stringify(data).replace(/</g, "\\u003c");

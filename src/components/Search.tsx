@@ -150,6 +150,26 @@ export default function Search() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [loadIndex]);
 
+  // 支持用 ?q=关键词 直接打开搜索并带入查询。
+  // 这条对应 structured-data.ts 里声明的 SearchAction
+  // （urlTemplate: /?q={search_term_string}）—— 少了它，搜索引擎的
+  // 站内搜索框点进来只会看到未过滤的首页，等于声明了一个不存在的接口。
+  // 顺便也让搜索结果可以分享链接。
+  const initialQueryHandled = useRef(false);
+  useEffect(() => {
+    if (initialQueryHandled.current) return;
+    const q = new URLSearchParams(window.location.search).get("q")?.trim();
+    if (!q) return;
+    initialQueryHandled.current = true;
+    // 包在 requestAnimationFrame 里，与 I18nProvider 恢复语言偏好时同样的做法：
+    // 不在 effect 体内同步 setState（react-hooks/set-state-in-effect）。
+    requestAnimationFrame(() => {
+      setQuery(q);
+      setOpen(true);
+      loadIndex();
+    });
+  }, [loadIndex]);
+
   useEffect(() => {
     if (!open) return;
 
