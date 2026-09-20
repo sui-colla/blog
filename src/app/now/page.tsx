@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import NowContent from "@/components/NowContent";
+import NowContent from "@/components/content/NowContent";
 import { nowPage } from "@/config/content-pages";
 
 export const metadata: Metadata = {

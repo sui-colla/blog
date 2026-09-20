@@ -13,7 +13,7 @@
  * 初始加载时检查 URL hash，自动滚动到锚点位置并高亮对应目录项。
  */
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import type { TocHeading } from "@/lib/posts";
+import type { TocHeading } from "@/lib/content/posts";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {

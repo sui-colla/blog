@@ -20,13 +20,13 @@ import remarkRehype from "remark-rehype";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import { popularPostSlugs } from "@/config/popular-posts";
-import { rehypeCodeMetaPlugin } from "./rehype-code-meta";
-import { rehypeFiguresPlugin } from "./rehype-figures";
-import { rehypeTocPlugin, type TocHeading } from "./rehype-toc";
+import { rehypeCodeMetaPlugin } from "./markdown/rehype-code-meta";
+import { rehypeFiguresPlugin } from "./markdown/rehype-figures";
+import { rehypeTocPlugin, type TocHeading } from "./markdown/rehype-toc";
 
 const postsDirectory = path.join(process.cwd(), "content", "posts");
 
-export { type TocHeading } from "./rehype-toc";
+export { type TocHeading } from "./markdown/rehype-toc";
 
 export interface PostMeta {
   slug: string;

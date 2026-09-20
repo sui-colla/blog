@@ -7,10 +7,10 @@
  */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/posts";
+import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/content/posts";
 import { absoluteUrl } from "@/config/site";
-import { buildArticleJsonLd, serializeJsonLd } from "@/lib/structured-data";
-import PostContent from "@/components/PostContent";
+import { buildArticleJsonLd, serializeJsonLd } from "@/lib/seo/structured-data";
+import PostContent from "@/components/post/PostContent";
 
 // SSG：构建时遍历所有文章 slug 生成静态页面
 export function generateStaticParams() {

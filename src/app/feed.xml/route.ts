@@ -5,7 +5,7 @@
  * force-static: 构建时生成一次，CDN 缓存 24 小时（s-maxage=86400）。
  */
 import { absoluteUrl, siteConfig } from "@/config/site";
-import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { getAllPosts, getPostBySlug } from "@/lib/content/posts";
 
 export const dynamic = "force-static";
 

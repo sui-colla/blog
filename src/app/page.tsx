@@ -4,8 +4,8 @@
  * 服务端预取文章列表、标签、热门文章数据，传递给客户端 HomeContent 组件渲染。
  * 分页通过 ?page=N 查询参数实现，由 searchParams 读取。
  */
-import { getAllPosts, getAllTags, getPopularPosts } from "@/lib/posts";
-import HomeContent from "@/components/HomeContent";
+import { getAllPosts, getAllTags, getPopularPosts } from "@/lib/content/posts";
+import HomeContent from "@/components/content/HomeContent";
 
 export default async function Home({
   searchParams,

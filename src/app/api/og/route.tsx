@@ -12,7 +12,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 import { absoluteUrl, siteConfig } from "@/config/site";
-import { getPostBySlug } from "@/lib/posts";
+import { getPostBySlug } from "@/lib/content/posts";
 
 export const runtime = "nodejs";
 

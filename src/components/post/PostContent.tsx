@@ -12,18 +12,18 @@
  */
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import type { Post, PostMeta } from "@/lib/posts";
-import TableOfContents from "@/components/TableOfContents";
-import Subscribe from "@/components/Subscribe";
-import ArticleContent from "@/components/ArticleContent";
-import ReadingProgress from "@/components/ReadingProgress";
-import RelatedPosts from "@/components/RelatedPosts";
-import Comments from "@/components/Comments";
-import PostNav from "@/components/PostNav";
-import BackToTop from "@/components/BackToTop";
-import Donate from "@/components/Donate";
-import ShareButtons from "@/components/ShareButtons";
-import PostSeries from "@/components/PostSeries";
+import type { Post, PostMeta } from "@/lib/content/posts";
+import TableOfContents from "@/components/post/TableOfContents";
+import Subscribe from "@/components/ui/Subscribe";
+import ArticleContent from "@/components/post/ArticleContent";
+import ReadingProgress from "@/components/post/ReadingProgress";
+import RelatedPosts from "@/components/post/RelatedPosts";
+import Comments from "@/components/post/Comments";
+import PostNav from "@/components/post/PostNav";
+import BackToTop from "@/components/ui/BackToTop";
+import Donate from "@/components/post/Donate";
+import ShareButtons from "@/components/post/ShareButtons";
+import PostSeries from "@/components/post/PostSeries";
 import { absoluteUrl } from "@/config/site";
 
 interface Props {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LinksContent from "@/components/LinksContent";
+import LinksContent from "@/components/content/LinksContent";
 import { linksPage } from "@/config/content-pages";
 
 export const metadata: Metadata = {

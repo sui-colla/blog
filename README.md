@@ -16,6 +16,29 @@
 - 表单服务：Resend
 - 访问统计：可选 Umami
 
+## 目录结构
+
+```text
+content/posts/       Markdown 文章源文件
+public/              静态资源、图标和 PWA 文件
+src/app/             Next.js 路由、元数据和 API Route Handler
+src/components/
+  layout/            全站布局与导航组件
+  content/           首页、归档、标签和内容型页面组件
+  post/              文章详情、目录、评论和分享组件
+  ui/                可复用交互组件
+src/config/          站点和内容页面配置
+src/lib/
+  content/           文章读取和 Markdown 处理
+  forms/              联系与订阅表单服务
+  i18n/               中英文文案与语言 Provider
+  admin/              后台统计数据
+  seo/                JSON-LD 和 SEO 辅助函数
+scripts/              内容质量检查脚本
+```
+
+路由文件只负责请求参数、数据装配和页面元数据；页面交互放在 `src/components` 对应的职责目录中，文章源文件和 Markdown 解析逻辑保持在 `content` 域内。
+
 ## 功能概览
 
 - Markdown 文章、标签、系列、归档、RSS、sitemap 和 robots。
