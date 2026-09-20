@@ -20,7 +20,7 @@ const zh: Record<string, string> = {
   "nav.closeMenu": "关闭导航菜单",
 
   // 首页
-  "home.greeting": "欢迎来到露比的工作室",
+  "home.greeting": "欢迎来到我的博客",
   "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
   "home.latestPosts": "最新文章",
   "home.empty": "暂时还没有文章，稍后再来看看吧。",
