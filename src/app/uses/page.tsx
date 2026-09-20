@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import UsesContent from "@/components/UsesContent";
+import UsesContent from "@/components/content/UsesContent";
 import { usesCategories } from "@/config/content-pages";
 
 export const metadata: Metadata = {

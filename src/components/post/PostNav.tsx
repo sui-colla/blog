@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PostMeta } from "@/lib/posts";
+import type { PostMeta } from "@/lib/content/posts";
 
 interface Props {
   prev: PostMeta | null;

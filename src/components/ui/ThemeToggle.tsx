@@ -38,11 +38,14 @@ export default function ThemeToggle() {
   // 初始化：从 localStorage 读取并应用
   useEffect(() => {
     const stored = getStoredTheme();
+    // 主题本身在这里同步应用，不受影响；
+    // 但 setMounted 用 setTimeout 而非 rAF —— rAF 在页面不可见时不触发，
+    // 那样后台标签页里切换按钮会一直停在未挂载状态。
     applyTheme(stored);
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       setTheme(stored);
       setMounted(true);
-    });
+    }, 0);
   }, []);
 
   // 切换主题

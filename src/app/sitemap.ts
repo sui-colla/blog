@@ -5,7 +5,7 @@
  * 文章页 priority=0.8，固定页面 0.4–0.7，标签页 0.5。
  */
 import type { MetadataRoute } from "next";
-import { getAllPosts, getAllTags } from "@/lib/posts";
+import { getAllPosts, getAllTags } from "@/lib/content/posts";
 import { absoluteUrl } from "@/config/site";
 
 function latestPostDate(posts: { date: string }[]) {

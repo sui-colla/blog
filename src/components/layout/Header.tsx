@@ -10,9 +10,9 @@
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import Search from "@/components/Search";
-import ThemeToggle from "@/components/ThemeToggle";
-import LanguageToggle from "@/components/LanguageToggle";
+import Search from "@/components/ui/Search";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import LanguageToggle from "@/components/ui/LanguageToggle";
 import { siteConfig } from "@/config/site";
 import { useI18n } from "@/lib/i18n";
 

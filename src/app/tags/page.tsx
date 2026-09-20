@@ -1,5 +1,5 @@
-import { getAllTags } from "@/lib/posts";
-import TagsContent from "@/components/TagsContent";
+import { getAllTags } from "@/lib/content/posts";
+import TagsContent from "@/components/content/TagsContent";
 
 export const metadata = {
   title: "标签",

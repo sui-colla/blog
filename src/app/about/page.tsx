@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import AboutContent from "@/components/AboutContent";
+import AboutContent from "@/components/content/AboutContent";
 
 export const metadata: Metadata = {
   title: "关于",

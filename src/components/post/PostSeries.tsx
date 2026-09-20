@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
-import type { PostMeta } from "@/lib/posts";
+import type { PostMeta } from "@/lib/content/posts";
 
 interface Props {
   seriesName: string;

@@ -6,7 +6,7 @@
  * - CDN 缓存 24h，浏览器缓存 1h
  * - 草稿和未来发布的文章不包含在索引中
  */
-import { getSearchIndexItems } from "@/lib/posts";
+import { getSearchIndexItems } from "@/lib/content/posts";
 
 export const dynamic = "force-static";
 

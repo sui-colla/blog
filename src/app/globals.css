@@ -14,12 +14,11 @@
 }
 
 @theme inline {
-  /* 中英混排字体栈：Geist 只覆盖拉丁字形，中文回落到系统黑体，
-     显式声明可以避免 Windows 上落到默认宋体/衬线字体 */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+  /* 中英混排字体栈：显式声明可以避免 Windows 上落到默认宋体/衬线字体。 */
+  --font-sans: ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
     "Noto Sans SC", sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo,
+  --font-mono: ui-monospace, SFMono-Regular, Menlo,
     Consolas, "Liberation Mono", monospace;
   --color-accent: #52525b;
   --color-accent-foreground: #fafaf9;

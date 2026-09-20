@@ -1,5 +1,5 @@
-import { getAllPosts } from "@/lib/posts";
-import ArchiveContent from "@/components/ArchiveContent";
+import { getAllPosts } from "@/lib/content/posts";
+import ArchiveContent from "@/components/content/ArchiveContent";
 
 export const metadata = {
   title: "归档",

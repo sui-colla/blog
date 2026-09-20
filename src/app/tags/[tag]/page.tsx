@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { getPostsByTag, getAllTags } from "@/lib/posts";
-import TagDetailContent from "@/components/TagDetailContent";
+import { getPostsByTag, getAllTags } from "@/lib/content/posts";
+import TagDetailContent from "@/components/content/TagDetailContent";
 
 /**
  * 解码动态段。

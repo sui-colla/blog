@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import OfflineContent from "@/components/OfflineContent";
+import OfflineContent from "@/components/content/OfflineContent";
 
 export const metadata: Metadata = {
   title: "离线阅读",

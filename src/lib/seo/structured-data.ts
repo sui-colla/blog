@@ -9,7 +9,7 @@
  * Google Rich Results Test 可验证输出是否正确。
  */
 import { absoluteUrl, siteConfig } from "@/config/site";
-import type { Post } from "@/lib/posts";
+import type { Post } from "@/lib/content/posts";
 
 // @id 使用 fragment 形式，避免与真实 URL 冲突
 const personId = `${siteConfig.url}/#person`;

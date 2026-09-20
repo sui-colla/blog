@@ -9,11 +9,11 @@
  * 这两块由本组件自己渲染，不从 Sidebar 复用。
  */
 import Link from "next/link";
-import Subscribe from "@/components/Subscribe";
-import TagLink from "@/components/TagLink";
-import Sidebar from "@/components/Sidebar";
+import Subscribe from "@/components/ui/Subscribe";
+import TagLink from "@/components/ui/TagLink";
+import Sidebar from "@/components/layout/Sidebar";
 import { useI18n } from "@/lib/i18n";
-import type { PostMeta } from "@/lib/posts";
+import type { PostMeta } from "@/lib/content/posts";
 
 interface Tag {
   tag: string;

@@ -6,7 +6,7 @@
  * 纯服务端计算，不依赖外部服务。
  */
 import Link from "next/link";
-import type { PostMeta } from "@/lib/posts";
+import type { PostMeta } from "@/lib/content/posts";
 import { useI18n } from "@/lib/i18n";
 
 interface Props {
