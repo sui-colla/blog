@@ -1,20 +1,13 @@
 "use client";
 
 /**
- * 文章详情页布局（客户端组件）
+ * 文章详情页（对应 Fuwari posts/[slug].astro）
  *
- * 页面结构：
- * - 顶部：阅读进度条 + 回到顶部按钮
- * - 主体（lg:flex）：左侧文章区 + 右侧粘性目录（桌面端）
- * - 文章区：元信息 → 系列导航 → 移动端折叠目录 → 正文 → 分享 → 上下篇 → 相关推荐 → 评论 → 赞赏 → 订阅
- *
- * 移动端目录折叠为 <details>，桌面端目录 sticky 固定在右侧。
+ * 卡片内依次是：字数/阅读时间 → 大标题 → 日期/分类/标签 → 正文；
+ * 卡片外是上一篇/下一篇、相关文章、评论、赞赏与订阅卡片。
  */
-import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
-import type { Post, PostMeta } from "@/lib/content/posts";
-import TableOfContents from "@/components/post/TableOfContents";
-import Subscribe from "@/components/ui/Subscribe";
+import { Calendar, Clock, FileText, Folder, Tag } from "lucide-react";
+import PageShell from "@/components/layout/PageShell";
 import ArticleContent from "@/components/post/ArticleContent";
 import ReadingProgress from "@/components/post/ReadingProgress";
 import RelatedPosts from "@/components/post/RelatedPosts";
@@ -24,7 +17,10 @@ import BackToTop from "@/components/ui/BackToTop";
 import Donate from "@/components/post/Donate";
 import ShareButtons from "@/components/post/ShareButtons";
 import PostSeries from "@/components/post/PostSeries";
+import Subscribe from "@/components/ui/Subscribe";
+import { useI18n } from "@/lib/i18n";
 import { absoluteUrl } from "@/config/site";
+import type { Post, PostMeta } from "@/lib/content/posts";
 
 interface Props {
   post: Post;
@@ -32,12 +28,21 @@ interface Props {
   prev: PostMeta | null;
   next: PostMeta | null;
   seriesPosts?: PostMeta[];
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
-export default function PostContent({ post, allPosts, prev, next, seriesPosts }: Props) {
-  const { t, locale } = useI18n();
-  const hasToc = post.headings.length > 0;
-  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
+export default function PostContent({
+  post,
+  allPosts,
+  prev,
+  next,
+  seriesPosts,
+  tags = [],
+  popularPosts = [],
+}: Props) {
+  const { t } = useI18n();
+  const [category, ...restTags] = post.tags ?? [];
   const postUrl = absoluteUrl(`/posts/${post.slug}`);
 
   return (
@@ -45,47 +50,77 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
       <ReadingProgress />
       <BackToTop />
 
-      <div className="article-layout">
-        <Link href="/" className="page-back">
-          &larr; {t("post.backHome")}
-        </Link>
-
-        <div className="article-grid">
-          {/* 主内容区 */}
-          <article className="article-main">
-            <header className="article-header">
-              <div className="article-meta">
-                <time dateTime={post.date}>
-                  {new Date(post.date).toLocaleDateString(dateLocale, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </time>
-                <span aria-hidden="true">·</span>
-                <span>{post.readingTime} {t("post.readingTime")}</span>
-                <span aria-hidden="true">·</span>
-                <span>{post.wordCount.toLocaleString()} {t("post.wordCount")}</span>
+      <PageShell tags={tags} popularPosts={popularPosts} headings={post.headings}>
+        <article className="post-shell">
+          <div className="post-page">
+            <div className="post-stats">
+              <div className="post-stats__item">
+                <span className="post-stats__icon" aria-hidden="true">
+                  <FileText size={13} />
+                </span>
+                <span className="post-stats__text">
+                  {post.wordCount.toLocaleString()} {t("post.wordCount")}
+                </span>
               </div>
-              <h1 className="article-title">
-                {post.title}
-              </h1>
-              {post.tags && post.tags.length > 0 && (
-                <div className="article-tags">
-                  {post.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      href={`/tags/${encodeURIComponent(tag)}`}
-                      className="tag-link"
-                    >
-                      {tag}
-                    </Link>
-                  ))}
+              <div className="post-stats__item">
+                <span className="post-stats__icon" aria-hidden="true">
+                  <Clock size={13} />
+                </span>
+                <span className="post-stats__text">
+                  {post.readingTime} {t("post.readingTime")}
+                </span>
+              </div>
+            </div>
+
+            <h1 className="post-title">{post.title}</h1>
+
+            <div className="post-card__meta">
+              <div className="meta-item">
+                <span className="meta-icon" aria-hidden="true">
+                  <Calendar size={15} />
+                </span>
+                <time className="meta-text" dateTime={post.date}>
+                  {post.date}
+                </time>
+              </div>
+
+              <div className="meta-item">
+                <span className="meta-icon" aria-hidden="true">
+                  <Folder size={15} />
+                </span>
+                {category ? (
+                  <a
+                    href={`/tags/${encodeURIComponent(category)}`}
+                    className="meta-text"
+                  >
+                    {category}
+                  </a>
+                ) : (
+                  <span className="meta-text">{t("post.uncategorized")}</span>
+                )}
+              </div>
+
+              {(restTags.length > 0 || (post.tags?.length ?? 0) > 0) && (
+                <div className="meta-item">
+                  <span className="meta-icon" aria-hidden="true">
+                    <Tag size={15} />
+                  </span>
+                  <span className="meta-text">
+                    {(restTags.length > 0 ? restTags : post.tags ?? []).map(
+                      (tag, i) => (
+                        <span key={tag}>
+                          {i > 0 && <span className="meta-sep">/</span>}
+                          <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+                        </span>
+                      )
+                    )}
+                  </span>
                 </div>
               )}
-            </header>
+            </div>
 
-            {/* 系列文章导航 */}
+            <hr className="post-divider" />
+
             {post.series && seriesPosts && seriesPosts.length > 1 && (
               <PostSeries
                 seriesName={post.series}
@@ -94,63 +129,31 @@ export default function PostContent({ post, allPosts, prev, next, seriesPosts }:
               />
             )}
 
-            {/* 移动端折叠目录 */}
-            {hasToc && (
-              <details className="toc-details article-toc-mobile">
-                <summary>
-                  {t("post.toc")}
-                </summary>
-                <div>
-                  <TableOfContents headings={post.headings} showTitle={false} />
-                </div>
-              </details>
-            )}
-
-            {/* 文章内容 */}
             <ArticleContent html={post.contentHtml} />
 
-            {/* 分享 + 复制链接 */}
+            <div className="post-divider" style={{ marginTop: "1.5rem" }} />
             <ShareButtons title={post.title} url={postUrl} />
+          </div>
+        </article>
 
-            {/* 文章前后导航 */}
-            <PostNav
-              prev={prev}
-              next={next}
-              labels={{
-                prev: t("post.prev"),
-                next: t("post.next"),
-              }}
-            />
+        <PostNav
+          prev={prev}
+          next={next}
+          labels={{ prev: t("post.prev"), next: t("post.next") }}
+        />
 
-            {/* 相关文章推荐 */}
-            {post.tags && post.tags.length > 0 && (
-              <RelatedPosts
-                currentSlug={post.slug}
-                currentTags={post.tags}
-                allPosts={allPosts}
-              />
-            )}
+        {post.tags && post.tags.length > 0 && (
+          <RelatedPosts
+            currentSlug={post.slug}
+            currentTags={post.tags}
+            allPosts={allPosts}
+          />
+        )}
 
-            {/* 评论区 */}
-            <Comments />
-
-            {/* 赞赏支持 */}
-            <Donate />
-
-            {/* 文章底部订阅 */}
-            <Subscribe />
-          </article>
-
-          {/* 桌面端粘性侧边栏目录 */}
-          {hasToc && (
-            <aside className="article-aside">
-              <div className="article-aside__inner">
-                <TableOfContents headings={post.headings} levels={[2]} />
-              </div>
-            </aside>
-          )}
-        </div>
-      </div>
+        <Comments />
+        <Donate />
+        <Subscribe />
+      </PageShell>
     </>
   );
 }

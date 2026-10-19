@@ -1,16 +1,10 @@
 "use client";
 
 /**
- * 文章目录（Table of Contents）
+ * 文章目录（对应 Fuwari TOC）
  *
- * 高亮原理：
- * - IntersectionObserver 监听所有标题元素的可见性
- * - rootMargin: "-80px 0px -65% 0px" 含义：
- *   · top -80px 避开 sticky header
- *   · bottom -65% 只检测视口上方 35% 区域，确保高亮的是"正在阅读"的章节
- * - visibleSet 记录当前可见的标题 id，取 DOM 顺序中第一个作为 activeId
- *
- * 初始加载时检查 URL hash，自动滚动到锚点位置并高亮对应目录项。
+ * 一级标题带数字徽标，二级标题用圆点；当前阅读位置高亮。
+ * 高亮原理：IntersectionObserver 监听标题可见性，取可见区域中最靠前的标题。
  */
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import type { TocHeading } from "@/lib/content/posts";
@@ -18,23 +12,45 @@ import { useI18n } from "@/lib/i18n";
 
 interface Props {
   headings: TocHeading[];
-  /** 是否显示"目录"标题。在移动端 details/summary 中可设为 false */
+  /** 是否显示"目录"标题 */
   showTitle?: boolean;
-  /** 限制显示的标题层级，例如桌面端仅显示 h2。 */
+  /** 限制显示的标题层级，例如 [2, 3]。 */
   levels?: number[];
 }
 
-export default function TableOfContents({ headings, showTitle = true, levels }: Props) {
+export default function TableOfContents({
+  headings,
+  showTitle = true,
+  levels,
+}: Props) {
   const { t } = useI18n();
   const displayHeadings = useMemo(
-    () => (levels ? headings.filter((heading) => levels.includes(heading.level)) : headings),
+    () =>
+      levels
+        ? headings.filter((heading) => levels.includes(heading.level))
+        : headings,
     [headings, levels]
   );
+
+  const items = useMemo(() => {
+    if (displayHeadings.length === 0) return [];
+    const minLevel = Math.min(...displayHeadings.map((h) => h.level));
+    let counter = 0;
+    return displayHeadings.map((heading) => {
+      const isTop = heading.level === minLevel;
+      if (isTop) counter += 1;
+      return {
+        ...heading,
+        isTop,
+        number: isTop ? counter : null,
+      };
+    });
+  }, [displayHeadings]);
+
   const [activeId, setActiveId] = useState<string>("");
   const visibleSet = useRef<Set<string>>(new Set());
   const initialized = useRef(false);
 
-  // 滚动监听：高亮当前可见区域最靠前的标题
   useEffect(() => {
     if (displayHeadings.length === 0) return;
     visibleSet.current.clear();
@@ -50,21 +66,18 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
           }
         }
 
-        // 找到 DOM 顺序中第一个当前可见的标题
         const firstVisible = displayHeadings.find((h) =>
-          visibleSet.current.has(h.id),
+          visibleSet.current.has(h.id)
         );
         if (firstVisible) {
           setActiveId(firstVisible.id);
         }
       },
       {
-        // top -80px 让过 sticky header，bottom -65% 只取页面上方 35% 区域
         rootMargin: "-80px 0px -65% 0px",
-      },
+      }
     );
 
-    // 延迟一帧再观察，确保 DOM 已渲染
     requestAnimationFrame(() => {
       for (const h of displayHeadings) {
         const el = document.getElementById(h.id);
@@ -75,14 +88,12 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
     return () => observer.disconnect();
   }, [displayHeadings]);
 
-  // 初始加载时，检查 URL hash 作为初始高亮
   useEffect(() => {
     if (initialized.current || displayHeadings.length === 0) return;
     initialized.current = true;
 
     const hash = window.location.hash.slice(1);
     if (hash && displayHeadings.some((h) => h.id === hash)) {
-      // 延迟滚动到锚点位置（等页面完全渲染后）
       requestAnimationFrame(() => {
         setActiveId(hash);
         const el = document.getElementById(hash);
@@ -93,7 +104,6 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
     }
   }, [displayHeadings]);
 
-  // 点击目录项：平滑滚动 + 更新 URL hash
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
       e.preventDefault();
@@ -104,34 +114,33 @@ export default function TableOfContents({ headings, showTitle = true, levels }: 
         setActiveId(id);
       }
     },
-    [],
+    []
   );
 
-  if (displayHeadings.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
     <nav aria-label={t("toc.ariaLabel")} className="toc-nav">
-      {showTitle && (
-        <h4 className="toc-title">
-          {t("toc.title")}
-        </h4>
-      )}
+      {showTitle && <h4 className="toc-title">{t("toc.title")}</h4>}
 
-      <ul className="space-y-0.5">
-        {displayHeadings.map((h) => {
-          const isActive = h.id === activeId;
-          const indent =
-            h.level === 3 ? "pl-6" : h.level === 4 ? "pl-9" : "pl-3";
+      <ul>
+        {items.map((heading) => {
+          const isActive = heading.id === activeId;
 
           return (
-            <li key={h.id}>
+            <li key={heading.id}>
               <a
-                href={`#${h.id}`}
-                title={h.text}
-                onClick={(e) => handleClick(e, h.id)}
-                className={`toc-link ${indent} ${isActive ? "toc-link--active" : ""}`}
+                href={`#${heading.id}`}
+                title={heading.text}
+                onClick={(e) => handleClick(e, heading.id)}
+                className={`toc-link${heading.isTop ? "" : " toc-link--sub"}${
+                  isActive ? " toc-link--active" : ""
+                }`}
               >
-                {h.text}
+                <span className="toc-badge" aria-hidden="true">
+                  {heading.number}
+                </span>
+                <span>{heading.text}</span>
               </a>
             </li>
           );

@@ -58,7 +58,7 @@ export default function ThemeToggle() {
 
   // 防止 SSR 水合不匹配
   if (!mounted) {
-    return <div className="w-8 h-8" />;
+    return <span className="icon-btn" />;
   }
 
   const icons: Record<Theme, React.ReactNode> = {
@@ -77,7 +77,7 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={cycleTheme}
-      className="icon-button"
+      className="btn-plain icon-btn"
       title={labels[theme]}
       aria-label={`${t("theme.ariaPrefix")}${labels[theme]}${t("theme.ariaSuffix")}`}
     >

@@ -1,9 +1,6 @@
 /**
- * 相关文章推荐
- *
- * 根据标签重叠度（overlap）打分排序，取前 maxItems 篇展示。
- * 标签重叠越多分数越高，无共同标签的文章不显示。
- * 纯服务端计算，不依赖外部服务。
+ * 相关文章推荐（卡片式区块）
+ * 根据标签重叠度打分排序，纯服务端计算。
  */
 import Link from "next/link";
 import type { PostMeta } from "@/lib/content/posts";
@@ -22,15 +19,15 @@ export default function RelatedPosts({
   allPosts,
   maxItems = 3,
 }: Props) {
-  const { t, locale } = useI18n();
-  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
+  const { t } = useI18n();
 
   if (currentTags.length === 0) return null;
 
   const scored = allPosts
     .filter((p) => p.slug !== currentSlug)
     .map((post) => {
-      const overlap = post.tags?.filter((tag) => currentTags.includes(tag)).length ?? 0;
+      const overlap =
+        post.tags?.filter((tag) => currentTags.includes(tag)).length ?? 0;
       return { post, score: overlap };
     })
     .filter((s) => s.score > 0)
@@ -40,8 +37,8 @@ export default function RelatedPosts({
   if (scored.length === 0) return null;
 
   return (
-    <section className="related-posts">
-      <h3 className="related-posts-title">{t("related.title")}</h3>
+    <section className="card-base section-card">
+      <h2 className="section-title">{t("related.title")}</h2>
       <div className="related-posts-grid">
         {scored.map(({ post }) => (
           <Link
@@ -49,17 +46,8 @@ export default function RelatedPosts({
             href={`/posts/${post.slug}`}
             className="related-posts-card"
           >
-            <time
-              dateTime={post.date}
-              className="text-xs text-zinc-500 dark:text-zinc-400"
-            >
-              {new Date(post.date).toLocaleDateString(dateLocale, {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </time>
-            <h4 className="related-posts-card-title">{post.title}</h4>
+            <time dateTime={post.date}>{post.date}</time>
+            <h3 className="related-posts-card-title">{post.title}</h3>
             <p className="related-posts-card-summary">{post.summary}</p>
           </Link>
         ))}

@@ -15,7 +15,7 @@ function unauthorized() {
   return new NextResponse("Authentication required", {
     status: 401,
     headers: {
-      "WWW-Authenticate": 'Basic realm="LunaPath Admin", charset="UTF-8"',
+      "WWW-Authenticate": 'Basic realm="Xingye Admin", charset="UTF-8"',
       "Cache-Control": "no-store",
     },
   });

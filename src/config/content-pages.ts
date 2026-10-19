@@ -54,7 +54,7 @@ export interface UsesCategory {
 
 export const projects: ProjectItem[] = [
   {
-    name: "LunaPath Blog",
+    name: "Xingye Blog",
     summary: "基于 Next.js 的个人博客，用来记录技术学习、游戏攻略、生活观察和持续打磨的写作系统。",
     techStack: ["Next.js", "TypeScript", "Markdown", "PWA"],
     status: "featured",

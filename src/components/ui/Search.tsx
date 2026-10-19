@@ -335,10 +335,9 @@ export default function Search() {
         aria-haspopup="dialog"
         aria-controls={open ? "search-dialog" : undefined}
       >
-        <SearchIcon size={16} aria-hidden="true" />
-        <span className="hidden sm:inline">{t("search.label")}</span>
-        {/* 显隐由 .search-kbd 自己控制（未分层样式会压过 Tailwind 的 hidden） */}
-        <kbd className="search-kbd">⌘K</kbd>
+        <SearchIcon className="search-trigger__icon" size={18} aria-hidden="true" />
+        <span className="search-trigger__label">{t("search.label")}</span>
+        <kbd className="search-trigger__kbd">⌘K</kbd>
       </button>
 
       {open && (
@@ -351,7 +350,7 @@ export default function Search() {
           <div
             ref={modalRef}
             id="search-dialog"
-            className="search-modal"
+            className="search-panel"
             role="dialog"
             aria-modal="true"
             aria-label={t("search.modalAria")}
@@ -467,6 +466,27 @@ export default function Search() {
                     {t("search.clearFilters")}
                   </button>
                 )}
+              </div>
+            )}
+
+            {!trimmedQuery && !hasFilters && !loadError && (
+              <div className="search-hints">
+                <p className="search-hints__label">{t("search.suggest")}</p>
+                <div className="search-hints__tags">
+                  {tagOptions.slice(0, 8).map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      className="chip"
+                      onClick={() => {
+                        setQuery(tag);
+                        resetActiveIndex();
+                      }}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
 

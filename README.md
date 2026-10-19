@@ -1,4 +1,4 @@
-# LunaPath Blog
+# Xingye Blog
 
 [![CI](https://github.com/sui-colla/blog/actions/workflows/ci.yml/badge.svg)](https://github.com/sui-colla/blog/actions/workflows/ci.yml)
 
@@ -10,7 +10,7 @@
 - React 19
 - TypeScript
 - Tailwind CSS v4
-- Markdown 内容：`gray-matter` + `remark` + `rehype-pretty-code` + `shiki`
+- Markdown 内容：`gray-matter` + `remark` + `remark-gfm` + `rehype-pretty-code` + `shiki`
 - 搜索：`fuse.js`
 - 评论：Giscus
 - 表单服务：Resend
@@ -50,6 +50,40 @@ scripts/              内容质量检查脚本
 - `/admin` 私有只读后台查看内容统计、表单配置和外部服务入口。
 - PWA manifest、图标、service worker 与 `/offline` 离线 fallback。
 - `npm run check:content` 自动检查 frontmatter、站内链接和图片质量。
+
+## 界面设计（Fuwari 移植）
+
+整站 UI 以 [saicaca/fuwari](https://github.com/saicaca/fuwari)（MIT）为蓝本一比一移植到 Next.js App Router：
+页面底色、卡片、按钮、文章卡片、归档时间轴、侧栏 Profile、目录、搜索面板、页脚都沿用其结构，
+颜色改为 Fuwari 的 `oklch(… var(--hue))` 变量体系（默认 `--hue: 250`）。
+
+对应关系：
+
+| Fuwari | 本项目 |
+| --- | --- |
+| `src/styles/variables.styl` | `src/app/globals.css` 顶部设计令牌 |
+| `MainGridLayout.astro`（75rem 页面宽 + 17.5rem 侧栏） | `components/layout/PageShell.tsx` |
+| `Navbar.astro` | `components/layout/Header.tsx` |
+| `SideBar.astro` / `Profile.astro` / `WidgetLayout.astro` | `components/layout/SideBar.tsx` |
+| `PostCard.astro` / `PostMeta.astro` | `components/content/PostCard.tsx` |
+| `posts/[slug].astro` | `components/post/PostContent.tsx` |
+| `ArchivePanel.svelte` | `components/content/ArchiveContent.tsx` |
+| `TOC.astro` | `components/post/TableOfContents.tsx`（放在侧栏小工具里） |
+| `Search.svelte`（float-panel） | `components/ui/Search.tsx` |
+| `Footer.astro` | `components/layout/Footer.tsx` |
+
+排版使用 Roboto（`@fontsource/roboto`），代码块使用 JetBrains Mono；中文按系统字体回退。
+主题色相集中在 `src/config/site.ts` 的 `hue`，改一个数字即可换整站强调色。
+
+视觉回归截图（先 `npm run build && npm run start`）：
+
+```bash
+node scripts/shot.mjs --url=http://127.0.0.1:3000/ --out=shots/home.png --theme=light
+node scripts/shot.mjs --url=http://127.0.0.1:3000/ --out=shots/home-dark-m.png --theme=dark --mobile
+```
+
+`scripts/shot.mjs` 直接通过 Chrome DevTools Protocol 驱动无头 Chrome，不依赖额外 npm 包；
+支持 `--theme=light|dark`、`--mobile`、`--h`（截取高度）、`--y`（起始位置）、`--eval`（截图前执行脚本）。
 
 ## 本地开发
 
@@ -215,7 +249,7 @@ RSS、sitemap、robots 和页面 metadata 都使用 `src/config/site.ts` 里的�
 ```bash
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 RESEND_AUDIENCE_ID=aud_xxxxxxxxxxxxxxxxxxxxxxxx
-FORMS_FROM_EMAIL="LunaPath Blog <onboarding@resend.dev>"
+FORMS_FROM_EMAIL="Xingye Blog <onboarding@resend.dev>"
 CONTACT_TO_EMAIL=you@example.com
 # 可选：限制表单提交来源，多个来源用英文逗号分隔
 FORM_ALLOWED_ORIGINS=https://xiaojiccc.xyz

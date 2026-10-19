@@ -1,77 +1,95 @@
 "use client";
 
-import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
+import type { PostMeta } from "@/lib/content/posts";
 import type { LinksPageData } from "@/config/content-pages";
 
 interface Props {
   data: LinksPageData;
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
 function getInitial(name: string) {
   return name.trim().slice(0, 1).toUpperCase();
 }
 
-export default function LinksContent({ data }: Props) {
+export default function LinksContent({
+  data,
+  tags = [],
+  popularPosts = [],
+}: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="page-layout">
-      <Link href="/" className="page-back">
-        &larr; {t("post.backHome")}
-      </Link>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {t("links.title")}
-        </span>
-      </h1>
-      <p className="mt-3 text-zinc-500 dark:text-zinc-400">{t("links.description")}</p>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <h1 className="page-title">{t("links.title")}</h1>
+        <p className="page-lead">{t("links.description")}</p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        <div className="rounded-md border border-teal-100 bg-teal-50/70 p-5 text-sm leading-6 text-zinc-600 dark:border-teal-900/40 dark:bg-teal-950/20 dark:text-zinc-400">
-          <h2 className="mb-2 font-bold text-zinc-900 dark:text-zinc-50">{t("links.exchange")}</h2>
-          {data.exchangeNote}
+        <div className="card-grid" style={{ marginTop: "1.5rem" }}>
+          <div className="entry-card">
+            <h2 className="entry-card__title">{t("links.exchange")}</h2>
+            <p className="entry-card__desc">{data.exchangeNote}</p>
+          </div>
+          <div className="entry-card">
+            <h2 className="entry-card__title">{t("links.broken")}</h2>
+            <p className="entry-card__desc">{data.brokenLinkNote}</p>
+          </div>
         </div>
-        <div className="rounded-md border border-zinc-200 bg-white/80 p-5 text-sm leading-6 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/70 dark:text-zinc-400">
-          <h2 className="mb-2 font-bold text-zinc-900 dark:text-zinc-50">{t("links.broken")}</h2>
-          {data.brokenLinkNote}
-        </div>
-      </div>
 
-      {data.links.length === 0 ? (
-        <div className="mt-10 rounded-md border border-dashed border-teal-200 bg-teal-50/60 p-8 text-center text-sm text-zinc-500 dark:border-teal-900/50 dark:bg-teal-950/20 dark:text-zinc-400">
-          {t("links.empty")}
-        </div>
-      ) : (
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          {data.links.map((link) => (
-            <a
-              key={link.url}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="group rounded-md border border-teal-100 bg-white/80 p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-teal-900/60"
-            >
-              <div className="flex items-start gap-4">
-                {link.avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={link.avatar} alt={`${link.name} avatar`} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
-                ) : (
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-100 text-lg font-bold text-teal-700 dark:bg-teal-900/30 dark:text-teal-300">
-                    {getInitial(link.name)}
-                  </span>
-                )}
-                <div className="min-w-0">
-                  <h2 className="font-bold text-zinc-900 transition group-hover:text-teal-700 dark:text-zinc-50 dark:group-hover:text-teal-300">
+        {data.links.length === 0 ? (
+          <p className="empty-state" style={{ marginTop: "1.5rem" }}>
+            {t("links.empty")}
+          </p>
+        ) : (
+          <div className="card-grid" style={{ marginTop: "1.5rem" }}>
+            {data.links.map((link) => (
+              <a
+                key={link.url}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className="entry-card"
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.6rem",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  {link.avatar ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={link.avatar}
+                      alt={`${link.name} avatar`}
+                      width={36}
+                      height={36}
+                      style={{ borderRadius: "0.5rem" }}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span
+                      className="btn-regular"
+                      style={{ width: "2.25rem", height: "2.25rem" }}
+                      aria-hidden="true"
+                    >
+                      {getInitial(link.name)}
+                    </span>
+                  )}
+                  <h2 className="entry-card__title" style={{ margin: 0 }}>
                     {link.name} ↗
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">{link.description}</p>
                 </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
-    </div>
+                <p className="entry-card__desc">{link.description}</p>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </PageShell>
   );
 }

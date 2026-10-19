@@ -8,6 +8,8 @@
  */
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
+import { getSidebarData } from "@/lib/content/sidebar";
 import { getAdminDashboardData, type AdminStatusItem } from "@/lib/admin/stats";
 
 // 强制每次请求动态渲染，确保统计数据实时
@@ -15,80 +17,63 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Admin",
-  description: "LunaPath Blog 的私有只读运营面板",
+  description: "Xingye Blog 的私有只读运营面板",
   robots: {
     index: false,
     follow: false,
   },
 };
 
-function StatusPill({ ready }: { ready: boolean }) {
+function StatCard({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: number | string;
+  hint?: string;
+}) {
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
-        ready
-          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-          : "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300"
-      }`}
-    >
-      {ready ? "Ready" : "Needs setup"}
-    </span>
-  );
-}
-
-function StatCard({ label, value, hint }: { label: string; value: number | string; hint?: string }) {
-  return (
-    <div className="rounded-lg border border-teal-100/80 bg-white/80 p-5 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-50">{value}</p>
-      {hint ? <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">{hint}</p> : null}
+    <div className="entry-card">
+      <p className="entry-card__desc">{label}</p>
+      <p className="stat-value">{value}</p>
+      {hint ? <p className="stat-hint">{hint}</p> : null}
     </div>
   );
 }
 
 function StatusList({ items }: { items: AdminStatusItem[] }) {
   return (
-    <ul className="mt-4 space-y-2">
+    <div className="kv-list">
       {items.map((item) => (
-        <li key={item.label} className="flex items-start justify-between gap-4 rounded-md bg-teal-50/70 px-4 py-3 text-sm dark:bg-zinc-950/70">
-          <span className="font-medium text-zinc-700 dark:text-zinc-200">{item.label}</span>
-          <span className={item.configured ? "text-emerald-700 dark:text-emerald-300" : "text-teal-700 dark:text-teal-300"}>
+        <div key={item.label} className="kv-row">
+          <span>{item.label}</span>
+          <span className={item.configured ? "kv-row__ok" : "kv-row__warn"}>
             {item.detail}
           </span>
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 
 function ServiceCard({
   title,
-  ready,
   items,
   links,
 }: {
   title: string;
-  ready: boolean;
   items: AdminStatusItem[];
   links: { label: string; href: string }[];
 }) {
   return (
-    <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{title}</h2>
-        <StatusPill ready={ready} />
-      </div>
+    <section className="entry-card">
+      <h2 className="entry-card__title">{title}</h2>
       <StatusList items={items} />
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="entry-card__links">
         {links.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border border-teal-200 px-3 py-1.5 text-sm font-medium text-teal-700 transition hover:bg-teal-50 dark:border-teal-900/70 dark:text-teal-300 dark:hover:bg-teal-950/40"
-          >
-            {link.label}
+          <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
+            {link.label} ↗
           </a>
         ))}
       </div>
@@ -98,80 +83,103 @@ function ServiceCard({
 
 export default function AdminPage() {
   const data = getAdminDashboardData();
+  const { tags, popularPosts } = getSidebarData();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
-      <div className="mb-10">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-teal-700 dark:text-teal-400">Private dashboard</p>
-        <h1 className="mt-3 text-4xl font-bold text-zinc-950 dark:text-zinc-50 sm:text-5xl">
-          运营管理面板
-        </h1>
-        <p className="mt-4 max-w-2xl text-zinc-600 dark:text-zinc-400">
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <h1 className="page-title">运营管理面板</h1>
+        <p className="page-lead">
           只读查看站点内容、表单服务和部署状态。这里不会展示 API Key、完整私密邮箱列表或联系表单记录。
         </p>
+
+        <div className="card-grid" style={{ marginTop: "1.5rem" }}>
+          <StatCard
+            label="全部文章"
+            value={data.content.totalPosts}
+            hint="包含草稿和定时发布"
+          />
+          <StatCard label="已发布" value={data.content.publishedPosts} />
+          <StatCard label="草稿" value={data.content.draftPosts} />
+          <StatCard label="定时发布" value={data.content.scheduledPosts} />
+          <StatCard label="标签" value={data.content.tagCount} />
+          <StatCard label="系列" value={data.content.seriesCount} />
+          <StatCard
+            label="热门配置"
+            value={data.content.popularPosts.length}
+            hint={
+              data.content.missingPopularSlugs.length
+                ? `${data.content.missingPopularSlugs.length} 个 slug 未匹配`
+                : "配置正常"
+            }
+          />
+          <StatCard
+            label="生成时间"
+            value={new Date(data.generatedAt).toLocaleTimeString("zh-CN", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+            hint="服务端实时生成"
+          />
+        </div>
       </div>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="全部文章" value={data.content.totalPosts} hint="包含草稿和定时发布" />
-        <StatCard label="已发布" value={data.content.publishedPosts} />
-        <StatCard label="草稿" value={data.content.draftPosts} />
-        <StatCard label="定时发布" value={data.content.scheduledPosts} />
-        <StatCard label="标签" value={data.content.tagCount} />
-        <StatCard label="系列" value={data.content.seriesCount} />
-        <StatCard label="热门配置" value={data.content.popularPosts.length} hint={data.content.missingPopularSlugs.length ? `${data.content.missingPopularSlugs.length} 个 slug 未匹配` : "配置正常"} />
-        <StatCard label="生成时间" value={new Date(data.generatedAt).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })} hint="服务端实时生成" />
-      </section>
-
-      <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        <ServiceCard {...data.services.subscribe} />
-        <ServiceCard {...data.services.contact} />
-        <ServiceCard {...data.services.analytics} />
+      <div className="card-base content-card">
+        <h2 className="section-title" style={{ marginLeft: 0 }}>
+          服务状态
+        </h2>
+        <div className="card-grid">
+          <ServiceCard {...data.services.subscribe} />
+          <ServiceCard {...data.services.contact} />
+          <ServiceCard {...data.services.analytics} />
+        </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">最近文章</h2>
-          <div className="mt-4 space-y-3">
-            {data.content.recentPosts.map((post) => (
-              <div key={post.slug} className="flex items-center justify-between gap-4 rounded-md bg-teal-50/70 px-4 py-3 dark:bg-zinc-950/70">
-                <div>
-                  <Link href={`/posts/${post.slug}`} className="font-medium text-zinc-800 hover:text-teal-700 dark:text-zinc-100 dark:hover:text-teal-300">
-                    {post.title}
-                  </Link>
-                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{post.date}</p>
+      <div className="card-base content-card">
+        <div className="card-grid">
+          <section className="entry-card">
+            <h2 className="entry-card__title">最近文章</h2>
+            <div className="kv-list">
+              {data.content.recentPosts.map((post) => (
+                <div key={post.slug} className="kv-row">
+                  <span>
+                    <Link href={`/posts/${post.slug}`} className="kv-title">
+                      {post.title}
+                    </Link>
+                    <span className="stat-hint" style={{ display: "block" }}>
+                      {post.date}
+                    </span>
+                  </span>
+                  <span className="tag-chip">{post.status}</span>
                 </div>
-                <span className="shrink-0 rounded-full bg-white px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-900 dark:text-zinc-300">
-                  {post.status}
+              ))}
+            </div>
+          </section>
+
+          <section className="entry-card">
+            <h2 className="entry-card__title">部署与检查</h2>
+            <div className="kv-list">
+              <div className="kv-row">
+                <span>站点 URL</span>
+                <span className="kv-row__value">{data.deploy.siteUrl}</span>
+              </div>
+              <div className="kv-row">
+                <span>环境</span>
+                <span className="kv-row__value">{data.deploy.vercelEnv}</span>
+              </div>
+              <div className="kv-row">
+                <span>分支 / Commit</span>
+                <span className="kv-row__value">
+                  {data.deploy.commitRef} · {data.deploy.commitSha}
                 </span>
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-lg border border-teal-100/80 bg-white/80 p-6 shadow-sm shadow-teal-100/40 dark:border-zinc-800 dark:bg-zinc-900/80 dark:shadow-none">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">部署与检查</h2>
-          <dl className="mt-4 space-y-3 text-sm">
-            <div>
-              <dt className="text-zinc-500 dark:text-zinc-400">站点 URL</dt>
-              <dd className="mt-1 break-all font-medium text-zinc-800 dark:text-zinc-100">{data.deploy.siteUrl}</dd>
             </div>
-            <div>
-              <dt className="text-zinc-500 dark:text-zinc-400">环境</dt>
-              <dd className="mt-1 font-medium text-zinc-800 dark:text-zinc-100">{data.deploy.vercelEnv}</dd>
-            </div>
-            <div>
-              <dt className="text-zinc-500 dark:text-zinc-400">分支 / Commit</dt>
-              <dd className="mt-1 font-medium text-zinc-800 dark:text-zinc-100">{data.deploy.commitRef} · {data.deploy.commitSha}</dd>
-            </div>
-          </dl>
-          <div className="mt-5 rounded-md bg-zinc-950 px-4 py-3 font-mono text-xs text-teal-100">
-            npm run check:content
-          </div>
-          <p className="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
-            内容检查已接入 CI；新增文章后先运行上面的命令，再运行完整检查。
-          </p>
-        </section>
+            <p className="stat-hint" style={{ marginTop: "0.75rem" }}>
+              内容检查已接入 CI；新增文章后先运行 npm run check:content，再运行完整检查。
+            </p>
+          </section>
+        </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

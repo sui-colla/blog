@@ -16,6 +16,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
+import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
@@ -333,6 +334,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   // rehypeTocPlugin    → 提取 h2/h3/h4 标题并注入锚点（必须在 rehypeStringify 之前）
   // rehypeStringify    → HAST → HTML 字符串
   const processed = await remark()
+    .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypePrettyCode, {
       theme: "one-dark-pro",

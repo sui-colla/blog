@@ -180,7 +180,7 @@ export default function ArticleContent({ html }: Props) {
     <>
       <div
         ref={ref}
-        className="prose max-w-none"
+        className="markdown-body"
         dangerouslySetInnerHTML={{ __html: html }}
       />
       {lightbox && (

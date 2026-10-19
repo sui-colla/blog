@@ -1,85 +1,96 @@
 "use client";
 
+/**
+ * 归档页（对应 Fuwari ArchivePanel.svelte）
+ *
+ * 卡片内按年份分组：年份 / 主色圆点 / 文章数，
+ * 每条记录是「日期 / 虚线时间轴 / 标题 / 标签」。
+ */
 import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/content/posts";
 
 interface Props {
   groups: Record<string, PostMeta[]>;
   sortedKeys: string[];
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
-export default function ArchiveContent({ groups, sortedKeys }: Props) {
-  const { t, locale } = useI18n();
+interface YearGroup {
+  year: string;
+  posts: PostMeta[];
+}
 
-  const monthNames: Record<string, string[]> = {
-    zh: ["1 月", "2 月", "3 月", "4 月", "5 月", "6 月", "7 月", "8 月", "9 月", "10 月", "11 月", "12 月"],
-    en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+export default function ArchiveContent({
+  groups,
+  sortedKeys,
+  tags = [],
+  popularPosts = [],
+}: Props) {
+  const { t } = useI18n();
+
+  const years: YearGroup[] = [];
+  for (const key of sortedKeys) {
+    const year = key.split("-")[0];
+    const list = groups[key];
+    const existing = years.find((item) => item.year === year);
+    if (existing) {
+      existing.posts.push(...list);
+    } else {
+      years.push({ year, posts: [...list] });
+    }
+  }
+
+  const formatMMDD = (date: string) => {
+    const d = new Date(date);
+    return `${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+      d.getDate()
+    ).padStart(2, "0")}`;
   };
 
   return (
-    <div className="page-layout">
-      <Link
-        href="/"
-        className="page-back"
-      >
-        &larr; {t("post.backHome")}
-      </Link>
-
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl mb-10">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {t("archive.title")}
-        </span>
-      </h1>
-
-      <div className="archive-timeline">
-        {sortedKeys.map((key, index) => {
-          const [year, month] = key.split("-");
-          const previousYear = index > 0 ? sortedKeys[index - 1].split("-")[0] : "";
-          const showYear = year !== previousYear;
-
-          return (
-            <div key={key}>
-              {showYear && (
-                <h2 className="archive-year">{year}</h2>
-              )}
-              <div className="archive-month-group">
-                <h3 className="archive-month">
-                  {monthNames[locale][parseInt(month) - 1]}
-                </h3>
-                <ul className="archive-posts">
-                  {groups[key].map((post) => (
-                    <li key={post.slug} className="archive-post-item">
-                      <span className="archive-post-date">
-                        {new Date(post.date).getDate()}{t("archive.daySuffix") ? ` ${t("archive.daySuffix")}` : ""}
-                      </span>
-                      <Link
-                        href={`/posts/${post.slug}`}
-                        className="archive-post-link"
-                      >
-                        {post.title}
-                      </Link>
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="archive-post-tags">
-                          {post.tags.map((tag) => (
-                            <Link
-                              key={tag}
-                              href={`/tags/${encodeURIComponent(tag)}`}
-                              className="archive-post-tag"
-                            >
-                              {tag}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base archive-card">
+        {years.length === 0 ? (
+          <p className="empty-state">{t("home.empty")}</p>
+        ) : (
+          years.map((group) => (
+            <div key={group.year}>
+              <div className="archive-year-row">
+                <div className="archive-year">{group.year}</div>
+                <div className="archive-year-dot-wrap">
+                  <div className="archive-year-dot" />
+                </div>
+                <div className="archive-year-count">
+                  {group.posts.length} {t("sidebar.posts")}
+                </div>
               </div>
+
+              {group.posts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/posts/${post.slug}`}
+                  className="archive-row btn-plain"
+                  aria-label={post.title}
+                >
+                  <div className="archive-row__inner">
+                    <div className="archive-row__date">{formatMMDD(post.date)}</div>
+                    <div className="archive-row__line">
+                      <div className="archive-row__dot" />
+                    </div>
+                    <div className="archive-row__title">{post.title}</div>
+                    <div className="archive-row__tags">
+                      {(post.tags ?? []).map((tag) => `#${tag}`).join(" ")}
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
-    </div>
+    </PageShell>
   );
 }

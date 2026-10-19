@@ -1,79 +1,39 @@
 "use client";
 
-import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
+import PostCard from "@/components/content/PostCard";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/content/posts";
 
 interface Props {
   tag: string;
   posts: PostMeta[];
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
-export default function TagDetailContent({ tag, posts }: Props) {
-  const { t, locale } = useI18n();
-  const dateLocale = locale === "zh" ? "zh-CN" : "en-US";
+export default function TagDetailContent({
+  tag,
+  posts,
+  tags = [],
+  popularPosts = [],
+}: Props) {
+  const { t } = useI18n();
 
   return (
-    <div className="page-layout">
-      <Link
-        href="/tags"
-        className="page-back"
-      >
-        &larr; {t("tags.allTags")}
-      </Link>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <h1 className="page-title">{tag}</h1>
+        <p className="page-lead">
+          {t("tags.articleCount").replace("{count}", String(posts.length))}
+        </p>
+      </div>
 
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {tag}
-        </span>
-      </h1>
-      <p className="mt-2 text-zinc-500 dark:text-zinc-400">
-        {t("tags.articleCount").replace("{count}", String(posts.length))}
-      </p>
-
-      <div className="mt-10 flex flex-col gap-8">
-        {posts.map((post) => (
-          <article key={post.slug}>
-            <Link
-              href={`/posts/${post.slug}`}
-              className="group block rounded-xl p-5 -mx-5 hover:bg-teal-50/60 dark:hover:bg-zinc-900 transition-colors"
-            >
-              <time
-                dateTime={post.date}
-                className="text-sm text-zinc-500 dark:text-zinc-400"
-              >
-                {new Date(post.date).toLocaleDateString(dateLocale, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
-              <h2 className="mt-1 text-xl font-semibold text-zinc-800 group-hover:text-teal-700 dark:text-zinc-50 dark:group-hover:text-teal-400 transition-colors">
-                {post.title}
-              </h2>
-              <p className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                {post.summary}
-              </p>
-              {post.tags && post.tags.length > 0 && (
-                <div className="mt-3 flex gap-2">
-                  {post.tags.map((t) => (
-                    <span
-                      key={t}
-                      className={`inline-block rounded-full px-3 py-0.5 text-xs font-medium ${
-                        t === tag
-                          ? "bg-teal-700 text-white"
-                          : "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400"
-                      }`}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </Link>
-          </article>
+      <div className="post-list">
+        {posts.map((post, index) => (
+          <PostCard key={post.slug} post={post} index={index} />
         ))}
       </div>
-    </div>
+    </PageShell>
   );
 }

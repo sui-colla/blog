@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPostsByTag, getAllTags } from "@/lib/content/posts";
+import { getSidebarData } from "@/lib/content/sidebar";
 import TagDetailContent from "@/components/content/TagDetailContent";
 
 /**
@@ -49,5 +50,14 @@ export default async function TagPage({
 
   if (posts.length === 0) notFound();
 
-  return <TagDetailContent tag={decoded} posts={posts} />;
+  const { tags, popularPosts } = getSidebarData();
+
+  return (
+    <TagDetailContent
+      tag={decoded}
+      posts={posts}
+      tags={tags}
+      popularPosts={popularPosts}
+    />
+  );
 }

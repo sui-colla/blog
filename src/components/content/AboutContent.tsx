@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
+import type { PostMeta } from "@/lib/content/posts";
 
 function getContactErrorMessage(error: unknown, t: (key: string) => string) {
   if (error === "missing_fields") return t("contact.errorEmpty");
@@ -20,12 +22,19 @@ function getContactErrorMessage(error: unknown, t: (key: string) => string) {
   return t("contact.errorFail");
 }
 
-export default function AboutContent() {
+interface Props {
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
+}
+
+export default function AboutContent({ tags = [], popularPosts = [] }: Props) {
   const { t } = useI18n();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -51,7 +60,11 @@ export default function AboutContent() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), message: message.trim() }),
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+        }),
       });
 
       const data = await res.json();
@@ -80,78 +93,60 @@ export default function AboutContent() {
 
   const messageId = "contact-form-message";
   const hasError = status === "error" && Boolean(errorMsg);
-  const statusMessage = status === "success" ? t("contact.success") : hasError ? errorMsg : "";
+  const statusMessage =
+    status === "success" ? t("contact.success") : hasError ? errorMsg : "";
+
+  const morePages = [
+    { href: "/projects", title: t("nav.projects"), desc: t("about.moreProjects") },
+    { href: "/now", title: t("nav.now"), desc: t("about.moreNow") },
+    { href: "/links", title: t("nav.links"), desc: t("about.moreLinks") },
+    { href: "/uses", title: t("nav.uses"), desc: t("about.moreUses") },
+  ];
 
   return (
-    <div className="page-layout">
-      <Link
-        href="/"
-        className="page-back"
-      >
-        &larr; {t("post.backHome")}
-      </Link>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {t("about.title")}
-        </span>
-      </h1>
-      <div className="prose max-w-none mt-8">
-        <p>{t("about.intro")}</p>
-        <p>{t("about.bio")}</p>
-      </div>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <div className="markdown-body">
+          <h1>{t("about.title")}</h1>
+          <p>{t("about.intro")}</p>
+          <p>{t("about.bio")}</p>
+          <p>{t("about.contactDesc")}</p>
+        </div>
 
-      <section className="mt-10" aria-labelledby="about-more-heading">
-        <h2 id="about-more-heading" className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">
+        <h2 className="section-title" style={{ marginTop: "1.5rem" }}>
           {t("about.more")}
         </h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            { href: "/projects", title: t("nav.projects"), desc: t("about.moreProjects"), icon: "✨" },
-            { href: "/now", title: t("nav.now"), desc: t("about.moreNow"), icon: "🌿" },
-            { href: "/links", title: t("nav.links"), desc: t("about.moreLinks"), icon: "🔗" },
-            { href: "/uses", title: t("nav.uses"), desc: t("about.moreUses"), icon: "🧰" },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-md border border-teal-100 bg-white/80 p-4 text-sm transition hover:border-teal-200 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70 dark:hover:border-teal-900/60"
-            >
-              <span className="text-xl" aria-hidden="true">{item.icon}</span>
-              <span className="mt-2 block font-semibold text-zinc-900 dark:text-zinc-50">{item.title}</span>
-              <span className="mt-1 block leading-6 text-zinc-500 dark:text-zinc-400">{item.desc}</span>
+        <div className="card-grid card-grid--two">
+          {morePages.map((item) => (
+            <Link key={item.href} href={item.href} className="entry-card">
+              <h3 className="entry-card__title">{item.title}</h3>
+              <p className="entry-card__desc">{item.desc}</p>
             </Link>
           ))}
         </div>
-      </section>
-
-      <div className="prose max-w-none mt-10">
-        <h2>{t("about.contact")}</h2>
-        <p>{t("about.contactDesc")}</p>
       </div>
 
-      {/* 联系表单 */}
-      <div className="mt-8">
-        <h2 className="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-2" id="contact-heading">
+      <section className="card-base section-card" aria-labelledby="contact-heading">
+        <h2 id="contact-heading" className="section-title">
           {t("contact.title")}
         </h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-          {t("contact.desc")}
-        </p>
+        <p className="section-desc">{t("contact.desc")}</p>
+
         <form
           onSubmit={handleSubmit}
-          className="contact-form"
+          className="form-card"
           noValidate
           aria-labelledby="contact-heading"
         >
-          <div className="contact-field">
-            <label htmlFor="contact-name" className="contact-label">
+          <div className="form-field">
+            <label htmlFor="contact-name" className="form-label">
               {t("contact.name")}
             </label>
             <input
               id="contact-name"
               type="text"
               name="name"
-              className="contact-input"
+              className="form-input"
               placeholder={t("contact.namePlaceholder")}
               value={name}
               onChange={(e) => {
@@ -165,15 +160,16 @@ export default function AboutContent() {
               required
             />
           </div>
-          <div className="contact-field">
-            <label htmlFor="contact-email" className="contact-label">
+
+          <div className="form-field">
+            <label htmlFor="contact-email" className="form-label">
               {t("contact.email")}
             </label>
             <input
               id="contact-email"
               type="email"
               name="email"
-              className="contact-input"
+              className="form-input"
               placeholder={t("contact.emailPlaceholder")}
               value={email}
               onChange={(e) => {
@@ -187,14 +183,15 @@ export default function AboutContent() {
               required
             />
           </div>
-          <div className="contact-field">
-            <label htmlFor="contact-message" className="contact-label">
+
+          <div className="form-field">
+            <label htmlFor="contact-message" className="form-label">
               {t("contact.message")}
             </label>
             <textarea
               id="contact-message"
               name="message"
-              className="contact-textarea"
+              className="form-textarea"
               placeholder={t("contact.messagePlaceholder")}
               rows={5}
               value={message}
@@ -208,14 +205,16 @@ export default function AboutContent() {
               required
             />
           </div>
+
           <button
             type="submit"
-            className="contact-btn"
+            className="form-submit"
             disabled={status === "loading"}
             aria-busy={status === "loading" || undefined}
           >
             {status === "loading" ? t("contact.sending") : t("contact.submit")}
           </button>
+
           {statusMessage && (
             <p
               id={messageId}
@@ -223,15 +222,15 @@ export default function AboutContent() {
               aria-live="polite"
               className={
                 status === "success"
-                  ? "contact-msg contact-msg--success"
-                  : "contact-msg contact-msg--error"
+                  ? "form-msg form-msg--success"
+                  : "form-msg form-msg--error"
               }
             >
               {statusMessage}
             </p>
           )}
         </form>
-      </div>
-    </div>
+      </section>
+    </PageShell>
   );
 }

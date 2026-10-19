@@ -1,14 +1,21 @@
 "use client";
 
-import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
+import type { PostMeta } from "@/lib/content/posts";
 import type { NowPageData } from "@/config/content-pages";
 
 interface Props {
   data: NowPageData;
+  tags?: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
-export default function NowContent({ data }: Props) {
+export default function NowContent({
+  data,
+  tags = [],
+  popularPosts = [],
+}: Props) {
   const { t, locale } = useI18n();
   const updated = new Intl.DateTimeFormat(locale === "zh" ? "zh-CN" : "en", {
     year: "numeric",
@@ -17,41 +24,33 @@ export default function NowContent({ data }: Props) {
   }).format(new Date(data.updatedAt));
 
   return (
-    <div className="page-layout">
-      <Link href="/" className="page-back">
-        &larr; {t("post.backHome")}
-      </Link>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {t("now.title")}
-        </span>
-      </h1>
-      <p className="mt-3 text-zinc-500 dark:text-zinc-400">{t("now.description")}</p>
-      <p className="mt-4 inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-medium text-teal-700 dark:bg-teal-900/20 dark:text-teal-300">
-        {t("now.updatedAt").replace("{date}", updated)}
-      </p>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <h1 className="page-title">{t("now.title")}</h1>
+        <p className="page-lead">{t("now.description")}</p>
+        <p className="meta-text" style={{ marginTop: "0.75rem" }}>
+          {t("now.updatedAt").replace("{date}", updated)}
+        </p>
 
-      {data.sections.length === 0 ? (
-        <div className="mt-10 rounded-md border border-dashed border-teal-200 bg-teal-50/60 p-8 text-center text-sm text-zinc-500 dark:border-teal-900/50 dark:bg-teal-950/20 dark:text-zinc-400">
-          {t("now.empty")}
-        </div>
-      ) : (
-        <div className="mt-10 space-y-5">
-          {data.sections.map((section) => (
-            <section key={section.title} className="rounded-md border border-teal-100 bg-white/80 p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70">
-              <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-50">{section.title}</h2>
-              <ul className="mt-4 space-y-3">
-                {section.items.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-teal-400" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </div>
-      )}
-    </div>
+        {data.sections.length === 0 ? (
+          <p className="empty-state" style={{ marginTop: "1.5rem" }}>
+            {t("now.empty")}
+          </p>
+        ) : (
+          <div className="card-grid" style={{ marginTop: "1.5rem" }}>
+            {data.sections.map((section) => (
+              <section key={section.title} className="entry-card">
+                <h2 className="entry-card__title">{section.title}</h2>
+                <ul className="clean-list">
+                  {section.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+    </PageShell>
   );
 }

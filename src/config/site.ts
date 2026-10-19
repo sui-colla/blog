@@ -44,20 +44,37 @@ function resolveSiteUrl(raw: string | undefined): string {
 const siteUrl = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
 
 export const siteConfig = {
-  name: "LunaPath",
-  description: "LunaPath 的博客，记录思考和分享知识的地方",
-  englishDescription: "LunaPath's blog — notes on tech, thoughts, and life",
+  name: "Xingye",
+  description: "Xingye 的博客，记录思考和分享知识的地方",
+  englishDescription: "Xingye's blog — notes on tech, thoughts, and life",
   url: siteUrl,
   locale: "zh_CN",
   language: "zh-CN",
   themeColor: "#52525b",
+  /** Fuwari 主题色相（0-360），用于页面强调色 oklch(… var(--hue)) */
+  hue: 250,
+  profile: {
+    name: "Xingye",
+    bio: "记录技术、思考与生活的个人博客。",
+    avatar: "/images/avatar.svg",
+    links: [
+      { name: "About", href: "/about", icon: "user" },
+      { name: "RSS", href: "/feed.xml", icon: "rss", external: true },
+      {
+        name: "GitHub",
+        href: "https://github.com/sui-colla",
+        icon: "github",
+        external: true,
+      },
+    ],
+  },
   author: {
-    name: "LunaPath",
+    name: "Xingye",
     url: siteUrl,
   },
   rss: {
     path: "/feed.xml",
-    title: "LunaPath RSS",
+    title: "Xingye RSS",
   },
   analytics: {
     umami: {

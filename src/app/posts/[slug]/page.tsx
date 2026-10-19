@@ -8,6 +8,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug, getAllPosts, getAdjacentPosts, getPostsBySeries } from "@/lib/content/posts";
+import { getSidebarData } from "@/lib/content/sidebar";
 import { absoluteUrl } from "@/config/site";
 import { buildArticleJsonLd, serializeJsonLd } from "@/lib/seo/structured-data";
 import PostContent from "@/components/post/PostContent";
@@ -74,6 +75,7 @@ export default async function PostPage({
   const { prev, next } = getAdjacentPosts(slug);
   const jsonLd = buildArticleJsonLd(post, slug);
   const seriesPosts = post.series ? getPostsBySeries(post.series) : undefined;
+  const { tags, popularPosts } = getSidebarData();
 
   return (
     <>
@@ -83,7 +85,15 @@ export default async function PostPage({
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
         />
       )}
-      <PostContent post={post} allPosts={allPosts} prev={prev} next={next} seriesPosts={seriesPosts} />
+      <PostContent
+        post={post}
+        allPosts={allPosts}
+        prev={prev}
+        next={next}
+        seriesPosts={seriesPosts}
+        tags={tags}
+        popularPosts={popularPosts}
+      />
     </>
   );
 }

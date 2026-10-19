@@ -1,11 +1,7 @@
 "use client";
 
 /**
- * 邮箱订阅表单
- *
- * 客户端校验（邮箱格式、非空）后调用 POST /api/subscribe，
- * 服务端通过 Resend API 将邮箱加入 audience 列表。
- * 支持识别"已订阅"状态并显示友好提示。
+ * 邮箱订阅表单（Fuwari 卡片风格）
  */
 import { useState, type FormEvent } from "react";
 import { useI18n } from "@/lib/i18n";
@@ -28,7 +24,9 @@ function getSubscribeErrorMessage(error: unknown, t: (key: string) => string) {
 export default function Subscribe() {
   const { t } = useI18n();
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+    "idle"
+  );
   const [message, setMessage] = useState("");
 
   async function handleSubmit(e: FormEvent) {
@@ -78,54 +76,56 @@ export default function Subscribe() {
   const hasError = status === "error" && Boolean(message);
 
   return (
-    <div className="subscribe-box">
-      <h3 className="subscribe-title">{t("subscribe.title")}</h3>
-      <p className="subscribe-desc">{t("subscribe.desc")}</p>
+    <section className="card-base section-card">
+      <h2 className="section-title">{t("subscribe.title")}</h2>
+      <p className="section-desc">{t("subscribe.desc")}</p>
 
-      <form className="subscribe-form" onSubmit={handleSubmit} noValidate>
-        <input
-          type="email"
-          className="subscribe-input"
-          placeholder={t("subscribe.placeholder")}
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (status === "error" || status === "success") {
-              setStatus("idle");
-              setMessage("");
-            }
-          }}
-          disabled={status === "loading"}
-          aria-label={t("subscribe.ariaLabel")}
-          aria-invalid={hasError || undefined}
-          aria-describedby={message ? messageId : undefined}
-          autoComplete="email"
-          required
-        />
+      <form className="form-card" onSubmit={handleSubmit} noValidate>
+        <div className="form-field">
+          <input
+            type="email"
+            className="form-input"
+            placeholder={t("subscribe.placeholder")}
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (status === "error" || status === "success") {
+                setStatus("idle");
+                setMessage("");
+              }
+            }}
+            disabled={status === "loading"}
+            aria-label={t("subscribe.ariaLabel")}
+            aria-invalid={hasError || undefined}
+            aria-describedby={message ? messageId : undefined}
+            autoComplete="email"
+            required
+          />
+        </div>
         <button
           type="submit"
-          className="subscribe-btn"
+          className="form-submit"
           disabled={status === "loading"}
           aria-busy={status === "loading" || undefined}
         >
           {status === "loading" ? t("subscribe.loading") : t("subscribe.btn")}
         </button>
-      </form>
 
-      {message && (
-        <p
-          id={messageId}
-          role="status"
-          aria-live="polite"
-          className={
-            status === "success"
-              ? "subscribe-msg subscribe-msg--success"
-              : "subscribe-msg subscribe-msg--error"
-          }
-        >
-          {message}
-        </p>
-      )}
-    </div>
+        {message && (
+          <p
+            id={messageId}
+            role="status"
+            aria-live="polite"
+            className={
+              status === "success"
+                ? "form-msg form-msg--success"
+                : "form-msg form-msg--error"
+            }
+          >
+            {message}
+          </p>
+        )}
+      </form>
+    </section>
   );
 }

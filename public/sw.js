@@ -1,7 +1,7 @@
 const CACHE_VERSION = "v1";
-const STATIC_CACHE = `lunapath-static-${CACHE_VERSION}`;
-const PAGE_CACHE = `lunapath-pages-${CACHE_VERSION}`;
-const RUNTIME_CACHE = `lunapath-runtime-${CACHE_VERSION}`;
+const STATIC_CACHE = `Xingye-static-${CACHE_VERSION}`;
+const PAGE_CACHE = `Xingye-pages-${CACHE_VERSION}`;
+const RUNTIME_CACHE = `Xingye-runtime-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
   "/",

@@ -1,4 +1,5 @@
 import { getAllPosts } from "@/lib/content/posts";
+import { getSidebarData } from "@/lib/content/sidebar";
 import ArchiveContent from "@/components/content/ArchiveContent";
 
 export const metadata = {
@@ -8,8 +9,8 @@ export const metadata = {
 
 export default function ArchivePage() {
   const posts = getAllPosts();
+  const { tags, popularPosts } = getSidebarData();
 
-  // 按年月分组
   const groups: Record<string, typeof posts> = {};
   for (const post of posts) {
     const d = new Date(post.date);
@@ -20,5 +21,12 @@ export default function ArchivePage() {
 
   const sortedKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
 
-  return <ArchiveContent groups={groups} sortedKeys={sortedKeys} />;
+  return (
+    <ArchiveContent
+      groups={groups}
+      sortedKeys={sortedKeys}
+      tags={tags}
+      popularPosts={popularPosts}
+    />
+  );
 }

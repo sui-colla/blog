@@ -12,7 +12,7 @@ export default function LanguageToggle() {
     <button
       type="button"
       onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
-      className="icon-button icon-button--language"
+      className="btn-plain icon-btn"
       title={locale === "zh" ? "Switch to English" : "切换到中文"}
       aria-label={locale === "zh" ? "Switch to English" : "切换到中文"}
     >

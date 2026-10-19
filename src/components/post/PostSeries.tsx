@@ -21,7 +21,7 @@ export default function PostSeries({ seriesName, posts, currentSlug }: Props) {
   return (
     <div className="post-series">
       <h3 className="post-series-title">
-        📚 {t("series.title")}：{seriesName}
+        {t("series.title")} · {seriesName}
       </h3>
       <ol className="post-series-list">
         {sorted.map((post, idx) => (

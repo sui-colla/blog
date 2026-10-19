@@ -13,8 +13,11 @@
  * - Analytics 和 ServiceWorkerRegister 放在 body 末尾，不影响首屏渲染
  */
 import type { Metadata, Viewport } from "next";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "@fontsource-variable/jetbrains-mono";
 import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import Analytics from "@/components/layout/Analytics";
 import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister";
 import DocumentTitle from "@/components/layout/DocumentTitle";
@@ -81,15 +84,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
-        {/* FOUC 防护：在浏览器渲染前同步读取 localStorage 中的主题偏好，
-            直接设置 data-theme 属性，避免页面先显示亮色再跳暗色的闪烁 */}
+        {/* FOUC 防护：在浏览器渲染前同步读取 localStorage 中的主题与色相偏好，
+            避免页面先显示亮色/默认色相再跳变 */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);var h=parseInt(localStorage.getItem("hue")||"250",10);if(!(h>=0&&h<=360))h=250;document.documentElement.style.setProperty("--hue",String(h))}catch(e){}})()`,
           }}
         />
       </head>
-      <body className="min-h-screen flex flex-col text-zinc-800 dark:text-zinc-100 font-sans">
+      <body className="site-body min-h-screen flex flex-col font-sans">
         <I18nProvider>
           <DocumentTitle />
           <SkipToContent />
@@ -97,7 +100,6 @@ export default function RootLayout({
           <main id="main-content" className="main-content flex-1" tabIndex={-1}>
             {children}
           </main>
-          <Footer />
         </I18nProvider>
         <Analytics />
         <ServiceWorkerRegister />

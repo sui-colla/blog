@@ -1,4 +1,5 @@
 import { getAllTags } from "@/lib/content/posts";
+import { getSidebarData } from "@/lib/content/sidebar";
 import TagsContent from "@/components/content/TagsContent";
 
 export const metadata = {
@@ -8,5 +9,6 @@ export const metadata = {
 
 export default function TagsPage() {
   const tags = getAllTags();
-  return <TagsContent tags={tags} />;
+  const sidebar = getSidebarData();
+  return <TagsContent tags={tags} popularPosts={sidebar.popularPosts} />;
 }

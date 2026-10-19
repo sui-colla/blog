@@ -137,9 +137,9 @@ export async function sendSubscriptionConfirmation(email: string): Promise<void>
       body: JSON.stringify({
         from,
         to: [email],
-        subject: "订阅成功 - LunaPath Blog",
+        subject: "订阅成功 - Xingye Blog",
         text: [
-          "感谢订阅 LunaPath Blog。",
+          "感谢订阅 Xingye Blog。",
           "",
           "有新文章发布时，我们会通过此邮箱通知你。",
           "",
@@ -160,7 +160,7 @@ export async function sendSubscriptionConfirmation(email: string): Promise<void>
 
 function buildContactText({ name, email, message }: ContactInput): string {
   return [
-    "New message from LunaPath Blog contact form.",
+    "New message from Xingye Blog contact form.",
     "",
     `Name: ${name}`,
     `Email: ${email}`,

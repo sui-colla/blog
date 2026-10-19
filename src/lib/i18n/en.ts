@@ -20,12 +20,26 @@ const en: Record<string, string> = {
   "nav.closeMenu": "Close navigation menu",
 
   // Home
-  "home.greeting": "Hello, welcome.",
+  "home.eyebrow": "Notes · Code · Life",
+  "home.heroTitle": "Thinking clearly,",
+  "home.heroHighlight": "written down slowly.",
   "home.tagline": "A place for notes on tech, thoughts, and life. Writing helps me think clearly — hope it inspires you too.",
   "home.latestPosts": "Latest Posts",
   "home.empty": "No posts yet. Check back soon.",
   "home.startHere": "Start here",
   "home.readPost": "Read article",
+  "home.ctaRead": "Read the latest",
+  "home.ctaAbout": "About me",
+  "home.words": "Total words",
+  "home.avgReading": "Avg. read",
+  "home.min": "min",
+  "home.statsNote": "Counted from Markdown",
+  "home.stats": "At a glance",
+  "home.featured": "Featured",
+  "home.nowLabel": "Now",
+  "home.nowText": "Tidying up my Next.js notes and writing setup, still adding to the game guides. Slow updates, steady writing.",
+  "home.nowCta": "Read the now page",
+  "home.profileBio": "Notes on code, writing and games. Written in Markdown, shipped with Next.js.",
 
   // Popular posts
   "popular.title": "Popular Posts",
@@ -33,6 +47,7 @@ const en: Record<string, string> = {
 
   // Post
   "post.notFound": "Not Found",
+  "post.eyebrow": "Notes",
   "post.backHome": "Back to Home",
   "post.readingTime": "min read",
   "post.toc": "Contents",
@@ -59,7 +74,7 @@ const en: Record<string, string> = {
 
   // About
   "about.title": "About",
-  "about.intro": "Hi, I'm LunaPath.",
+  "about.intro": "Hi, I'm Xingye.",
   "about.bio": "This is where I document my learnings in tech, reflections on life, and reading notes. Writing helps me organize my thoughts, and I hope it brings you some value too.",
   "about.contact": "Contact",
   "about.contactDesc": "You can find me on GitHub, or leave a comment below any article.",
@@ -97,7 +112,7 @@ const en: Record<string, string> = {
   "uses.readPost": "Related post",
 
   // Subscribe
-  "subscribe.title": "📬 Subscribe",
+  "subscribe.title": "Subscribe",
   "subscribe.desc": "Don't want to miss new posts? Leave your email and I'll notify you.",
   "subscribe.placeholder": "your@email.com",
   "subscribe.ariaLabel": "Email address",
@@ -128,6 +143,7 @@ const en: Record<string, string> = {
   "search.allSeries": "All series",
   "search.clearFilters": "Clear",
   "search.seriesPrefix": "Series: ",
+  "search.suggest": "Try a tag",
   "search.move": "Move",
   "search.goto": "Go",
   "search.close": "Close",
@@ -138,6 +154,7 @@ const en: Record<string, string> = {
 
   // Theme
   "theme.system": "System",
+  "theme.hue": "Accent hue",
   "theme.light": "Light",
   "theme.dark": "Dark",
   "theme.ariaPrefix": "Current: ",
@@ -149,6 +166,7 @@ const en: Record<string, string> = {
 
   // Post pinned
   "post.pinned": "Pinned",
+  "post.uncategorized": "Uncategorized",
 
   // Browse navigation
   "browse.title": "Browse",
@@ -170,13 +188,18 @@ const en: Record<string, string> = {
   "copy.fail": "Failed",
 
   // Footer
-  "footer.builtWith": "Built with Next.js",
+  "footer.builtWith": "Powered by Next.js & Fuwari design",
+  "footer.pages": "Pages",
+  "footer.feeds": "Feeds & index",
+  "footer.rss": "RSS feed",
 
   // Site description
-  "site.description": "LunaPath's blog — notes on tech, thoughts, and life",
-  "site.rssTitle": "LunaPath RSS",
+  "site.description": "Xingye's blog — notes on tech, thoughts, and life",
+  "site.rssTitle": "Xingye RSS",
+  "site.tagline": "notes & work",
 
   // 404
+  "notFound.badge": "404",
   "notFound.title": "Page Not Found",
   "notFound.desc": "The page you're looking for doesn't exist — it may have been moved or the link is incorrect.",
   "notFound.backHome": "Back to Home",
@@ -204,7 +227,7 @@ const en: Record<string, string> = {
   "contact.title": "Contact Me",
   "contact.desc": "Have a question or thought? Feel free to reach out via the form below.",
   "contact.name": "Your Name",
-  "contact.namePlaceholder": "LunaPath",
+  "contact.namePlaceholder": "Xingye",
   "contact.email": "Email Address",
   "contact.emailPlaceholder": "your@email.com",
   "contact.message": "Message",
@@ -234,7 +257,7 @@ const en: Record<string, string> = {
   "backToTop.label": "Back to top",
 
   // Donate
-  "donate.title": "☕ Support",
+  "donate.title": "Support",
   "donate.desc": "If this article helped you, consider buying the author a coffee~",
   "donate.wechat": "WeChat",
   "donate.alipay": "Alipay",

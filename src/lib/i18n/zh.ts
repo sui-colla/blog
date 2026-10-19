@@ -20,12 +20,26 @@ const zh: Record<string, string> = {
   "nav.closeMenu": "关闭导航菜单",
 
   // 首页
-  "home.greeting": "欢迎来到露比的工作室",
+  "home.eyebrow": "笔记 · 代码 · 生活",
+  "home.heroTitle": "把想清楚的事，",
+  "home.heroHighlight": "慢慢写成文字。",
   "home.tagline": "这里记录一些关于技术、思考和生活的内容。写作帮助我理清思路，也希望对你有所启发。",
   "home.latestPosts": "最新文章",
   "home.empty": "暂时还没有文章，稍后再来看看吧。",
   "home.startHere": "从这里开始",
   "home.readPost": "阅读全文",
+  "home.ctaRead": "读最新文章",
+  "home.ctaAbout": "关于我",
+  "home.words": "总字数",
+  "home.avgReading": "平均阅读",
+  "home.min": "分钟",
+  "home.statsNote": "数据从 Markdown 自动统计",
+  "home.stats": "站点数据",
+  "home.featured": "精选",
+  "home.nowLabel": "现在",
+  "home.nowText": "最近在整理 Next.js 与写作系统，也在补全游戏攻略。更新不快，但一直在写。",
+  "home.nowCta": "看看近况",
+  "home.profileBio": "技术、写作与游戏笔记。Markdown 写作，Next.js 发布。",
 
   // 热门文章
   "popular.title": "热门文章",
@@ -33,6 +47,7 @@ const zh: Record<string, string> = {
 
   // 文章页
   "post.notFound": "未找到",
+  "post.eyebrow": "笔记",
   "post.backHome": "返回首页",
   "post.readingTime": "分钟阅读",
   "post.toc": "目录",
@@ -59,7 +74,7 @@ const zh: Record<string, string> = {
 
   // 关于页
   "about.title": "关于",
-  "about.intro": "你好，我是 LunaPath。",
+  "about.intro": "你好，我是 Xingye。",
   "about.bio": "这里是我记录技术学习、生活思考和阅读笔记的地方。写作帮助我整理思路，也希望能为你带来一些价值。",
   "about.contact": "联系方式",
   "about.contactDesc": "可以通过 GitHub 找到我，或者在文章下方留言讨论。",
@@ -97,7 +112,7 @@ const zh: Record<string, string> = {
   "uses.readPost": "相关文章",
 
   // 订阅
-  "subscribe.title": "📬 订阅博客",
+  "subscribe.title": "订阅博客",
   "subscribe.desc": "不想错过新文章？留下邮箱，有新内容时我会通知你。",
   "subscribe.placeholder": "your@email.com",
   "subscribe.ariaLabel": "邮箱地址",
@@ -128,6 +143,7 @@ const zh: Record<string, string> = {
   "search.allSeries": "全部系列",
   "search.clearFilters": "清除",
   "search.seriesPrefix": "系列：",
+  "search.suggest": "试试这些标签",
   "search.move": "移动",
   "search.goto": "跳转",
   "search.close": "关闭",
@@ -138,6 +154,7 @@ const zh: Record<string, string> = {
 
   // 主题切换
   "theme.system": "跟随系统",
+  "theme.hue": "主题色相",
   "theme.light": "浅色模式",
   "theme.dark": "深色模式",
   "theme.ariaPrefix": "当前：",
@@ -149,6 +166,7 @@ const zh: Record<string, string> = {
 
   // 文章置顶
   "post.pinned": "置顶",
+  "post.uncategorized": "未分类",
 
   // 浏览导航
   "browse.title": "浏览",
@@ -170,13 +188,18 @@ const zh: Record<string, string> = {
   "copy.fail": "失败",
 
   // Footer
-  "footer.builtWith": "Built with Next.js",
+  "footer.builtWith": "Powered by Next.js & Fuwari 风格",
+  "footer.pages": "页面",
+  "footer.feeds": "订阅与索引",
+  "footer.rss": "RSS 订阅",
 
   // 站点描述
-  "site.description": "LunaPath 的博客，记录思考和分享知识的地方",
-  "site.rssTitle": "LunaPath RSS",
+  "site.description": "Xingye 的博客，记录思考和分享知识的地方",
+  "site.rssTitle": "Xingye RSS",
+  "site.tagline": "笔记与作品",
 
   // 404 页
+  "notFound.badge": "404",
   "notFound.title": "页面走丢了",
   "notFound.desc": "你要找的页面不存在，可能已被移除或地址有误。",
   "notFound.backHome": "返回首页",
@@ -204,7 +227,7 @@ const zh: Record<string, string> = {
   "contact.title": "联系我",
   "contact.desc": "有任何问题或想法？欢迎通过下面的表单联系我。",
   "contact.name": "你的名字",
-  "contact.namePlaceholder": "LunaPath",
+  "contact.namePlaceholder": "Xingye",
   "contact.email": "邮箱地址",
   "contact.emailPlaceholder": "your@email.com",
   "contact.message": "留言内容",
@@ -234,7 +257,7 @@ const zh: Record<string, string> = {
   "backToTop.label": "回到顶部",
 
   // 赞赏支持
-  "donate.title": "☕ 赞赏支持",
+  "donate.title": "赞赏支持",
   "donate.desc": "如果这篇文章对你有帮助，可以请作者喝杯咖啡~",
   "donate.wechat": "微信",
   "donate.alipay": "支付宝",

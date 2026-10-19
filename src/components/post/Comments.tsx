@@ -3,24 +3,12 @@
 /**
  * 评论区（基于 Giscus / GitHub Discussions）
  *
+ * 结构与 Fuwari 的卡片式区块一致：卡片标题 + 说明 + 评论挂载点。
  * 关键设计：
  * - Giscus 组件延迟加载（mounted），避免 SSR 时水合不匹配
  * - 主题同步：监听 document.documentElement 的 data-theme 属性变化
- *   （MutationObserver）和 prefers-color-scheme 媒体查询，自动切换 Giscus 主题
  * - widgetKey 包含主题+语言+repoId，任一变化时强制重新挂载 Giscus iframe
- * - COMMENTS_READY_DELAY: 延迟显示骨架屏→真实组件的切换，避免 iframe 加载闪烁
- * - LOAD_ERROR_TIMEOUT: 超时检测，若 Giscus iframe 未在指定时间内加载完成则显示重新加载按钮
  * - 缺少配置时显示引导链接，指向 giscus.app 获取 repoId/categoryId
- *
- * 必需环境变量：NEXT_PUBLIC_GISCUS_REPO_ID、NEXT_PUBLIC_GISCUS_CATEGORY_ID
- *
- * ⚠️ 排查提示：如果配置齐全但评论区一直停在骨架屏、最后显示
- * 「评论加载超时，请检查网络连接后重试」，**大概率不是网络问题**，
- * 而是 giscus 的 GitHub App 没有安装到仓库上。此时 giscus.app 的
- * /api/discussions 会返回 403：
- *   {"error":"giscus is not installed on this repository"}
- * iframe 因此始终不会创建。去 https://github.com/apps/giscus 安装并
- * 勾选对应仓库即可。注意这句错误文案会把原因指向网络，容易误导。
  */
 import Giscus from "@giscus/react";
 import { useEffect, useState } from "react";
@@ -33,7 +21,9 @@ const LOAD_ERROR_TIMEOUT = 15_000;
 
 function getSystemTheme(): WidgetTheme {
   if (typeof window === "undefined") return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 function resolveWidgetTheme(): WidgetTheme {
@@ -65,7 +55,8 @@ function CommentsSkeleton({ label }: { label: string }) {
 export default function Comments() {
   const { locale, t } = useI18n();
   const repoId = process.env.NEXT_PUBLIC_GISCUS_REPO_ID?.trim() ?? "";
-  const categoryId = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID?.trim() ?? "";
+  const categoryId =
+    process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID?.trim() ?? "";
   const hasConfig = Boolean(repoId && categoryId);
   const commentsLang = locale === "zh" ? "zh-CN" : "en";
 
@@ -76,8 +67,6 @@ export default function Comments() {
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
-    // setTimeout 而非 rAF：rAF 在页面不可见时不触发，
-    // 那样后台标签页里评论区会永远停在骨架屏。
     const mountedTimer = window.setTimeout(() => {
       setMounted(true);
     }, 0);
@@ -90,7 +79,10 @@ export default function Comments() {
 
     const root = document.documentElement;
     const observer = new MutationObserver(syncTheme);
-    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
 
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handleMediaChange = () => {
@@ -109,9 +101,10 @@ export default function Comments() {
       setIsReady(true);
     }, COMMENTS_READY_DELAY);
 
-    // 超时检测：如果 Giscus iframe 在指定时间内未加载完成，显示重新加载按钮
     const errorTimer = window.setTimeout(() => {
-      const iframe = document.querySelector("#comments iframe") as HTMLIFrameElement | null;
+      const iframe = document.querySelector(
+        "#comments iframe"
+      ) as HTMLIFrameElement | null;
       if (!iframe) {
         setLoadError(true);
       }
@@ -141,18 +134,18 @@ export default function Comments() {
     });
     window.setTimeout(() => setIsReady(true), COMMENTS_READY_DELAY);
     window.setTimeout(() => {
-      const iframe = document.querySelector("#comments iframe") as HTMLIFrameElement | null;
+      const iframe = document.querySelector(
+        "#comments iframe"
+      ) as HTMLIFrameElement | null;
       if (!iframe) setLoadError(true);
     }, LOAD_ERROR_TIMEOUT);
   };
 
   if (!hasConfig) {
     return (
-      <section className="comments-section">
-        <div className="comments-header">
-          <h3 className="comments-title">{t("comments.title")}</h3>
-          <p className="comments-desc">{t("comments.desc")}</p>
-        </div>
+      <section className="card-base section-card">
+        <h2 className="section-title">{t("comments.title")}</h2>
+        <p className="section-desc">{t("comments.desc")}</p>
         <div className="comments-error-card" role="status" aria-live="polite">
           <h3 className="comments-error-title">{t("comments.missingTitle")}</h3>
           <p className="comments-error-desc">{t("comments.missingDesc")}</p>
@@ -174,21 +167,25 @@ export default function Comments() {
   const widgetKey = `${widgetTheme}-${commentsLang}-${repoId}-${categoryId}-${reloadKey}`;
 
   return (
-    <section className="comments-section" aria-busy={!isReady}>
-      <div className="comments-header">
-        <h3 className="comments-title">{t("comments.title")}</h3>
-        <p className="comments-desc">{t("comments.desc")}</p>
-      </div>
+    <section className="card-base section-card" aria-busy={!isReady}>
+      <h2 className="section-title">{t("comments.title")}</h2>
+      <p className="section-desc">{t("comments.desc")}</p>
 
       <div className="comments-shell">
         <div
-          className={`comments-loading-layer${isReady && !loadError ? " comments-loading-layer--hidden" : ""}`}
+          className={`comments-loading-layer${
+            isReady && !loadError ? " comments-loading-layer--hidden" : ""
+          }`}
           aria-hidden={isReady && !loadError ? "true" : undefined}
         >
           <CommentsSkeleton label={t("comments.loading")} />
         </div>
 
-        <div className={`comments-widget${isReady ? " comments-widget--ready" : " comments-widget--loading"}`}>
+        <div
+          className={`comments-widget${
+            isReady ? " comments-widget--ready" : " comments-widget--loading"
+          }`}
+        >
           {mounted && (
             <Giscus
               key={widgetKey}

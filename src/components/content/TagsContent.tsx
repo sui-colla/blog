@@ -1,40 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import PageShell from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
+import type { PostMeta } from "@/lib/content/posts";
 
 interface Props {
   tags: { tag: string; count: number }[];
+  popularPosts?: PostMeta[];
 }
 
-export default function TagsContent({ tags }: Props) {
+export default function TagsContent({ tags, popularPosts = [] }: Props) {
   const { t } = useI18n();
 
   return (
-    <div className="page-layout">
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-        <span className="text-zinc-950 dark:text-zinc-50">
-          {t("tags.title")}
-        </span>
-      </h1>
-      <p className="mt-3 text-zinc-500 dark:text-zinc-400">
-        {t("tags.description")}
-      </p>
+    <PageShell tags={tags} popularPosts={popularPosts}>
+      <div className="card-base content-card">
+        <h1 className="page-title">{t("tags.title")}</h1>
+        <p className="page-lead">{t("tags.description")}</p>
 
-      <div className="mt-10 flex flex-wrap gap-3">
-        {tags.map(({ tag, count }) => (
-          <Link
-            key={tag}
-            href={`/tags/${encodeURIComponent(tag)}`}
-            className="group inline-flex items-center gap-1.5 rounded-full bg-teal-50 px-4 py-2 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/40"
-          >
-            {tag}
-            <span className="text-xs text-teal-700 dark:text-teal-400">
-              {count}
-            </span>
-          </Link>
-        ))}
+        <div className="widget__chips" style={{ marginTop: "1.25rem" }}>
+          {tags.map(({ tag, count }) => (
+            <Link
+              key={tag}
+              href={`/tags/${encodeURIComponent(tag)}`}
+              className="tag-chip"
+              aria-label={`${tag} · ${count}`}
+            >
+              {tag}
+              <span style={{ marginLeft: "0.4rem", opacity: 0.6 }}>{count}</span>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
+    </PageShell>
   );
 }
