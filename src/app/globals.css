@@ -38,6 +38,20 @@
   /* Fuwari PAGE_WIDTH = 75rem */
   --page-width: 75rem;
   --content-delay: 150ms;
+  /* 导航栏高度：首页壁纸用它抵消顶部占位，让壁纸从视口顶端开始 */
+  --nav-height: 4.5rem;
+
+  /* 玻璃卡片与水晶背景（暗色主题启用） */
+  --card-border-color: transparent;
+  --card-border-width: 0px;
+  --card-shadow: none;
+  --card-backdrop: none;
+  --crystal-opacity: 0;
+  --crystal-noise-opacity: 0;
+
+  /* 黑色水晶光标：PNG 32×32，热点在箭头顶端（2,2） */
+  --cursor-arrow: url("/cursors/crystal-arrow.png") 2 2, auto;
+  --cursor-pointer: url("/cursors/crystal-pointer.png") 2 2, pointer;
 
   --primary: oklch(0.70 0.14 var(--hue));
   --page-bg: oklch(0.95 0.01 var(--hue));
@@ -110,113 +124,58 @@
   );
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --primary: oklch(0.75 0.14 var(--hue));
-    --page-bg: oklch(0.16 0.014 var(--hue));
-    --card-bg: oklch(0.23 0.015 var(--hue));
-
-    --btn-content: oklch(0.75 0.1 var(--hue));
-
-    --btn-regular-bg: oklch(0.33 0.035 var(--hue));
-    --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
-    --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
-
-    --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
-    --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
-
-    --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
-    --btn-card-bg-active: oklch(0.35 0.035 var(--hue));
-
-    --line-divider: rgba(255, 255, 255, 0.08);
-    --line-color: rgba(255, 255, 255, 0.1);
-    --meta-divider: rgba(255, 255, 255, 0.2);
-
-    --selection-bg: oklch(0.40 0.08 var(--hue));
-
-    --link-underline: oklch(0.40 0.08 var(--hue));
-    --link-hover: oklch(0.40 0.08 var(--hue));
-    --link-active: oklch(0.35 0.07 var(--hue));
-
-    --float-panel-bg: oklch(0.19 0.015 var(--hue));
-
-    --toc-badge-bg: var(--btn-regular-bg);
-    --toc-btn-hover: oklch(0.22 0.02 var(--hue));
-    --toc-btn-active: oklch(0.25 0.02 var(--hue));
-    --toc-item-active: oklch(0.35 0.07 var(--hue));
-
-    --text-90: rgba(255, 255, 255, 0.9);
-    --text-75: rgba(255, 255, 255, 0.75);
-    --text-50: rgba(255, 255, 255, 0.5);
-    --text-30: rgba(255, 255, 255, 0.3);
-    --text-25: rgba(255, 255, 255, 0.25);
-
-    --neutral-400: oklch(0.7 0.01 var(--hue));
-
-    --color-selection-bar: linear-gradient(
-      to right,
-      oklch(0.7 0.1 0),
-      oklch(0.7 0.1 30),
-      oklch(0.7 0.1 60),
-      oklch(0.7 0.1 90),
-      oklch(0.7 0.1 120),
-      oklch(0.7 0.1 150),
-      oklch(0.7 0.1 180),
-      oklch(0.7 0.1 210),
-      oklch(0.7 0.1 240),
-      oklch(0.7 0.1 270),
-      oklch(0.7 0.1 300),
-      oklch(0.7 0.1 330),
-      oklch(0.7 0.1 360)
-    );
-  }
-}
-
+/* 暗色为站点默认主题；亮色沿用 :root 的基础令牌 */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --primary: oklch(0.75 0.14 var(--hue));
-  --page-bg: oklch(0.16 0.014 var(--hue));
-  --card-bg: oklch(0.23 0.015 var(--hue));
+  /* 墨黑水晶：不是纯黑，保留一点冷蓝色阶；卡片是半透明烟水晶玻璃 */
+  --page-bg: #07080d;
+  --card-bg: rgba(20, 25, 38, 0.58);
+  --card-border-color: rgba(184, 212, 255, 0.14);
+  --card-border-width: 1px;
+  --card-shadow: 0 28px 70px -42px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --card-backdrop: blur(18px) saturate(140%);
+  --crystal-opacity: 1;
+  --crystal-noise-opacity: 0.055;
 
-  --btn-content: oklch(0.75 0.1 var(--hue));
+  --primary: oklch(0.78 0.13 var(--hue));
+  --btn-content: oklch(0.86 0.09 var(--hue));
 
-  --btn-regular-bg: oklch(0.33 0.035 var(--hue));
-  --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
-  --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
+  --btn-regular-bg: rgba(255, 255, 255, 0.055);
+  --btn-regular-bg-hover: rgba(255, 255, 255, 0.09);
+  --btn-regular-bg-active: rgba(255, 255, 255, 0.13);
 
-  --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
-  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
+  --btn-plain-bg-hover: rgba(255, 255, 255, 0.055);
+  --btn-plain-bg-active: rgba(255, 255, 255, 0.09);
 
-  --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
-  --btn-card-bg-active: oklch(0.35 0.035 var(--hue));
+  --btn-card-bg-hover: rgba(255, 255, 255, 0.045);
+  --btn-card-bg-active: rgba(255, 255, 255, 0.08);
 
-  --line-divider: rgba(255, 255, 255, 0.08);
-  --line-color: rgba(255, 255, 255, 0.1);
-  --meta-divider: rgba(255, 255, 255, 0.2);
+  --line-divider: rgba(200, 220, 255, 0.09);
+  --line-color: rgba(200, 220, 255, 0.12);
+  --meta-divider: rgba(200, 220, 255, 0.22);
 
-  --selection-bg: oklch(0.40 0.08 var(--hue));
+  --selection-bg: rgba(110, 160, 255, 0.32);
 
-  --link-underline: oklch(0.40 0.08 var(--hue));
-  --link-hover: oklch(0.40 0.08 var(--hue));
-  --link-active: oklch(0.35 0.07 var(--hue));
+  --link-underline: rgba(130, 175, 255, 0.28);
+  --link-hover: rgba(130, 175, 255, 0.12);
+  --link-active: rgba(130, 175, 255, 0.18);
 
-  --float-panel-bg: oklch(0.19 0.015 var(--hue));
+  --float-panel-bg: rgba(12, 15, 24, 0.88);
 
   --toc-badge-bg: var(--btn-regular-bg);
-  --toc-btn-hover: oklch(0.22 0.02 var(--hue));
-  --toc-btn-active: oklch(0.25 0.02 var(--hue));
-  --toc-item-active: oklch(0.35 0.07 var(--hue));
+  --toc-btn-hover: rgba(255, 255, 255, 0.045);
+  --toc-btn-active: rgba(255, 255, 255, 0.08);
+  --toc-item-active: oklch(0.78 0.1 var(--hue));
 
-  --text-90: rgba(255, 255, 255, 0.9);
-  --text-75: rgba(255, 255, 255, 0.75);
-  --text-50: rgba(255, 255, 255, 0.5);
-  --text-30: rgba(255, 255, 255, 0.3);
-  --text-25: rgba(255, 255, 255, 0.25);
+  --text-90: rgba(240, 246, 255, 0.94);
+  --text-75: rgba(236, 243, 255, 0.78);
+  --text-50: rgba(220, 232, 255, 0.54);
+  --text-30: rgba(210, 226, 255, 0.32);
+  --text-25: rgba(210, 226, 255, 0.24);
 
-  --neutral-400: oklch(0.7 0.01 var(--hue));
+  --neutral-400: oklch(0.72 0.015 var(--hue));
 
   --color-selection-bar: linear-gradient(
     to right,
@@ -251,6 +210,8 @@ html {
   scroll-padding-top: 6rem;
   -webkit-text-size-adjust: 100%;
   font-size: 14px;
+  background-color: var(--page-bg);
+  transition: background-color 0.35s ease;
 }
 
 @media (min-width: 768px) {
@@ -262,12 +223,80 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--page-bg);
+  background: transparent;
   color: var(--text-75);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: var(--cursor-arrow);
+  transition: color 0.2s ease;
+}
+
+/* 墨黑水晶底：
+   1) 冷色光晕 + 放射切面 + 菱形晶格；
+   2) 极细颗粒，模拟磨砂水晶表面。
+   两层都固定在视口，不随页面滚动，也不拦截指针事件。 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--crystal-opacity);
+  transition: opacity 0.35s ease;
+  background-image:
+    radial-gradient(
+      ellipse 80% 60% at 8% -12%,
+      rgba(96, 142, 255, 0.22) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 92% 4%,
+      rgba(200, 225, 255, 0.12) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 50% 115%,
+      rgba(70, 100, 220, 0.16) 0%,
+      transparent 65%
+    ),
+    conic-gradient(
+      from 212deg at 10% 16%,
+      transparent 0deg 26deg,
+      rgba(170, 205, 255, 0.065) 26.5deg 27deg,
+      transparent 27.5deg 360deg
+    ),
+    conic-gradient(
+      from 32deg at 88% 76%,
+      transparent 0deg 18deg,
+      rgba(255, 255, 255, 0.05) 18.5deg 19deg,
+      transparent 19.5deg 360deg
+    ),
+    linear-gradient(
+      125deg,
+      transparent 47.8%,
+      rgba(190, 215, 255, 0.045) 48%,
+      transparent 48.3%
+    ),
+    linear-gradient(
+      55deg,
+      transparent 47.8%,
+      rgba(255, 255, 255, 0.032) 48%,
+      transparent 48.3%
+    );
+  background-size: auto, auto, auto, auto, auto, 260px 260px, 420px 420px;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--crystal-noise-opacity);
+  background-image: url("/images/crystal-grain.svg");
+  background-size: 180px 180px;
+  mix-blend-mode: screen;
 }
 
 a {
@@ -277,6 +306,37 @@ a {
 
 button {
   font-family: inherit;
+}
+
+/* 黑色水晶光标：只对精确指针设备启用，触屏保持系统行为 */
+@media (hover: hover) and (pointer: fine) {
+  a,
+  button,
+  summary,
+  label,
+  select,
+  [role="button"],
+  .btn-plain,
+  .btn-regular,
+  .btn-card,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="range"] {
+    cursor: var(--cursor-pointer);
+  }
+
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="url"],
+  input[type="password"],
+  input[type="number"],
+  textarea {
+    cursor: text;
+  }
 }
 
 h1,
@@ -368,10 +428,60 @@ strong {
    -------------------------------------------------------------------------- */
 
 .card-base {
+  position: relative;
   overflow: hidden;
+  border: var(--card-border-width) solid var(--card-border-color);
   border-radius: var(--radius-large);
   background: var(--card-bg);
-  transition: background-color 0.2s ease;
+  box-shadow: var(--card-shadow);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 烟水晶玻璃：左上角冷光，加上 1px 渐变高光边 */
+[data-theme="dark"] .card-base,
+[data-theme="dark"] .post-card,
+[data-theme="dark"] .navbar {
+  background-image:
+    radial-gradient(
+      120% 100% at 0% 0%,
+      rgba(135, 180, 255, 0.1) 0%,
+      transparent 46%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 30%);
+}
+
+/* 导航栏在滚动时要压住壁纸/正文，玻璃底比普通卡片更实一点 */
+[data-theme="dark"] .navbar {
+  background-color: rgba(8, 10, 17, 0.74);
+}
+
+@supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+  [data-theme="dark"] .card-base::after,
+  [data-theme="dark"] .post-card::after,
+  [data-theme="dark"] .navbar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(225, 240, 255, 0.3) 0%,
+      rgba(120, 160, 255, 0.05) 32%,
+      rgba(120, 160, 255, 0.03) 68%,
+      rgba(210, 235, 255, 0.2) 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 }
 
 /* Fuwari expand-animation：hover 时缩放淡入的底色层 */
@@ -383,7 +493,7 @@ strong {
   justify-content: center;
   background: none;
   color: var(--text-75);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: color 0.2s ease;
 }
 
@@ -427,7 +537,7 @@ strong {
   border-radius: 0.5rem;
   background: var(--btn-regular-bg);
   color: var(--btn-content);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.2s ease, color 0.2s ease,
     transform 0.1s ease;
 }
@@ -526,6 +636,7 @@ strong {
 }
 
 .navbar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -533,8 +644,15 @@ strong {
   height: 4.5rem;
   margin: 0 auto;
   padding: 0 1rem;
+  border: var(--card-border-width) solid var(--card-border-color);
+  border-top: 0;
   border-radius: 0 0 var(--radius-large) var(--radius-large);
   background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .main-wrap {
@@ -568,6 +686,70 @@ strong {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   4.1 首页壁纸（对应 Fuwari MainGridLayout.astro 的 banner）
+   壁纸铺满视口宽度并从页面顶端开始，sticky 导航栏浮在其上；
+   桌面端 Profile 卡向上压住壁纸下沿，复刻 Fuwari 的层叠关系。
+   -------------------------------------------------------------------------- */
+
+.home-banner {
+  position: relative;
+  width: 100%;
+  height: clamp(20rem, 56vh, 34rem);
+  margin-top: calc(-1 * var(--nav-height));
+  overflow: hidden;
+  border-radius: 0 0 var(--radius-large) var(--radius-large);
+  background: #07080d;
+  box-shadow: inset 0 -1px 0 rgba(210, 230, 255, 0.1);
+}
+
+.home-banner__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 64% 20%;
+}
+
+/* 壁纸下沿压暗 + 一道很淡的斜向水晶反光 */
+.home-banner__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 28%,
+      rgba(200, 225, 255, 0.055) 44%,
+      transparent 56%
+    ),
+    linear-gradient(
+      to top,
+      rgba(5, 7, 12, 0.74) 0%,
+      rgba(5, 7, 12, 0.26) 28%,
+      transparent 48%
+    );
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .home-banner {
+    height: clamp(16rem, 40vh, 22rem);
+    border-radius: 0 0 0.75rem 0.75rem;
+  }
+
+  .home-banner__image {
+    object-position: 66% 18%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-page .sidebar__profile {
+    position: relative;
+    z-index: 2;
+    margin-top: -5rem;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -649,7 +831,7 @@ strong {
   background: rgba(0, 0, 0, 0.04);
   transition: background-color 0.2s ease, width 0.3s ease;
   width: 10rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .navbar-search:hover,
@@ -800,6 +982,11 @@ strong {
   transform: scale(1.03);
 }
 
+[data-theme="dark"] .profile-card__avatar-link {
+  box-shadow: 0 0 0 1px rgba(190, 216, 255, 0.13),
+    0 24px 50px -28px rgba(0, 0, 0, 0.9);
+}
+
 .profile-card__inner {
   padding: 0 0.5rem;
 }
@@ -921,7 +1108,7 @@ strong {
   background: var(--btn-regular-bg);
   color: var(--btn-content);
   font-size: 0.8125rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.2s ease;
 }
 
@@ -1076,7 +1263,7 @@ strong {
   background: var(--btn-regular-bg);
   color: var(--btn-content);
   font-weight: 700;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   list-style: none;
 }
 
@@ -1158,8 +1345,14 @@ strong {
   flex-direction: column;
   width: 100%;
   overflow: hidden;
+  border: var(--card-border-width) solid var(--card-border-color);
   border-radius: var(--radius-large);
   background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 /* pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 */
@@ -1900,7 +2093,7 @@ a.meta-text:hover {
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -2311,7 +2504,7 @@ a.meta-text:hover {
   border-radius: 0.5rem;
   background: transparent;
   color: var(--text-75);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: color 0.2s ease;
 }
 
@@ -2397,7 +2590,7 @@ a.meta-text:hover {
   background: var(--btn-regular-bg);
   color: var(--btn-content);
   font-size: 1rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .search-error {
@@ -2439,7 +2632,7 @@ a.meta-text:hover {
   color: var(--primary);
   font-size: 0.75rem;
   font-weight: 700;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .search-results {
@@ -2462,7 +2655,7 @@ a.meta-text:hover {
 .search-result-item {
   padding: 0.625rem 0.75rem;
   border-radius: 0.5rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .search-result-item:hover,
@@ -2536,7 +2729,7 @@ a.meta-text:hover {
 }
 
 .search-hints__tags .tag-chip {
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .search-footer {
@@ -2622,7 +2815,7 @@ a.meta-text:hover {
   color: #fff;
   font-size: 0.875rem;
   font-weight: 700;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
@@ -2736,7 +2929,7 @@ a.meta-text:hover {
   background: var(--btn-regular-bg);
   color: var(--btn-content);
   font-weight: 700;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .comments-widget iframe {
@@ -2817,7 +3010,7 @@ a.meta-text:hover {
   background: var(--btn-regular-bg);
   color: var(--btn-content);
   font-size: 0.8125rem;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .share-btn:hover {
@@ -2894,7 +3087,7 @@ a.meta-text:hover {
   color: var(--btn-content);
   font-size: 0.8125rem;
   font-weight: 700;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .donate-btn--wechat {
@@ -3030,7 +3223,7 @@ a.meta-text:hover {
   border-radius: 1rem;
   background: var(--card-bg);
   color: var(--primary);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -3089,7 +3282,7 @@ a.meta-text:hover {
   border-radius: 9999px;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .lightbox-close {
@@ -3254,6 +3447,21 @@ a.meta-text:hover {
   animation: panel-in 0.2s ease-out;
 }
 
+.mobile-navigation,
+.search-panel,
+.hue-panel {
+  border: var(--card-border-width) solid var(--card-border-color);
+  -webkit-backdrop-filter: var(--card-backdrop);
+  backdrop-filter: var(--card-backdrop);
+}
+
+[data-theme="dark"] .mobile-navigation,
+[data-theme="dark"] .search-panel,
+[data-theme="dark"] .hue-panel {
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
 /* 标题行：标题+重置按钮 左，色相数值右（w-10 h-7 圆角方块） */
 .hue-panel__head {
   display: flex;
@@ -3295,7 +3503,7 @@ a.meta-text:hover {
   border-radius: 0.375rem;
   background: var(--btn-regular-bg);
   color: var(--btn-content);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: background-color 0.2s ease, transform 0.1s ease,
     opacity 0.2s ease;
 }
@@ -3354,7 +3562,7 @@ a.meta-text:hover {
   margin: 0;
   appearance: none;
   background: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 .hue-range::-webkit-slider-thumb {
@@ -3407,6 +3615,10 @@ a.meta-text:hover {
 }
 
 @media (max-width: 767px) {
+  :root {
+    --nav-height: 4rem;
+  }
+
   .navbar {
     height: 4rem;
     padding: 0 0.5rem;

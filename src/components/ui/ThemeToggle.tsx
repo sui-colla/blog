@@ -1,38 +1,31 @@
 "use client";
 
 /**
- * 主题切换按钮（system → light → dark → system 循环切换）
+ * 主题切换按钮（dark ↔ light）
  *
- * - 偏好持久化到 localStorage("theme")
- * - "system" 模式移除 data-theme 属性，让 CSS 的 prefers-color-scheme 媒体查询生效
- * - "light"/"dark" 模式显式设置 data-theme，覆盖系统偏好
+ * - 默认黑色水晶暗色主题；偏好持久化到 localStorage("theme")
+ * - 不再使用 system：系统亮色不应该把站点从黑色水晶带回白底
+ * - light 作为显式可选项保留，方便需要高对比阅读时切换
  * - 未 mounted 时渲染空占位符，防止 SSR 水合不匹配
  */
 import { useEffect, useState } from "react";
-import { Laptop, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
-type Theme = "system" | "light" | "dark";
+type Theme = "light" | "dark";
 
 function getStoredTheme(): Theme {
-  if (typeof window === "undefined") return "system";
-  const stored = localStorage.getItem("theme");
-  if (stored === "light" || stored === "dark") return stored;
-  return "system";
+  if (typeof window === "undefined") return "dark";
+  return localStorage.getItem("theme") === "light" ? "light" : "dark";
 }
 
 function applyTheme(theme: Theme) {
-  const root = document.documentElement;
-  if (theme === "system") {
-    root.removeAttribute("data-theme");
-  } else {
-    root.setAttribute("data-theme", theme);
-  }
+  document.documentElement.setAttribute("data-theme", theme);
 }
 
 export default function ThemeToggle() {
   const { t } = useI18n();
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   // 初始化：从 localStorage 读取并应用
@@ -50,7 +43,7 @@ export default function ThemeToggle() {
 
   // 切换主题
   function cycleTheme() {
-    const next: Theme = theme === "system" ? "light" : theme === "light" ? "dark" : "system";
+    const next: Theme = theme === "light" ? "dark" : "light";
     setTheme(next);
     applyTheme(next);
     localStorage.setItem("theme", next);
@@ -62,13 +55,11 @@ export default function ThemeToggle() {
   }
 
   const icons: Record<Theme, React.ReactNode> = {
-    system: <Laptop size={16} aria-hidden="true" />,
     light: <Sun size={16} aria-hidden="true" />,
     dark: <Moon size={16} aria-hidden="true" />,
   };
 
   const labels: Record<Theme, string> = {
-    system: t("theme.system"),
     light: t("theme.light"),
     dark: t("theme.dark"),
   };

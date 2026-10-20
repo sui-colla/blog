@@ -76,6 +76,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteConfig.language}
+      data-theme="dark"
       className="antialiased"
       suppressHydrationWarning
     >
@@ -84,11 +85,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(websiteJsonLd) }}
         />
-        {/* FOUC 防护：在浏览器渲染前同步读取 localStorage 中的主题与色相偏好，
-            避免页面先显示亮色/默认色相再跳变 */}
+        {/* FOUC 防护：默认使用黑色水晶暗色主题，
+            只有用户显式选过 light 时才恢复亮色；同时恢复色相偏好 */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);var h=parseInt(localStorage.getItem("hue")||"250",10);if(!(h>=0&&h<=360))h=250;document.documentElement.style.setProperty("--hue",String(h))}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.setAttribute("data-theme",t);var h=parseInt(localStorage.getItem("hue")||"250",10);if(!(h>=0&&h<=360))h=250;document.documentElement.style.setProperty("--hue",String(h))}catch(e){document.documentElement.setAttribute("data-theme","dark")}})()`,
           }}
         />
       </head>
