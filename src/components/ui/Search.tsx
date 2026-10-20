@@ -322,6 +322,7 @@ export default function Search() {
 
   return (
     <>
+      {/* 桌面：Fuwari 式导航栏搜索框（hidden lg:flex）；移动端：图标按钮 */}
       <button
         ref={triggerRef}
         type="button"
@@ -329,15 +330,25 @@ export default function Search() {
           loadIndex();
           setOpen(true);
         }}
-        className="search-trigger"
+        className="navbar-search"
         aria-label={t("search.ariaLabel")}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? "search-dialog" : undefined}
       >
-        <SearchIcon className="search-trigger__icon" size={18} aria-hidden="true" />
-        <span className="search-trigger__label">{t("search.label")}</span>
-        <kbd className="search-trigger__kbd">⌘K</kbd>
+        <SearchIcon className="navbar-search__icon" aria-hidden="true" />
+        <span className="navbar-search__text">{t("search.label")}</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          loadIndex();
+          setOpen(true);
+        }}
+        className="search-trigger navbar-search-btn"
+        aria-label={t("search.ariaLabel")}
+      >
+        <SearchIcon className="search-trigger__icon" aria-hidden="true" />
       </button>
 
       {open && (

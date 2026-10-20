@@ -31,13 +31,18 @@ const iconMap = {
 
 function Widget({
   title,
+  delay = 0,
   children,
 }: {
   title: string;
+  delay?: number;
   children: React.ReactNode;
 }) {
   return (
-    <div className="card-base widget">
+    <div
+      className="card-base widget onload-animation"
+      style={{ animationDelay: `calc(var(--content-delay) + ${delay}ms)` }}
+    >
       <div className="widget__title">{title}</div>
       <div className="widget__body">{children}</div>
     </div>
@@ -48,7 +53,7 @@ export default function SideBar({ tags = [], popularPosts = [], headings = [] }:
   const { t } = useI18n();
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar onload-animation">
       <div className="sidebar__profile">
         <div className="card-base profile-card">
           <Link
@@ -108,7 +113,7 @@ export default function SideBar({ tags = [], popularPosts = [], headings = [] }:
         )}
 
         {tags.length > 0 && (
-          <Widget title={t("nav.tags")}>
+          <Widget title={t("nav.tags")} delay={headings.length > 0 ? 50 : 0}>
             <div className="widget__chips">
               {tags.map(({ tag }) => (
                 <Link
@@ -124,7 +129,10 @@ export default function SideBar({ tags = [], popularPosts = [], headings = [] }:
         )}
 
         {popularPosts.length > 0 && (
-          <Widget title={t("popular.title")}>
+          <Widget
+            title={t("popular.title")}
+            delay={headings.length > 0 ? 100 : 50}
+          >
             <div>
               {popularPosts.slice(0, 5).map((post) => (
                 <Link

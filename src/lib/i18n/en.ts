@@ -155,6 +155,7 @@ const en: Record<string, string> = {
   // Theme
   "theme.system": "System",
   "theme.hue": "Accent hue",
+  "theme.reset": "Reset to default",
   "theme.light": "Light",
   "theme.dark": "Dark",
   "theme.ariaPrefix": "Current: ",
