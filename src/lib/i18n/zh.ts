@@ -155,6 +155,7 @@ const zh: Record<string, string> = {
   // 主题切换
   "theme.system": "跟随系统",
   "theme.hue": "主题色相",
+  "theme.reset": "恢复默认",
   "theme.light": "浅色模式",
   "theme.dark": "深色模式",
   "theme.ariaPrefix": "当前：",

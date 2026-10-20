@@ -4,11 +4,12 @@
  * 顶部导航（对应 Fuwari Navbar.astro）
  *
  * 白色卡片贴在视口顶端，只有下方两个圆角；左侧品牌使用主色，
- * 中间导航为 btn-plain，右侧是搜索 / 主题 / 语言 / 移动端菜单。
+ * 中间导航为 btn-plain，右侧是搜索（桌面框/移动按钮）/ 色相 / 主题 / 语言 / 移动端菜单。
+ * 移动端菜单是 fixed right-4 的 float-panel，每行右侧带箭头（Fuwari NavMenuPanel）。
  */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, Home, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Home, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Search from "@/components/ui/Search";
 import HuePicker from "@/components/ui/HuePicker";
@@ -98,6 +99,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
+                  <ChevronRight size={20} aria-hidden="true" />
                 </Link>
               ))}
               <a
@@ -108,6 +110,7 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               >
                 GitHub
+                <ArrowUpRight size={14} aria-hidden="true" />
               </a>
             </div>
           </div>

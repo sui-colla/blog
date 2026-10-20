@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Xingye — Fuwari 风格设计系统
-   视觉迁移自 https://github.com/saicaca/fuwari（MIT），按 Next.js 组件重实现。
+   Xingye — Fuwari 1:1 视觉复刻
+   视觉规范逐项移植自 https://github.com/saicaca/fuwari（MIT）
    颜色全部基于 --hue 的 oklch 变量，暗色模式与浅色模式共用同一套令牌。
+   所有尺寸/间距/圆角/动画时序均按 Fuwari 源码（Tailwind rem 体系）换算。
    ========================================================================== */
 
 @custom-variant dark {
@@ -21,12 +22,12 @@
   --font-sans: "Roboto", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
     system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo,
-    Consolas, monospace;
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --color-accent: oklch(0.7 0.14 250);
 }
 
 /* --------------------------------------------------------------------------
-   1. Design tokens（对应 Fuwari src/styles/variables.styl）
+   1. Design tokens（对应 Fuwari src/styles/variables.styl + constants.ts）
    -------------------------------------------------------------------------- */
 
 :root {
@@ -34,10 +35,11 @@
 
   --hue: 250;
   --radius-large: 1rem;
+  /* Fuwari PAGE_WIDTH = 75rem */
   --page-width: 75rem;
   --content-delay: 150ms;
 
-  --primary: oklch(0.7 0.14 var(--hue));
+  --primary: oklch(0.70 0.14 var(--hue));
   --page-bg: oklch(0.95 0.01 var(--hue));
   --card-bg: #fff;
 
@@ -65,21 +67,21 @@
 
   --inline-code-bg: var(--btn-regular-bg);
   --inline-code-color: var(--btn-content);
-  --selection-bg: oklch(0.9 0.05 var(--hue));
-  --codeblock-selection: oklch(0.4 0.08 var(--hue));
+  --selection-bg: oklch(0.90 0.05 var(--hue));
+  --codeblock-selection: oklch(0.40 0.08 var(--hue));
   --codeblock-bg: oklch(0.17 0.015 var(--hue));
   --codeblock-topbar-bg: oklch(0.3 0.02 var(--hue));
 
   --link-underline: oklch(0.93 0.04 var(--hue));
   --link-hover: oklch(0.95 0.025 var(--hue));
-  --link-active: oklch(0.9 0.05 var(--hue));
+  --link-active: oklch(0.90 0.05 var(--hue));
 
   --float-panel-bg: #fff;
 
-  --toc-badge-bg: oklch(0.89 0.05 var(--hue));
+  --toc-badge-bg: oklch(0.89 0.050 var(--hue));
   --toc-btn-hover: oklch(0.926 0.015 var(--hue));
-  --toc-btn-active: oklch(0.9 0.015 var(--hue));
-  --toc-item-active: oklch(0.7 0.13 var(--hue));
+  --toc-btn-active: oklch(0.90 0.015 var(--hue));
+  --toc-item-active: oklch(0.70 0.13 var(--hue));
 
   --text-90: rgba(0, 0, 0, 0.9);
   --text-75: rgba(0, 0, 0, 0.75);
@@ -88,6 +90,24 @@
   --text-25: rgba(0, 0, 0, 0.25);
 
   --neutral-400: oklch(0.65 0.01 var(--hue));
+
+  /* Fuwari rainbow-light（DisplaySettings 滑块背景） */
+  --color-selection-bar: linear-gradient(
+    to right,
+    oklch(0.8 0.1 0),
+    oklch(0.8 0.1 30),
+    oklch(0.8 0.1 60),
+    oklch(0.8 0.1 90),
+    oklch(0.8 0.1 120),
+    oklch(0.8 0.1 150),
+    oklch(0.8 0.1 180),
+    oklch(0.8 0.1 210),
+    oklch(0.8 0.1 240),
+    oklch(0.8 0.1 270),
+    oklch(0.8 0.1 300),
+    oklch(0.8 0.1 330),
+    oklch(0.8 0.1 360)
+  );
 }
 
 @media (prefers-color-scheme: dark) {
@@ -99,11 +119,12 @@
     --card-bg: oklch(0.23 0.015 var(--hue));
 
     --btn-content: oklch(0.75 0.1 var(--hue));
+
     --btn-regular-bg: oklch(0.33 0.035 var(--hue));
     --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
     --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
 
-    --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
+    --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
     --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
 
     --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
@@ -113,12 +134,10 @@
     --line-color: rgba(255, 255, 255, 0.1);
     --meta-divider: rgba(255, 255, 255, 0.2);
 
-    --selection-bg: oklch(0.4 0.08 var(--hue));
-    --codeblock-bg: oklch(0.17 0.015 var(--hue));
-    --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue));
+    --selection-bg: oklch(0.40 0.08 var(--hue));
 
-    --link-underline: oklch(0.4 0.08 var(--hue));
-    --link-hover: oklch(0.4 0.08 var(--hue));
+    --link-underline: oklch(0.40 0.08 var(--hue));
+    --link-hover: oklch(0.40 0.08 var(--hue));
     --link-active: oklch(0.35 0.07 var(--hue));
 
     --float-panel-bg: oklch(0.19 0.015 var(--hue));
@@ -135,6 +154,23 @@
     --text-25: rgba(255, 255, 255, 0.25);
 
     --neutral-400: oklch(0.7 0.01 var(--hue));
+
+    --color-selection-bar: linear-gradient(
+      to right,
+      oklch(0.7 0.1 0),
+      oklch(0.7 0.1 30),
+      oklch(0.7 0.1 60),
+      oklch(0.7 0.1 90),
+      oklch(0.7 0.1 120),
+      oklch(0.7 0.1 150),
+      oklch(0.7 0.1 180),
+      oklch(0.7 0.1 210),
+      oklch(0.7 0.1 240),
+      oklch(0.7 0.1 270),
+      oklch(0.7 0.1 300),
+      oklch(0.7 0.1 330),
+      oklch(0.7 0.1 360)
+    );
   }
 }
 
@@ -146,11 +182,12 @@
   --card-bg: oklch(0.23 0.015 var(--hue));
 
   --btn-content: oklch(0.75 0.1 var(--hue));
+
   --btn-regular-bg: oklch(0.33 0.035 var(--hue));
   --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue));
   --btn-regular-bg-active: oklch(0.43 0.045 var(--hue));
 
-  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue));
+  --btn-plain-bg-hover: oklch(0.30 0.035 var(--hue));
   --btn-plain-bg-active: oklch(0.27 0.025 var(--hue));
 
   --btn-card-bg-hover: oklch(0.3 0.03 var(--hue));
@@ -160,12 +197,10 @@
   --line-color: rgba(255, 255, 255, 0.1);
   --meta-divider: rgba(255, 255, 255, 0.2);
 
-  --selection-bg: oklch(0.4 0.08 var(--hue));
-  --codeblock-bg: oklch(0.17 0.015 var(--hue));
-  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue));
+  --selection-bg: oklch(0.40 0.08 var(--hue));
 
-  --link-underline: oklch(0.4 0.08 var(--hue));
-  --link-hover: oklch(0.4 0.08 var(--hue));
+  --link-underline: oklch(0.40 0.08 var(--hue));
+  --link-hover: oklch(0.40 0.08 var(--hue));
   --link-active: oklch(0.35 0.07 var(--hue));
 
   --float-panel-bg: oklch(0.19 0.015 var(--hue));
@@ -182,10 +217,27 @@
   --text-25: rgba(255, 255, 255, 0.25);
 
   --neutral-400: oklch(0.7 0.01 var(--hue));
+
+  --color-selection-bar: linear-gradient(
+    to right,
+    oklch(0.7 0.1 0),
+    oklch(0.7 0.1 30),
+    oklch(0.7 0.1 60),
+    oklch(0.7 0.1 90),
+    oklch(0.7 0.1 120),
+    oklch(0.7 0.1 150),
+    oklch(0.7 0.1 180),
+    oklch(0.7 0.1 210),
+    oklch(0.7 0.1 240),
+    oklch(0.7 0.1 270),
+    oklch(0.7 0.1 300),
+    oklch(0.7 0.1 330),
+    oklch(0.7 0.1 360)
+  );
 }
 
 /* --------------------------------------------------------------------------
-   2. Base
+   2. Base（对应 Fuwari Layout.astro：<html class="text-[14px] md:text-[16px]">）
    -------------------------------------------------------------------------- */
 
 *,
@@ -294,7 +346,7 @@ strong {
   top: 0.75rem;
 }
 
-/* 文本层级（Fuwari text-90 / text-75 / text-50 / text-30） */
+/* 文本层级（Fuwari text-90 / text-75 / text-50 / text-30 / text-25） */
 .text-90 {
   color: var(--text-90);
 }
@@ -312,7 +364,7 @@ strong {
 }
 
 /* --------------------------------------------------------------------------
-   3. 基础组件（Fuwari card-base / btn-plain / btn-regular / btn-card）
+   3. 基础组件（Fuwari main.css card-base / btn-plain / btn-regular / btn-card）
    -------------------------------------------------------------------------- */
 
 .card-base {
@@ -322,6 +374,7 @@ strong {
   transition: background-color 0.2s ease;
 }
 
+/* Fuwari expand-animation：hover 时缩放淡入的底色层 */
 .btn-plain {
   position: relative;
   z-index: 0;
@@ -361,6 +414,11 @@ strong {
   background: var(--btn-plain-bg-active);
 }
 
+/* Fuwari scale-animation：active 按压缩放 */
+.btn-plain:active {
+  transform: scale(0.95);
+}
+
 .btn-regular {
   display: inline-flex;
   align-items: center;
@@ -384,6 +442,17 @@ strong {
   transform: scale(0.95);
 }
 
+/* 暗色模式下 Fuwari 的 btn-regular 文字是 white/75 */
+[data-theme="dark"] .btn-regular {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn-regular {
+    color: rgba(255, 255, 255, 0.75);
+  }
+}
+
 .btn-card {
   display: flex;
   align-items: center;
@@ -400,12 +469,22 @@ strong {
 
 .btn-card:active {
   background: var(--btn-card-bg-active);
-  transform: scale(0.95);
+  transform: scale(0.85);
 }
 
 .btn-card.disabled {
   pointer-events: none;
-  color: var(--text-25);
+  color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .btn-card.disabled {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn-card.disabled {
+    color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .icon-btn {
@@ -414,8 +493,16 @@ strong {
   border-radius: 0.5rem;
 }
 
+@media (min-width: 768px) {
+  .icon-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+}
+
 /* --------------------------------------------------------------------------
    4. 布局（对应 MainGridLayout.astro）
+   grid-cols-[17.5rem_auto] gap-4 px-0 md:px-4，无 banner 时主面板距顶 5.5rem
    -------------------------------------------------------------------------- */
 
 .page-container {
@@ -424,11 +511,18 @@ strong {
   padding: 0 1rem;
 }
 
+/* Fuwari：navbar 卡片贴顶，只有下方圆角（!rounded-t-none） */
 .navbar-wrap {
   position: sticky;
   top: 0;
   z-index: 50;
-  padding: 0 1rem;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .navbar-wrap {
+    padding: 0 1rem;
+  }
 }
 
 .navbar {
@@ -446,7 +540,13 @@ strong {
 .main-wrap {
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: 1rem 1rem 0;
+  padding: 1rem 0 0;
+}
+
+@media (min-width: 768px) {
+  .main-wrap {
+    padding: 1rem 1rem 0;
+  }
 }
 
 .main-grid {
@@ -454,6 +554,13 @@ strong {
   grid-template-columns: 17.5rem auto;
   gap: 1rem;
   align-items: start;
+}
+
+/* Fuwari：移动端侧栏在内容下方（row-start-2 col-span-2） */
+@media (max-width: 1023px) {
+  .main-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .content-col {
@@ -464,7 +571,7 @@ strong {
 }
 
 /* --------------------------------------------------------------------------
-   5. Navbar
+   5. Navbar（对应 Navbar.astro）
    -------------------------------------------------------------------------- */
 
 .navbar__brand {
@@ -482,7 +589,7 @@ strong {
 .navbar__brand svg {
   width: 1.75rem;
   height: 1.75rem;
-  margin-bottom: 0.125rem;
+  margin-bottom: 0.25rem;
 }
 
 .navbar__links {
@@ -529,16 +636,81 @@ strong {
   }
 }
 
-/* 移动端下拉菜单（Fuwari float-panel） */
-.mobile-navigation {
+/* Fuwari 搜索框：hidden lg:flex h-11 mr-2 rounded-lg bg-black/[0.04] */
+.navbar-search {
+  display: none;
+  position: relative;
+  align-items: center;
+  height: 2.75rem;
+  margin-right: 0.5rem;
+  padding-left: 2.5rem;
+  padding-right: 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s ease, width 0.3s ease;
+  width: 10rem;
+  cursor: pointer;
+}
+
+.navbar-search:hover,
+.navbar-search:focus-within {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] .navbar-search,
+[data-theme="dark"] .navbar-search:hover,
+[data-theme="dark"] .navbar-search:focus-within {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .navbar-search:hover,
+[data-theme="dark"] .navbar-search:focus-within {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 1024px) {
+  .navbar-search {
+    display: flex;
+  }
+}
+
+.navbar-search__icon {
   position: absolute;
-  top: 4.75rem;
+  left: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--text-30);
+  pointer-events: none;
+}
+
+.navbar-search__text {
+  color: var(--text-50);
+  font-size: 0.875rem;
+}
+
+/* 移动端搜索按钮（lg 隐藏；双类选择器以覆盖后方的 .search-trigger display） */
+.search-trigger.navbar-search-btn {
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  .search-trigger.navbar-search-btn {
+    display: none;
+  }
+}
+
+/* 移动端下拉菜单（Fuwari NavMenuPanel float-panel：fixed right-4 p-2） */
+.mobile-navigation {
+  position: fixed;
+  top: 5.25rem;
   right: 1rem;
+  z-index: 60;
   width: 12rem;
   padding: 0.5rem;
   border-radius: var(--radius-large);
   background: var(--float-panel-bg);
-  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
   animation: panel-in 0.2s ease-out;
 }
 
@@ -550,11 +722,14 @@ strong {
 .mobile-navigation__link {
   display: flex;
   align-items: center;
-  height: 2.75rem;
-  padding: 0 0.75rem;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0.5rem 0 0.5rem 0.75rem;
+  padding-right: 0.25rem;
   border-radius: 0.5rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--text-75);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .mobile-navigation__link:hover {
@@ -562,10 +737,14 @@ strong {
   color: var(--primary);
 }
 
+.mobile-navigation__link svg {
+  color: var(--primary);
+}
+
 @keyframes panel-in {
   from {
     opacity: 0;
-    transform: translateY(-0.5rem);
+    transform: translateY(-0.25rem);
   }
   to {
     opacity: 1;
@@ -574,7 +753,7 @@ strong {
 }
 
 /* --------------------------------------------------------------------------
-   6. Sidebar — Profile 卡 + 小工具
+   6. Sidebar（对应 SideBar.astro / Profile.astro / WidgetLayout.astro）
    -------------------------------------------------------------------------- */
 
 .sidebar {
@@ -585,10 +764,12 @@ strong {
   margin-bottom: 1rem;
 }
 
+/* Profile.astro: card-base p-3 */
 .profile-card {
   padding: 0.75rem;
 }
 
+/* 头像链接：mt-1 mx-auto mb-3 max-w-[12rem] lg:max-w-none rounded-xl */
 .profile-card__avatar-link {
   position: relative;
   display: block;
@@ -623,6 +804,7 @@ strong {
   padding: 0 0.5rem;
 }
 
+/* font-bold text-xl text-center mb-1 */
 .profile-card__name {
   margin: 0 0 0.25rem;
   color: var(--text-90);
@@ -631,6 +813,7 @@ strong {
   text-align: center;
 }
 
+/* h-1 w-5 bg-[var(--primary)] mx-auto rounded-full mb-2 */
 .profile-card__rule {
   width: 1.25rem;
   height: 0.25rem;
@@ -646,6 +829,7 @@ strong {
   text-align: center;
 }
 
+/* btn-regular rounded-lg h-10 w-10 */
 .profile-card__links {
   display: flex;
   flex-wrap: wrap;
@@ -661,10 +845,11 @@ strong {
 }
 
 .profile-card__link svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
+/* SideBar.astro: sticky top-4 flex flex-col gap-4 */
 .sidebar__sticky {
   position: sticky;
   top: 1rem;
@@ -673,7 +858,7 @@ strong {
   gap: 1rem;
 }
 
-/* 小工具（WidgetLayout） */
+/* 小工具（WidgetLayout: pb-4 card-base，标题 ml-8 mt-4 mb-2） */
 .widget {
   padding-bottom: 1rem;
 }
@@ -686,6 +871,7 @@ strong {
   font-weight: 700;
 }
 
+/* before:w-1 before:h-4 before:rounded-md before:left-[-16px] before:top-[5.5px] */
 .widget__title::before {
   content: "";
   position: absolute;
@@ -701,6 +887,7 @@ strong {
   padding: 0 1rem;
 }
 
+/* 标签云（Tags.astro: flex gap-2 flex-wrap，ButtonTag: btn-regular h-8 px-3 rounded-lg） */
 .widget__chips {
   display: flex;
   flex-wrap: wrap;
@@ -742,6 +929,7 @@ strong {
   background: var(--btn-regular-bg-hover);
 }
 
+/* 分类/热门列表（ButtonLink.astro: h-10 pl-2 hover:pl-3 + badge） */
 .widget-link {
   display: flex;
   align-items: center;
@@ -770,6 +958,8 @@ strong {
   text-overflow: ellipsis;
 }
 
+/* badge: px-2 h-7 ml-4 min-w-[2rem] rounded-lg text-sm font-bold
+   bg-[var(--btn-regular-bg)] dark:bg-[var(--primary)] */
 .widget-link__badge {
   display: flex;
   align-items: center;
@@ -785,7 +975,19 @@ strong {
   font-weight: 700;
 }
 
-/* TOC（侧栏小工具版本） */
+[data-theme="dark"] .widget-link__badge {
+  background: var(--primary);
+  color: var(--deep-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .widget-link__badge {
+    background: var(--primary);
+    color: var(--deep-text);
+  }
+}
+
+/* TOC（侧栏小工具版本，对应 TOC.astro） */
 .toc-nav ul {
   display: flex;
   flex-direction: column;
@@ -806,6 +1008,7 @@ strong {
   display: none;
 }
 
+/* px-2 flex gap-2 min-h-9 rounded-xl py-2 */
 .toc-link {
   position: relative;
   display: flex;
@@ -831,6 +1034,7 @@ strong {
   font-weight: 700;
 }
 
+/* w-5 h-5 rounded-lg text-xs font-bold bg-[var(--toc-badge-bg)] */
 .toc-badge {
   display: flex;
   flex-shrink: 0;
@@ -849,6 +1053,7 @@ strong {
   background: transparent;
 }
 
+/* 二级：w-2 h-2 rounded-[0.1875rem] */
 .toc-link--sub .toc-badge::after {
   content: "";
   width: 0.5rem;
@@ -887,30 +1092,64 @@ strong {
   padding-top: 0.75rem;
 }
 
-@keyframes onload-fade {
-  from {
+/* --------------------------------------------------------------------------
+   入场动画（对应 Fuwari transition.css）
+   #navbar 0ms / #sidebar 100ms / #content-wrapper 150ms / .footer 250ms
+   keyframes: translateY(2rem) → 0, 300ms
+   -------------------------------------------------------------------------- */
+
+@keyframes fade-in-up {
+  0% {
+    transform: translateY(2rem);
     opacity: 0;
-    transform: translateY(0.75rem);
   }
-  to {
+  100% {
+    transform: translateY(0);
     opacity: 1;
-    transform: none;
   }
 }
 
 .onload-animation {
-  animation: onload-fade 0.6s ease both;
+  opacity: 0;
+  animation: 300ms fade-in-up;
+  animation-fill-mode: forwards;
   animation-delay: var(--content-delay, 0ms);
 }
 
+.sidebar.onload-animation,
+.sidebar .onload-animation {
+  animation-delay: calc(var(--content-delay, 0ms) - 50ms);
+}
+
+.site-footer.onload-animation,
+.content-col > .site-footer {
+  animation-delay: calc(var(--content-delay, 0ms) + 100ms);
+}
+
 /* --------------------------------------------------------------------------
-   7. 文章卡片（PostCard.astro）
+   7. 文章卡片（PostCard.astro + PostPage.astro）
    -------------------------------------------------------------------------- */
 
 .post-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* PostPage.astro: 移动端卡片合并（py-1 bg-[var(--card-bg)]），桌面端 gap-4 透明 */
+.post-list--mobile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-radius: var(--radius-large);
+  background: var(--card-bg);
+}
+
+@media (min-width: 768px) {
+  .post-list--mobile-card {
+    gap: 1rem;
+    background: transparent;
+  }
 }
 
 .post-card {
@@ -923,6 +1162,7 @@ strong {
   background: var(--card-bg);
 }
 
+/* pl-6 md:pl-9 pr-6 md:pr-2 pt-6 md:pt-7 pb-6 */
 .post-card__body {
   position: relative;
   padding: 1.5rem 1.5rem 1.5rem;
@@ -935,6 +1175,7 @@ strong {
   }
 }
 
+/* 标题：font-bold mb-3 text-3xl，左侧竖条 before:top-[35px] before:left-[18px] */
 .post-card__title {
   position: relative;
   display: block;
@@ -961,8 +1202,8 @@ strong {
   .post-card__title::before {
     content: "";
     position: absolute;
-    top: 0.5rem;
-    left: 0;
+    top: 2.1875rem;
+    left: 1.125rem;
     width: 0.25rem;
     height: 1.25rem;
     border-radius: 0.375rem;
@@ -970,6 +1211,23 @@ strong {
   }
 }
 
+/* 移动端标题内联箭头（md:hidden） */
+.post-card__title .title-chevron {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.25rem;
+  vertical-align: -0.125rem;
+  color: var(--primary);
+}
+
+@media (min-width: 768px) {
+  .post-card__title .title-chevron {
+    display: none;
+  }
+}
+
+/* 元信息（PostMeta.astro: flex flex-wrap gap-4 gap-y-2 mb-4） */
 .post-card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -984,6 +1242,7 @@ strong {
   min-width: 0;
 }
 
+/* meta-icon: w-8 h-8 rounded-md bg-[var(--btn-regular-bg)] text-[var(--btn-content)] mr-2 */
 .meta-icon {
   display: flex;
   flex-shrink: 0;
@@ -995,6 +1254,11 @@ strong {
   border-radius: 0.375rem;
   background: var(--btn-regular-bg);
   color: var(--btn-content);
+}
+
+.meta-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .meta-text {
@@ -1014,6 +1278,7 @@ a.meta-text:hover {
   font-size: 0.875rem;
 }
 
+/* 摘要（text-75 mb-3.5 pr-4） */
 .post-card__desc {
   margin: 0 0 0.875rem;
   padding-right: 1rem;
@@ -1025,6 +1290,7 @@ a.meta-text:hover {
   overflow: hidden;
 }
 
+/* 字数统计（text-sm text-black/30 flex gap-4） */
 .post-card__stats {
   display: flex;
   gap: 1rem;
@@ -1033,6 +1299,7 @@ a.meta-text:hover {
   font-size: 0.875rem;
 }
 
+/* 右侧进入按钮（btn-regular w-[3.25rem] absolute right-3 top-3 bottom-3 rounded-xl） */
 .post-card__enter {
   display: none;
   position: absolute;
@@ -1060,10 +1327,11 @@ a.meta-text:hover {
 }
 
 .post-card__enter svg {
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
+/* 封面（md:w-[28%] md:absolute md:top-3 md:bottom-3 md:right-3 rounded-xl） */
 .post-card__cover {
   display: block;
   object-fit: cover;
@@ -1085,6 +1353,33 @@ a.meta-text:hover {
   }
 }
 
+/* 移动端卡片之间的虚线分隔（PostCard.astro 最后那个 div） */
+.post-card__divider {
+  display: block;
+  margin: 0 1.5rem;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.post-card__divider:last-child {
+  border-top: 0;
+}
+
+@media (min-width: 768px) {
+  .post-card__divider {
+    display: none;
+  }
+}
+
+[data-theme="dark"] .post-card__divider {
+  border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .post-card__divider {
+    border-top-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
 .post-card__link-overlay {
   position: absolute;
   inset: 0;
@@ -1099,6 +1394,7 @@ a.meta-text:hover {
   gap: 0.75rem;
 }
 
+/* btn-card w-11 h-11 rounded-lg text-[var(--primary)] */
 .pagination__arrow {
   width: 2.75rem;
   height: 2.75rem;
@@ -1141,7 +1437,8 @@ a.meta-text:hover {
 }
 
 /* --------------------------------------------------------------------------
-   8. 文章页（posts/[slug].astro）
+   8. 文章页（posts/[...slug].astro）
+   card-base px-6 md:px-9 pt-6 pb-4；标题 text-3xl md:text-[2.25rem]/[2.75rem]
    -------------------------------------------------------------------------- */
 
 .post-shell {
@@ -1160,6 +1457,7 @@ a.meta-text:hover {
   }
 }
 
+/* 字数统计行：flex gap-5 mb-3 text-black/30，图标方块 bg-black/5 */
 .post-stats {
   display: flex;
   flex-direction: row;
@@ -1181,14 +1479,25 @@ a.meta-text:hover {
   height: 1.5rem;
   margin-right: 0.5rem;
   border-radius: 0.375rem;
-  background: var(--btn-regular-bg);
-  color: var(--btn-content);
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-50);
+}
+
+[data-theme="dark"] .post-stats__icon {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .post-stats__icon {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .post-stats__text {
   font-size: 0.875rem;
 }
 
+/* 标题：md:before:top-[0.75rem] md:before:left-[-1.125rem]（相对标题盒） */
 .post-title {
   position: relative;
   width: 100%;
@@ -1201,7 +1510,7 @@ a.meta-text:hover {
 
 @media (min-width: 768px) {
   .post-title {
-    padding-left: 1.5rem;
+    padding-left: 1.125rem;
     font-size: 2.25rem;
     line-height: 2.75rem;
   }
@@ -1216,6 +1525,11 @@ a.meta-text:hover {
     border-radius: 0.375rem;
     background: var(--primary);
   }
+}
+
+/* 元信息 mb-5 + 无封面时虚线分隔 */
+.post-page .post-card__meta {
+  margin-bottom: 1.25rem;
 }
 
 .post-divider {
@@ -1243,6 +1557,7 @@ a.meta-text:hover {
   }
 }
 
+/* btn-card rounded-2xl h-[3.75rem] px-4 gap-4 */
 .post-nav__btn {
   display: flex;
   align-items: center;
@@ -1333,7 +1648,7 @@ a.meta-text:hover {
 }
 
 /* --------------------------------------------------------------------------
-   9. Markdown 正文（markdown.css / markdown-extend）
+   9. Markdown 正文（markdown.css + markdown-extend.styl）
    -------------------------------------------------------------------------- */
 
 .markdown-body {
@@ -1389,6 +1704,7 @@ a.meta-text:hover {
   font-weight: 700;
 }
 
+/* Fuwari 链接：underline decoration-1 dashed + hover 背景高亮 */
 .markdown-body a {
   position: relative;
   display: inline;
@@ -1496,7 +1812,7 @@ a.meta-text:hover {
   font-weight: 700;
 }
 
-/* 代码块：标题栏 + 深色主体（对应 expressive-code） */
+/* 代码块：expressive-code 风格 */
 .markdown-body .code-block {
   position: relative;
   margin: 1.25rem 0;
@@ -1659,6 +1975,8 @@ a.meta-text:hover {
 
 /* --------------------------------------------------------------------------
    10. 归档（ArchivePanel.svelte）
+   px-8 py-6；年份行 h-[3.75rem]，列宽 15%/15%/70% (md 10%/10%/80%)
+   标题列 md:w-[65%]，标签列 md:w-[15%]
    -------------------------------------------------------------------------- */
 
 .archive-card {
@@ -1673,8 +1991,9 @@ a.meta-text:hover {
   height: 3.75rem;
 }
 
+/* text-2xl font-bold text-right text-75 */
 .archive-year {
-  width: 25%;
+  width: 15%;
   color: var(--text-75);
   font-size: 1.5rem;
   font-weight: 700;
@@ -1687,8 +2006,9 @@ a.meta-text:hover {
   }
 }
 
+/* h-3 w-3 rounded-full outline outline-[var(--primary)] -outline-offset-[2px] outline-3 */
 .archive-year-dot-wrap {
-  width: 25%;
+  width: 15%;
   display: flex;
   justify-content: center;
 }
@@ -1709,7 +2029,7 @@ a.meta-text:hover {
 }
 
 .archive-year-count {
-  width: 50%;
+  width: 70%;
   color: var(--text-50);
   text-align: left;
 }
@@ -1739,7 +2059,7 @@ a.meta-text:hover {
 }
 
 .archive-row__date {
-  width: 25%;
+  width: 15%;
   color: var(--text-50);
   font-size: 0.875rem;
   text-align: right;
@@ -1755,7 +2075,7 @@ a.meta-text:hover {
   position: relative;
   display: flex;
   align-items: center;
-  width: 25%;
+  width: 15%;
   height: 100%;
 }
 
@@ -1777,6 +2097,7 @@ a.meta-text:hover {
   pointer-events: none;
 }
 
+/* w-1 h-1 group-hover:h-5 bg-[oklch(0.5_0.05_var(--hue))] outline-4 outline-[var(--card-bg)] */
 .archive-row__dot {
   width: 0.25rem;
   height: 0.25rem;
@@ -1795,7 +2116,7 @@ a.meta-text:hover {
 }
 
 .archive-row__title {
-  width: 50%;
+  width: 70%;
   padding-right: 2rem;
   overflow: hidden;
   color: var(--text-75);
@@ -1933,7 +2254,7 @@ a.meta-text:hover {
   text-align: center;
 }
 
-/* 页脚（Footer.astro） */
+/* 页脚（Footer.astro: border-t dashed mx-32 my-10 + 圆角框 mb-12） */
 .site-footer {
   margin: 2.5rem 0 3rem;
 }
@@ -1974,9 +2295,10 @@ a.meta-text:hover {
 }
 
 /* --------------------------------------------------------------------------
-   12. 搜索面板（Fuwari float-panel）
+   12. 搜索面板（Fuwari float-panel：shadow-2xl rounded-2xl p-2）
    -------------------------------------------------------------------------- */
 
+/* 移动端搜索触发按钮（Fuwari: lg:!hidden btn-plain rounded-lg w-11 h-11） */
 .search-trigger {
   position: relative;
   display: flex;
@@ -1984,75 +2306,23 @@ a.meta-text:hover {
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  margin-right: 0.5rem;
   padding: 0;
   border: 0;
   border-radius: 0.5rem;
-  background: rgba(0, 0, 0, 0.04);
-  color: var(--text-50);
-  font-size: 0.875rem;
+  background: transparent;
+  color: var(--text-75);
   cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.search-trigger__label,
-.search-trigger__kbd {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .search-trigger {
-    justify-content: flex-start;
-    width: 12rem;
-    padding: 0 0.75rem 0 2rem;
-  }
-
-  .search-trigger__label {
-    display: inline;
-  }
-
-  .search-trigger__kbd {
-    display: inline-block;
-  }
+  transition: color 0.2s ease;
 }
 
 .search-trigger:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .search-trigger {
-    background: rgba(255, 255, 255, 0.05);
-  }
-  :root:not([data-theme="light"]) .search-trigger:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-}
-
-[data-theme="dark"] .search-trigger {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-[data-theme="dark"] .search-trigger:hover {
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary);
 }
 
 .search-trigger__icon {
-  position: absolute;
-  left: 0.75rem;
   width: 1.25rem;
   height: 1.25rem;
-  color: var(--text-30);
-}
-
-.search-trigger__kbd {
-  margin-left: auto;
-  padding: 0.1rem 0.35rem;
-  border-radius: 0.25rem;
-  background: var(--btn-regular-bg);
-  color: var(--btn-content);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  color: currentColor;
 }
 
 .search-overlay {
@@ -2061,19 +2331,27 @@ a.meta-text:hover {
   z-index: 100;
 }
 
+/* float-panel top-[5.25rem] rounded-[var(--radius-large)] p-2 */
 .search-panel {
   position: fixed;
-  top: 4.75rem;
-  right: max(1rem, calc((100vw - var(--page-width)) / 2 + 1rem));
+  top: 5.25rem;
+  right: 1rem;
   display: flex;
   flex-direction: column;
   width: min(30rem, calc(100vw - 2rem));
   max-height: min(34rem, calc(100vh - 6rem));
   overflow: hidden;
+  padding: 0.5rem;
   border-radius: var(--radius-large);
   background: var(--float-panel-bg);
-  box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   animation: panel-in 0.2s ease-out;
+}
+
+@media (min-width: 768px) {
+  .search-panel {
+    right: max(1rem, calc((100vw - var(--page-width)) / 2 + 1rem));
+  }
 }
 
 .search-input-wrapper {
@@ -2737,22 +3015,36 @@ a.meta-text:hover {
   transition: width 0.1s linear;
 }
 
+/* BackToTop.astro: 右侧 fixed bottom-10rem，3.75rem 圆角方块 */
 .back-to-top {
   position: fixed;
   right: 1.5rem;
-  bottom: 1.5rem;
+  bottom: 10rem;
   z-index: 40;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3.75rem;
+  height: 3.75rem;
   border: 0;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   background: var(--card-bg);
   color: var(--primary);
-  box-shadow: 0 10px 25px -15px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.back-to-top:hover {
+  background: var(--btn-card-bg-hover);
+}
+
+.back-to-top:active {
+  transform: scale(0.9);
+}
+
+.back-to-top svg {
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
 .lightbox-overlay {
@@ -2942,7 +3234,9 @@ a.meta-text:hover {
   background: var(--primary);
 }
 
-/* 主题色相选择（Fuwari DisplaySettings） */
+/* --------------------------------------------------------------------------
+   主题色相面板（对应 DisplaySettings.svelte：w-80 px-4 py-4 float-panel）
+   -------------------------------------------------------------------------- */
 .hue-picker {
   position: relative;
 }
@@ -2952,70 +3246,142 @@ a.meta-text:hover {
   top: 3.25rem;
   right: 0;
   z-index: 60;
-  width: 13.5rem;
-  padding: 0.9rem;
+  width: 20rem;
+  padding: 1rem;
   border-radius: var(--radius-large);
   background: var(--float-panel-bg);
   box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.35);
   animation: panel-in 0.2s ease-out;
 }
 
-.hue-panel__label {
-  margin: 0 0 0.5rem;
-  color: var(--text-50);
-  font-size: 0.75rem;
+/* 标题行：标题+重置按钮 左，色相数值右（w-10 h-7 圆角方块） */
+.hue-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
 }
 
+.hue-panel__title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 0.75rem;
+  color: var(--text-90);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.hue-panel__title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.33rem;
+  width: 0.25rem;
+  height: 1rem;
+  border-radius: 0.375rem;
+  background: var(--primary);
+}
+
+.hue-reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: var(--btn-regular-bg);
+  color: var(--btn-content);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease,
+    opacity 0.2s ease;
+}
+
+.hue-reset:hover {
+  background: var(--btn-regular-bg-hover);
+}
+
+.hue-reset:active {
+  transform: scale(0.9);
+}
+
+.hue-reset.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hue-value {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  background: var(--btn-regular-bg);
+  color: var(--btn-content);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* 滑块轨道：h-6 bg-[oklch(0.80_0.10_0)] rounded select-none */
+.hue-track {
+  position: relative;
+  height: 1.5rem;
+  padding: 0 0.25rem;
+  border-radius: 0.375rem;
+  background: oklch(0.8 0.1 0);
+  background-image: var(--color-selection-bar);
+  user-select: none;
+}
+
+[data-theme="dark"] .hue-track {
+  background: oklch(0.7 0.1 0);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hue-track {
+    background: oklch(0.7 0.1 0);
+  }
+}
+
+/* input: h-1.5rem 全宽，thumb 是 0.5rem×1rem 白色 70% 小竖条 */
 .hue-range {
   width: 100%;
-  height: 0.5rem;
-  border-radius: 9999px;
+  height: 1.5rem;
+  margin: 0;
   appearance: none;
-  background: linear-gradient(
-    to right,
-    oklch(0.7 0.14 0),
-    oklch(0.7 0.14 60),
-    oklch(0.7 0.14 120),
-    oklch(0.7 0.14 180),
-    oklch(0.7 0.14 240),
-    oklch(0.7 0.14 300),
-    oklch(0.7 0.14 360)
-  );
+  background: transparent;
   cursor: pointer;
 }
 
 .hue-range::-webkit-slider-thumb {
   appearance: none;
-  width: 1rem;
+  width: 0.5rem;
   height: 1rem;
-  border: 2px solid var(--card-bg);
-  border-radius: 9999px;
-  background: var(--primary);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-}
-
-.hue-swatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-top: 0.75rem;
-}
-
-.hue-swatch {
-  width: 1.25rem;
-  height: 1.25rem;
   border: 0;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: transform 0.15s ease;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: none;
 }
 
-.hue-swatch:hover {
-  transform: scale(1.12);
+.hue-range::-webkit-slider-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.hue-swatch.is-active {
-  box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 4px var(--text-30);
+.hue-range::-webkit-slider-thumb:active {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.hue-range::-moz-range-thumb {
+  width: 0.5rem;
+  height: 1rem;
+  border: 0;
+  border-radius: 0.125rem;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: none;
 }
 
 /* --------------------------------------------------------------------------
