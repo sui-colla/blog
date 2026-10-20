@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PageShell from "@/components/layout/PageShell";
 import PostCard from "@/components/content/PostCard";
+import HomeBanner from "@/components/content/HomeBanner";
 import { useI18n } from "@/lib/i18n";
 import type { PostMeta } from "@/lib/content/posts";
 
@@ -70,78 +71,81 @@ export default function HomeContent({
   const pages = buildPages(currentPage, totalPages);
 
   return (
-    <PageShell tags={tags} popularPosts={popularPosts}>
-      {pagePosts.length === 0 ? (
-        <div className="empty-state">{t("home.empty")}</div>
-      ) : (
-        /* Fuwari PostPage.astro：移动端所有卡片合并进一张大卡（py-1 card），
-           桌面端 gap-4 独立卡片 */
-        <div className="post-list post-list--mobile-card">
-          {pagePosts.map((post, index) => (
-            <PostCard
-              key={post.slug}
-              post={post}
-              index={index}
-              showDivider={index < pagePosts.length - 1}
-            />
-          ))}
-        </div>
-      )}
-
-      {totalPages > 1 && (
-        <nav className="pagination" aria-label={t("pagination.aria")}>
-          {currentPage > 1 ? (
-            <Link
-              href={`/?page=${currentPage - 1}`}
-              className="pagination__arrow btn-card"
-              aria-label={t("pagination.prev")}
-            >
-              <ChevronLeft size={26} aria-hidden="true" />
-            </Link>
-          ) : (
-            <span className="pagination__arrow btn-card disabled" aria-hidden="true">
-              <ChevronLeft size={26} />
-            </span>
-          )}
-
-          <div className="pagination__pages">
-            {pages.map((p, index) =>
-              p === HIDDEN ? (
-                <span key={`hidden-${index}`} className="pagination__page">
-                  …
-                </span>
-              ) : p === currentPage ? (
-                <span key={p} className="pagination__page pagination__page--current">
-                  {p}
-                </span>
-              ) : (
-                <Link
-                  key={p}
-                  href={p === 1 ? "/" : `/?page=${p}`}
-                  className="pagination__page btn-card"
-                  aria-label={`${t("pagination.next")} ${p}`}
-                >
-                  {p}
-                </Link>
-              )
-            )}
+    <div className="home-page">
+      <HomeBanner />
+      <PageShell tags={tags} popularPosts={popularPosts}>
+        {pagePosts.length === 0 ? (
+          <div className="empty-state">{t("home.empty")}</div>
+        ) : (
+          /* Fuwari PostPage.astro：移动端所有卡片合并进一张大卡（py-1 card），
+             桌面端 gap-4 独立卡片 */
+          <div className="post-list post-list--mobile-card">
+            {pagePosts.map((post, index) => (
+              <PostCard
+                key={post.slug}
+                post={post}
+                index={index}
+                showDivider={index < pagePosts.length - 1}
+              />
+            ))}
           </div>
+        )}
 
-          {currentPage < totalPages ? (
-            <Link
-              href={`/?page=${currentPage + 1}`}
-              className="pagination__arrow btn-card"
-              aria-label={t("pagination.next")}
-            >
-              <ChevronRight size={26} aria-hidden="true" />
-            </Link>
-          ) : (
-            <span className="pagination__arrow btn-card disabled" aria-hidden="true">
-              <ChevronRight size={26} />
-            </span>
-          )}
-        </nav>
-      )}
-    </PageShell>
+        {totalPages > 1 && (
+          <nav className="pagination" aria-label={t("pagination.aria")}>
+            {currentPage > 1 ? (
+              <Link
+                href={`/?page=${currentPage - 1}`}
+                className="pagination__arrow btn-card"
+                aria-label={t("pagination.prev")}
+              >
+                <ChevronLeft size={26} aria-hidden="true" />
+              </Link>
+            ) : (
+              <span className="pagination__arrow btn-card disabled" aria-hidden="true">
+                <ChevronLeft size={26} />
+              </span>
+            )}
+
+            <div className="pagination__pages">
+              {pages.map((p, index) =>
+                p === HIDDEN ? (
+                  <span key={`hidden-${index}`} className="pagination__page">
+                    …
+                  </span>
+                ) : p === currentPage ? (
+                  <span key={p} className="pagination__page pagination__page--current">
+                    {p}
+                  </span>
+                ) : (
+                  <Link
+                    key={p}
+                    href={p === 1 ? "/" : `/?page=${p}`}
+                    className="pagination__page btn-card"
+                    aria-label={`${t("pagination.next")} ${p}`}
+                  >
+                    {p}
+                  </Link>
+                )
+              )}
+            </div>
+
+            {currentPage < totalPages ? (
+              <Link
+                href={`/?page=${currentPage + 1}`}
+                className="pagination__arrow btn-card"
+                aria-label={t("pagination.next")}
+              >
+                <ChevronRight size={26} aria-hidden="true" />
+              </Link>
+            ) : (
+              <span className="pagination__arrow btn-card disabled" aria-hidden="true">
+                <ChevronRight size={26} />
+              </span>
+            )}
+          </nav>
+        )}
+      </PageShell>
+    </div>
   );
 }

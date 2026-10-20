@@ -50,13 +50,13 @@ export const siteConfig = {
   url: siteUrl,
   locale: "zh_CN",
   language: "zh-CN",
-  themeColor: "#52525b",
+  themeColor: "#07080d",
   /** Fuwari 主题色相（0-360），用于页面强调色 oklch(… var(--hue)) */
   hue: 250,
   profile: {
     name: "Xingye",
     bio: "记录技术、思考与生活的个人博客。",
-    avatar: "/images/avatar.svg",
+    avatar: "/images/avatar-silhouette.webp",
     links: [
       { name: "About", href: "/about", icon: "user" },
       { name: "RSS", href: "/feed.xml", icon: "rss", external: true },
