@@ -74,8 +74,8 @@ const zh: Record<string, string> = {
 
   // 关于页
   "about.title": "关于",
-  "about.intro": "你好，我是 Xingye。",
-  "about.bio": "这里是我记录技术学习、生活思考和阅读笔记的地方。写作帮助我整理思路，也希望能为你带来一些价值。",
+  "about.intro": "你好，我是 Xingye，专注计算机与建模方向的学习与实践。",
+  "about.bio": "这里记录计算机图形学、三维建模、数值仿真与参数化设计的笔记和工程实践。比起堆砌结论，我更关心模型如何被计算、验证和复用。",
   "about.contact": "联系方式",
   "about.contactDesc": "可以通过 GitHub 找到我，或者在文章下方留言讨论。",
   "about.more": "更多页面",
@@ -86,7 +86,7 @@ const zh: Record<string, string> = {
 
   // 内容页
   "projects.title": "项目",
-  "projects.description": "这里整理我正在做、做过和持续维护的小项目。",
+  "projects.description": "计算机图形学、三维建模与数值仿真方向的实验项目和维护中的小工具。",
   "projects.featured": "精选项目",
   "projects.archive": "归档与实验",
   "projects.empty": "项目正在整理中。",

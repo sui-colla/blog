@@ -5,9 +5,9 @@
  * 如果 slug 对应的文章不存在或未发布，会被自动过滤掉。
  */
 export const popularPostSlugs = [
-  "nextjs-guide",
-  "plc-learning-roadmap",
-  "sekiro-guide",
-  "cs2-guide",
-  "gta5-guide",
+  "computational-modeling-roadmap",
+  "mesh-half-edge-data-structure",
+  "blender-hard-surface-pipeline",
+  "finite-difference-heat-simulation",
+  "parametric-design-constraints",
 ] as const;

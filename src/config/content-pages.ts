@@ -54,36 +54,45 @@ export interface UsesCategory {
 
 export const projects: ProjectItem[] = [
   {
-    name: "Xingye Blog",
-    summary: "基于 Next.js 的个人博客，用来记录技术学习、游戏攻略、生活观察和持续打磨的写作系统。",
-    techStack: ["Next.js", "TypeScript", "Markdown", "PWA"],
+    name: "参数化零件生成器",
+    summary: "用参数文件驱动 FreeCAD 批量生成板件与孔阵列，输出 STEP、缩略图和尺寸表，方便做系列化设计。",
+    techStack: ["Python", "FreeCAD", "参数化设计"],
     status: "featured",
-    postUrl: "/posts/nextjs-guide",
+    postUrl: "/posts/parametric-design-constraints",
   },
   {
-    name: "内容质量检查脚本",
-    summary: "提交前检查文章 frontmatter、站内链接、图片路径和 alt 文本，减少内容维护成本。",
-    techStack: ["Node.js", "Markdown", "CI"],
+    name: "二维热传导求解器",
+    summary: "基于有限差分的平板温度场求解实验，包含稳定性检查、解析解对照和网格无关性验证。",
+    techStack: ["Python", "NumPy", "数值仿真"],
     status: "building",
+    postUrl: "/posts/finite-difference-heat-simulation",
   },
   {
-    name: "游戏攻略知识库",
-    summary: "把 CS2、GTA5、PUBG、只狼等攻略整理成可搜索、可归档的长期内容。",
-    techStack: ["Writing", "Search", "Tags"],
-    status: "archived",
+    name: "网格处理实验集",
+    summary: "从索引面集到半边结构的实现练习，覆盖邻接查询、法线计算、边界处理和非流形检查。",
+    techStack: ["Python", "计算几何", "半边结构"],
+    status: "building",
+    postUrl: "/posts/mesh-half-edge-data-structure",
+  },
+  {
+    name: "硬表面资产库",
+    summary: "按统一管线整理的机械零件资产：Blockout、高低模、UV、PBR 贴图与导出检查清单。",
+    techStack: ["Blender", "PBR", "三维建模"],
+    status: "building",
+    postUrl: "/posts/blender-hard-surface-pipeline",
   },
 ];
 
 export const nowPage: NowPageData = {
-  updatedAt: "2026-07-07",
+  updatedAt: "2026-10-21",
   sections: [
     {
       title: "学习",
-      items: ["继续整理 Next.js、前端工程化和内容系统相关笔记。", "把学到的东西尽量写成能复用的文章，而不只是零散记录。"],
+      items: ["补计算几何与数值方法的基础，重点是把推导落到可运行的代码。", "整理三维建模管线中的拓扑、UV 与烘焙问题。"],
     },
     {
       title: "创作",
-      items: ["完善博客的搜索、离线阅读、内容质量检查和阅读体验。", "把游戏攻略和技术笔记都整理成更容易检索的知识库。"],
+      items: ["把建模、仿真和参数化设计的实践写成可复用的笔记。", "维护一个从几何到验证的小型工具链，而不是零散脚本。"],
     },
     {
       title: "生活",

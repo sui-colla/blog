@@ -1579,6 +1579,150 @@ a.meta-text:hover {
   z-index: 1;
 }
 
+/* --------------------------------------------------------------------------
+   7.1 首页两列方块网格
+   桌面端两列等宽卡片，窄屏回落单列；卡片内部纵向排布，底部对齐。
+   -------------------------------------------------------------------------- */
+
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+@media (max-width: 680px) {
+  .post-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.post-card--tile {
+  height: 100%;
+  min-height: 17.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card--tile:hover {
+  border-color: var(--primary);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.post-card--tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.4rem;
+  width: 2.5rem;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--primary);
+  opacity: 0.85;
+  z-index: 2;
+}
+
+.post-card--tile .post-card__body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem 1.5rem 1.35rem;
+}
+
+.post-card__tile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.post-card__category {
+  display: inline-flex;
+  align-items: center;
+  height: 1.7rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--primary);
+  border-radius: 0.45rem;
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+a.post-card__category:hover {
+  background: var(--btn-plain-bg-hover);
+}
+
+.post-card__tile-date {
+  color: var(--text-50);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-grid .post-card__title {
+  display: -webkit-box;
+  margin-bottom: 0.7rem;
+  padding-left: 0;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: 1.35rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.post-grid .post-card__title::before {
+  display: none;
+}
+
+.post-grid .post-card__desc {
+  flex: 1;
+  margin-bottom: 1rem;
+  padding-right: 0;
+  -webkit-line-clamp: 3;
+}
+
+.post-card__tile-footer {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--line-divider);
+}
+
+.post-card__tile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.post-card__tile-tags .tag-chip {
+  height: 1.6rem;
+  padding: 0 0.55rem;
+  font-size: 0.75rem;
+}
+
+.post-card__tile-meta {
+  display: block;
+  color: var(--text-50);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.post-card__tile-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 500;
+}
+
+.post-card__tile-more:hover {
+  gap: 0.5rem;
+}
+
 /* 分页（Pagination.astro） */
 .pagination {
   display: flex;

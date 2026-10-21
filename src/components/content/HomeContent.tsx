@@ -77,15 +77,15 @@ export default function HomeContent({
         {pagePosts.length === 0 ? (
           <div className="empty-state">{t("home.empty")}</div>
         ) : (
-          /* Fuwari PostPage.astro：移动端所有卡片合并进一张大卡（py-1 card），
-             桌面端 gap-4 独立卡片 */
-          <div className="post-list post-list--mobile-card">
+          /* 两列方块网格：桌面端 2 列，窄屏回落为单列 */
+          <div className="post-grid">
             {pagePosts.map((post, index) => (
               <PostCard
                 key={post.slug}
                 post={post}
                 index={index}
-                showDivider={index < pagePosts.length - 1}
+                variant="tile"
+                showDivider={false}
               />
             ))}
           </div>

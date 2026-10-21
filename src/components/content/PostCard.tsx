@@ -3,8 +3,8 @@
 /**
  * 文章卡片（对应 Fuwari PostCard.astro）
  *
- * 无封面时右侧显示 btn-regular 箭头按钮；标题左侧有主色竖条；
- * 移动端标题尾部有内联箭头，卡片之间有虚线分隔。
+ * list：默认横向卡片，右侧显示进入按钮，卡片之间用虚线分隔。
+ * tile：两列方块网格专用，信息按“分类—标题—摘要—标签/统计”纵向排布。
  */
 import Link from "next/link";
 import { Calendar, ChevronRight, Folder, Tag } from "lucide-react";
@@ -15,12 +15,74 @@ interface Props {
   post: PostMeta;
   index?: number;
   showDivider?: boolean;
+  variant?: "list" | "tile";
 }
 
-export default function PostCard({ post, index = 0, showDivider = true }: Props) {
+export default function PostCard({
+  post,
+  index = 0,
+  showDivider = true,
+  variant = "list",
+}: Props) {
   const { t } = useI18n();
   const [category, ...restTags] = post.tags ?? [];
   const tags = restTags.length > 0 ? restTags : (post.tags ?? []);
+
+  if (variant === "tile") {
+    return (
+      <article
+        className="post-card post-card--tile onload-animation"
+        style={{ animationDelay: `calc(var(--content-delay) + ${index * 60}ms)` }}
+      >
+        <div className="post-card__body">
+          <div className="post-card__tile-top">
+            {category ? (
+              <Link
+                href={`/tags/${encodeURIComponent(category)}`}
+                className="post-card__category"
+              >
+                {category}
+              </Link>
+            ) : (
+              <span className="post-card__category">{t("post.uncategorized")}</span>
+            )}
+            <time className="post-card__tile-date" dateTime={post.date}>
+              {post.date}
+            </time>
+          </div>
+
+          <Link href={`/posts/${post.slug}`} className="post-card__title">
+            {post.title}
+          </Link>
+
+          <p className="post-card__desc">{post.summary}</p>
+
+          <div className="post-card__tile-footer">
+            <div className="post-card__tile-tags">
+              {restTags.slice(0, 2).map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/tags/${encodeURIComponent(tag)}`}
+                  className="tag-chip"
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+            <span className="post-card__tile-meta">
+              {post.wordCount.toLocaleString()} {t("post.wordCount")} ·{" "}
+              {post.readingTime} {t("post.readingTime")}
+            </span>
+          </div>
+
+          <Link href={`/posts/${post.slug}`} className="post-card__tile-more">
+            {t("home.readPost")}
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <>
