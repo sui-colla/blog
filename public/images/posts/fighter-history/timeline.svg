@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="tlTitle tlDesc">
+  <title id="tlTitle">战斗机发展史时间线</title>
+  <desc id="tlDesc">从 1944 年喷气式战斗机进入实战，到 2020 年代有人机与无人协同作战的八个技术节点。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b12"/>
+      <stop offset="0.55" stop-color="#0a111d"/>
+      <stop offset="1" stop-color="#0d1626"/>
+    </linearGradient>
+    <linearGradient id="axis" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f59e0b" stop-opacity="0"/>
+      <stop offset="0.12" stop-color="#f59e0b"/>
+      <stop offset="0.35" stop-color="#34d399"/>
+      <stop offset="0.62" stop-color="#60a5fa"/>
+      <stop offset="0.84" stop-color="#818cf8"/>
+      <stop offset="1" stop-color="#c084fc" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#86a8d8" stroke-opacity="0.055" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .kicker { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; font-size: 15px; letter-spacing: 3.2px; fill: #62d0ff; }
+      .title { font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif; font-size: 43px; font-weight: 700; fill: #f2f6ff; }
+      .subtitle { font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif; font-size: 18px; fill: #93a7c4; }
+      .gen { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; font-size: 13px; letter-spacing: 1.4px; }
+      .aircraft { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; font-size: 20px; font-weight: 700; fill: #edf4ff; }
+      .event { font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif; font-size: 14px; fill: #9fb2cc; }
+      .foot { font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif; font-size: 13px; fill: #7288a4; }
+      .footStrong { font-family: 'Microsoft YaHei', 'Noto Sans SC', sans-serif; font-size: 14px; fill: #b6c8e0; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+
+  <g opacity="0.9">
+    <path d="M1230 48 L1570 48 L1570 118 L1230 118 Z" fill="#0f1a2b" stroke="#1f3350"/>
+    <text x="1252" y="76" class="gen" fill="#6f8db3">GEN 1 → GEN 6</text>
+    <text x="1252" y="104" class="footStrong">8 个节点 · 3 条主线</text>
+  </g>
+
+  <text x="90" y="72" class="kicker">FIGHTER AIRCRAFT · 1944—2020s</text>
+  <text x="90" y="136" class="title">战斗机发展史：八个技术分水岭</text>
+  <text x="90" y="176" class="subtitle">代际不是年份，而是动力、航电与信息能力的组合变化。</text>
+
+  <line x1="90" y1="216" x2="1510" y2="216" stroke="#1d2d44" stroke-width="1"/>
+
+  <line x1="100" y1="470" x2="1500" y2="470" stroke="url(#axis)" stroke-width="2"/>
+  <line x1="100" y1="470" x2="1500" y2="470" stroke="#8fb8e8" stroke-opacity="0.12" stroke-width="6"/>
+
+  <!-- 1944 -->
+  <line x1="170" y1="397" x2="170" y2="470" stroke="#f59e0b" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="60" y="285" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="80" y="313" class="gen" fill="#fbbf24">第一代 · 1944</text>
+    <text x="80" y="344" class="aircraft">Me 262</text>
+    <text x="80" y="371" class="event">喷气式进入实战</text>
+  </g>
+  <circle cx="170" cy="470" r="16" fill="#f59e0b" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="170" cy="470" r="8" fill="#0a111d" stroke="#fbbf24" stroke-width="3"/>
+
+  <!-- 1953 -->
+  <line x1="360" y1="470" x2="360" y2="555" stroke="#fbbf24" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="250" y="555" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="270" y="583" class="gen" fill="#fbbf24">第二代 · 1953</text>
+    <text x="270" y="614" class="aircraft">F-100 / MiG-19</text>
+    <text x="270" y="641" class="event">跨音速与后掠翼</text>
+  </g>
+  <circle cx="360" cy="470" r="16" fill="#fbbf24" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="360" cy="470" r="8" fill="#0a111d" stroke="#fbbf24" stroke-width="3"/>
+
+  <!-- 1960s -->
+  <line x1="550" y1="397" x2="550" y2="470" stroke="#a3e635" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="440" y="285" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="460" y="313" class="gen" fill="#a3e635">第三代 · 1960s</text>
+    <text x="460" y="344" class="aircraft">MiG-21 / F-4</text>
+    <text x="460" y="371" class="event">两倍音速与导弹</text>
+  </g>
+  <circle cx="550" cy="470" r="16" fill="#a3e635" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="550" cy="470" r="8" fill="#0a111d" stroke="#a3e635" stroke-width="3"/>
+
+  <!-- 1970s -->
+  <line x1="740" y1="470" x2="740" y2="555" stroke="#34d399" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="630" y="555" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="650" y="583" class="gen" fill="#34d399">第四代 · 1970s</text>
+    <text x="650" y="614" class="aircraft">F-15 / F-16</text>
+    <text x="650" y="641" class="event">能量机动与电传</text>
+  </g>
+  <circle cx="740" cy="470" r="16" fill="#34d399" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="740" cy="470" r="8" fill="#0a111d" stroke="#34d399" stroke-width="3"/>
+
+  <!-- 1980s -->
+  <line x1="930" y1="397" x2="930" y2="470" stroke="#22d3ee" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="820" y="285" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="840" y="313" class="gen" fill="#22d3ee">隐身验证 · 1980s</text>
+    <text x="840" y="344" class="aircraft">F-117</text>
+    <text x="840" y="371" class="event">隐身与精确打击</text>
+  </g>
+  <circle cx="930" cy="470" r="16" fill="#22d3ee" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="930" cy="470" r="8" fill="#0a111d" stroke="#22d3ee" stroke-width="3"/>
+
+  <!-- 2005 -->
+  <line x1="1120" y1="470" x2="1120" y2="555" stroke="#60a5fa" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="1010" y="555" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="1030" y="583" class="gen" fill="#60a5fa">第五代 · 2005</text>
+    <text x="1030" y="614" class="aircraft">F-22 / F-35</text>
+    <text x="1030" y="641" class="event">超视距与传感器融合</text>
+  </g>
+  <circle cx="1120" cy="470" r="16" fill="#60a5fa" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="1120" cy="470" r="8" fill="#0a111d" stroke="#60a5fa" stroke-width="3"/>
+
+  <!-- 2011 -->
+  <line x1="1310" y1="397" x2="1310" y2="470" stroke="#818cf8" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="1200" y="285" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="1220" y="313" class="gen" fill="#818cf8">第五代 · 2011</text>
+    <text x="1220" y="344" class="aircraft">J-20 / Su-57</text>
+    <text x="1220" y="371" class="event">信息节点与超巡争论</text>
+  </g>
+  <circle cx="1310" cy="470" r="16" fill="#818cf8" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="1310" cy="470" r="8" fill="#0a111d" stroke="#818cf8" stroke-width="3"/>
+
+  <!-- 2020s -->
+  <line x1="1480" y1="470" x2="1480" y2="555" stroke="#c084fc" stroke-opacity="0.55" stroke-width="1.5"/>
+  <g>
+    <rect x="1370" y="555" width="220" height="112" rx="12" fill="#0e1726" stroke="#2b3b53"/>
+    <text x="1390" y="583" class="gen" fill="#c084fc">第六代 · 2020s</text>
+    <text x="1390" y="614" class="aircraft">NGAD / CCA</text>
+    <text x="1390" y="641" class="event">有人—无人协同</text>
+  </g>
+  <circle cx="1480" cy="470" r="16" fill="#c084fc" fill-opacity="0.14" filter="url(#glow)"/>
+  <circle cx="1480" cy="470" r="8" fill="#0a111d" stroke="#c084fc" stroke-width="3"/>
+
+  <line x1="90" y1="742" x2="1510" y2="742" stroke="#1d2d44" stroke-width="1"/>
+
+  <text x="90" y="780" class="footStrong">三条主线</text>
+  <text x="90" y="812" class="foot">动力：喷气 — 加力 — 超音速 — 超巡 — 变循环</text>
+  <text x="590" y="812" class="foot">航电：雷达 — 数据链 — 传感器融合 — 协同决策</text>
+  <text x="1090" y="812" class="foot">隐身：外形 — 材料 — 信息优势</text>
+
+  <text x="90" y="860" class="foot">示意图仅用于技术史梳理，不代表具体型号性能。部分代际划分存在美标 / 俄标差异。</text>
+  <text x="1510" y="860" class="foot" text-anchor="end">XINGYE · 2026</text>
+</svg>
