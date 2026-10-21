@@ -45,8 +45,9 @@ const siteUrl = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
 
 export const siteConfig = {
   name: "Xingye",
-  description: "Xingye 的博客，记录思考和分享知识的地方",
-  englishDescription: "Xingye's blog — notes on tech, thoughts, and life",
+  description: "计算机图形学、三维建模与数值仿真的学习与实践笔记",
+  englishDescription:
+    "Notes on computer graphics, 3D modeling, and numerical simulation",
   url: siteUrl,
   locale: "zh_CN",
   language: "zh-CN",
@@ -55,7 +56,7 @@ export const siteConfig = {
   hue: 250,
   profile: {
     name: "Xingye",
-    bio: "记录技术、思考与生活的个人博客。",
+    bio: "计算机图形学 · 三维建模 · 数值仿真",
     avatar: "/images/avatar-silhouette.webp",
     links: [
       { name: "About", href: "/about", icon: "user" },

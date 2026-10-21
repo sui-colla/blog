@@ -74,8 +74,8 @@ const en: Record<string, string> = {
 
   // About
   "about.title": "About",
-  "about.intro": "Hi, I'm Xingye.",
-  "about.bio": "This is where I document my learnings in tech, reflections on life, and reading notes. Writing helps me organize my thoughts, and I hope it brings you some value too.",
+  "about.intro": "Hi, I'm Xingye. I study and build things in computing and modeling.",
+  "about.bio": "This is where I document computer graphics, 3D modeling, numerical simulation, and parametric design. Rather than collecting conclusions, I care about how a model is computed, validated, and reused.",
   "about.contact": "Contact",
   "about.contactDesc": "You can find me on GitHub, or leave a comment below any article.",
   "about.more": "More pages",
@@ -86,7 +86,7 @@ const en: Record<string, string> = {
 
   // Content pages
   "projects.title": "Projects",
-  "projects.description": "Projects, experiments, and small systems I am building or maintaining.",
+  "projects.description": "Experiments and small tools in computer graphics, 3D modeling, and numerical simulation.",
   "projects.featured": "Featured",
   "projects.archive": "Archive & experiments",
   "projects.empty": "Projects are being organized.",

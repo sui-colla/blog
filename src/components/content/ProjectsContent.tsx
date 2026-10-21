@@ -68,8 +68,6 @@ export default function ProjectsContent({
   popularPosts = [],
 }: Props) {
   const { t } = useI18n();
-  const featured = projects.filter((project) => project.status === "featured");
-  const rest = projects.filter((project) => project.status !== "featured");
 
   return (
     <PageShell tags={tags} popularPosts={popularPosts}>
@@ -82,29 +80,11 @@ export default function ProjectsContent({
             {t("projects.empty")}
           </p>
         ) : (
-          <>
-            {featured.length > 0 && (
-              <div style={{ marginTop: "1.5rem" }}>
-                <h2 className="section-title">{t("projects.featured")}</h2>
-                <div className="card-grid">
-                  {featured.map((project) => (
-                    <ProjectCard key={project.name} project={project} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {rest.length > 0 && (
-              <div style={{ marginTop: "2rem" }}>
-                <h2 className="section-title">{t("projects.archive")}</h2>
-                <div className="card-grid">
-                  {rest.map((project) => (
-                    <ProjectCard key={project.name} project={project} />
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
+          <div className="card-grid card-grid--two" style={{ marginTop: "1.5rem" }}>
+            {projects.map((project) => (
+              <ProjectCard key={project.name} project={project} />
+            ))}
+          </div>
         )}
       </div>
     </PageShell>
